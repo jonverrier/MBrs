@@ -10,6 +10,7 @@
 
 #include "Host.h"
 #include "HostException.h"
+#include "HostUserData.h"
 
 #include "Core.h"
 #include "CoreFile.h"
@@ -48,7 +49,7 @@ CoreImageFile::operator=(const CoreImageFile& src)
    return *this;
 }
 
-HBool
+bool
 CoreImageFile::operator==(const CoreImageFile& rhs) const
 {
    if (this == &rhs)
@@ -57,7 +58,7 @@ CoreImageFile::operator==(const CoreImageFile& rhs) const
    return (CoreFileSystemEntity::operator==(rhs));
 }
 
-HBool
+bool
 CoreImageFile::operator!=(const CoreImageFile& rhs) const
 {
    if (this == &rhs)
@@ -163,18 +164,30 @@ CoreImageFile::readExifSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileErro
 {
    list<HString> exifSubjects;
 
-   if (fileError == 0) 
+   if (fileError == 0)
    {
       Exiv2::ExifData& exifData = image->exifData();
 
-      ostringstream os;
-      os << exifData["Exif.Image.XPKeywords"];
+      if (!exifData.empty()) 
+      {
+         // check the image tags are set before trying to read them
+         char key[] = "Exif.Image.XPKeywords";
+         Exiv2::ExifKey exifKey(key);
+         Exiv2::ExifData::iterator iter;
+         iter = exifData.findKey(exifKey);
+         
+         if (iter != exifData.end())
+         {
+            ostringstream os;
+            os << exifData[key];
 
-      // read as byte stream then convert to unicode
-      string streamString = os.str();
-      HString converted = convertToWide(streamString);
-      HString delimiter = H_TEXT(";");
-      exifSubjects = parseDelimiters(converted, delimiter);
+            // read as byte stream then convert to unicode
+            string streamString = os.str();
+            HString converted = convertToWide(streamString);
+            HString delimiter = H_TEXT(";");
+            exifSubjects = parseDelimiters(converted, delimiter);
+         }
+      }
    }
 
    return exifSubjects;
@@ -188,6 +201,7 @@ CoreImageFile::writeExifSubjectTags(Exiv2::Image::AutoPtr& image, const list<HSt
    if (fileError == 0)
    {
       Exiv2::ExifData& exifData = image->exifData();
+
       // Remove existing Exif subject data if it exists
       Exiv2::ExifKey key("Exif.Image.XPKeywords");
       Exiv2::ExifData::iterator iter;
@@ -212,18 +226,21 @@ CoreImageFile::readIptcSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileErro
    {
       Exiv2::IptcData& iptcData = image->iptcData();
 
-      Exiv2::IptcKey key("Iptc.Application2.Keywords");
-      Exiv2::IptcData::iterator iter;
-      
-      // Read as an array
-      for (iter = iptcData.findKey(key); iter != iptcData.end(); iter++)
+      if (!iptcData.empty())
       {
-         Exiv2::Iptcdatum datum = *iter;
-         if (datum.key() == key.key())
+         Exiv2::IptcKey key("Iptc.Application2.Keywords");
+         Exiv2::IptcData::iterator iter;
+
+         // Read as an array
+         for (iter = iptcData.findKey(key); iter != iptcData.end(); iter++)
          {
-            Exiv2::Value::AutoPtr pValue = datum.getValue();
-            string narrow = pValue.get()->toString();
-            iptcSubjects.push_back(convertToWide(narrow));
+            Exiv2::Iptcdatum datum = *iter;
+            if (datum.key() == key.key())
+            {
+               Exiv2::Value::AutoPtr pValue = datum.getValue();
+               string narrow = pValue.get()->toString();
+               iptcSubjects.push_back(convertToWide(narrow));
+            }
          }
       }
    }
@@ -262,14 +279,25 @@ CoreImageFile::readXmpSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileError
    if (fileError == 0) 
    {
       Exiv2::XmpData& xmpData = image->xmpData();
+      if (!xmpData.empty())
+      {
+         // check the image tags are set before trying to read them
+         char key[] = "Xmp.dc.subject";
+         Exiv2::XmpKey xmpKey(key);
+         Exiv2::XmpData::iterator iter;
+         iter = xmpData.findKey(xmpKey);
 
-      ostringstream os;
-      os << xmpData["Xmp.dc.subject"];
+         if (iter != xmpData.end())
+         {
+            ostringstream os;
+            os << xmpData["Xmp.dc.subject"];
 
-      string streamString = os.str();
-      HString converted = convertToWide(streamString);
-      HString delimiter = H_TEXT(",");
-      xmpSubjects = parseDelimiters(converted, delimiter);
+            string streamString = os.str();
+            HString converted = convertToWide(streamString);
+            HString delimiter = H_TEXT(",");
+            xmpSubjects = parseDelimiters(converted, delimiter);
+         }
+      }
    }
 
    return xmpSubjects;
@@ -393,4 +421,28 @@ CoreImageFile::deduplicateTags(list<HString>& consolidatedList, const list<HStri
    }
 
    return consolidatedList;
+}
+
+
+static const HChar* folderKey = H_TEXT("LastFolder");
+
+void CoreImageFile::saveImageDirectory (const HString& folder)
+{
+   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
+
+   data.writeString(folderKey, folder);
+}
+
+HString CoreImageFile::loadImageDirectory()
+{
+   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
+   
+   if (data.isDataStored(folderKey))
+   {
+      return data.readString(folderKey);
+   }
+   else
+   {
+      return HostUserData::defaultImageDirectory();
+   }
 }

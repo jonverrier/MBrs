@@ -8,7 +8,6 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
-#define WIN32_LEAN_AND_MEAN
 #define NOIME
 #define NOSYSPARAMSINFO
 #define NOGDICAPMASKS
@@ -16,8 +15,7 @@
 #define NOSYSCOMMANDS    
 #define OEMRESOURCE      
 #define NOATOM           
-#define NOCLIPBOARD      
-#define NOCTLMGR         
+#define NOCLIPBOARD               
 #define NODRAWTEXT       
 #define NOMB             
 #define NOMEMMGR         

@@ -43,22 +43,22 @@ public :
 
 // Comparison Operators
    
-   HBool   
+   bool   
    operator==(const HostInterlockedCount& rhs) const;
 
-   HBool   
+   bool   
    operator!=(const HostInterlockedCount& rhs) const;
 
-   HBool   
+   bool   
    operator<(const HostInterlockedCount& rhs) const;
 
-   HBool   
+   bool   
    operator<=(const HostInterlockedCount& rhs) const;
 
-   HBool 
+   bool 
    operator>(const HostInterlockedCount& rhs) const;
 
-   HBool 
+   bool 
    operator>=(const HostInterlockedCount& rhs) const;
 
 protected :

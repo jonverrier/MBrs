@@ -76,7 +76,7 @@ HostException::sourceLineNumber () const
    return m_lineNumber;
 }
 
-HBool 
+bool 
 HostException::operator== (const HostException& rhs) const
 {
    if (this == &rhs)
@@ -88,7 +88,7 @@ HostException::operator== (const HostException& rhs) const
       && m_lineNumber  == rhs.m_lineNumber;
 }
       
-HBool 
+bool 
 HostException::operator!= (const HostException& rhs) const
 {
    if (this == &rhs)

@@ -97,5 +97,12 @@ namespace TestHost
 
          Assert::IsTrue(data.isDataStored (testKey) == false);
       }
+
+      TEST_METHOD(PictureDirectory)
+      {
+         HString dir = HostUserData::defaultImageDirectory();
+
+         Assert::IsTrue(dir.size() > 0);
+      }
    };
 }

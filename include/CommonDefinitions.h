@@ -57,14 +57,7 @@ typedef long             HInt;     /* i  */
 // Unsigned type
 typedef unsigned long    HUint;    /* u */
 
-typedef size_t           HPtrDiff;
-
-// Boolean type
-#if (defined WINXX || defined LINUX)
-typedef bool             HBool;    /* f  */
-#else
-typedef unsigned long    HBool;    /* f  */
-#endif
+typedef size_t           HSize;
 
 // Byte
 typedef unsigned char    HByte;    /* b */

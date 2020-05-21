@@ -46,7 +46,7 @@ CoreDirectory::operator=(const CoreDirectory& src)
    return *this;
 }
 
-HBool
+bool
 CoreDirectory::operator==(const CoreDirectory& rhs) const
 {
    if (this == &rhs)
@@ -55,7 +55,7 @@ CoreDirectory::operator==(const CoreDirectory& rhs) const
    return (CoreFileSystemEntity::operator==(rhs));
 }
 
-HBool
+bool
 CoreDirectory::operator!=(const CoreDirectory& rhs) const
 {
    if (this == &rhs)
@@ -115,7 +115,7 @@ CoreDirectorySearch::operator=(const CoreDirectorySearch& src)
    return *this;
 }
 
-HBool
+bool
 CoreDirectorySearch::operator==(const CoreDirectorySearch& rhs) const
 {
    if (this == &rhs)
@@ -124,7 +124,7 @@ CoreDirectorySearch::operator==(const CoreDirectorySearch& rhs) const
    return (m_rootDir == rhs.m_rootDir);
 }
 
-HBool
+bool
 CoreDirectorySearch::operator!=(const CoreDirectorySearch& rhs) const
 {
    if (this == &rhs)
@@ -199,7 +199,7 @@ CoreDirectorySearch::listImagesAsynch(CoreDirectorySearch::SearchQueue& queueIn,
    }
 }
 
-HBool
+bool
 CoreDirectorySearch::isActive () const
 {
    return m_activeThreadCount.count() > 0;

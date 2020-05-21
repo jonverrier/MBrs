@@ -26,7 +26,7 @@ public :
    ~HostUserData (void);
    
 // Attributes
-   HBool
+   bool
    isDataStored (const HString& key);
 
    
@@ -58,12 +58,15 @@ public :
    HostUserData&   
    operator=(const HostUserData& copyMe);
 
+   static HString 
+   defaultImageDirectory();
+
 // Comparison Operators
    
-   HBool   
+   bool   
    operator==(const HostUserData& rhs) const;
 
-   HBool
+   bool
    operator!=(const HostUserData& rhs) const;
 
 protected :

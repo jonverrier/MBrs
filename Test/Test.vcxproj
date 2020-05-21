@@ -190,6 +190,7 @@
     <ClCompile Include="TestCoreDirSearch.cpp" />
     <ClCompile Include="TestCoreFile.cpp" />
     <ClCompile Include="TestCoreImageFile.cpp" />
+    <ClCompile Include="TestCorePath.cpp" />
     <ClCompile Include="TestHostException.cpp" />
     <ClCompile Include="TestHostLock.cpp" />
     <ClCompile Include="pch.cpp">

@@ -51,7 +51,7 @@ HostInterlockedCount::operator=(const HostInterlockedCount& src)
    return *this; 
 }
    
-HBool   
+bool   
 HostInterlockedCount::operator==(const HostInterlockedCount& rhs) const
 {
    if (this == &rhs)
@@ -60,7 +60,7 @@ HostInterlockedCount::operator==(const HostInterlockedCount& rhs) const
    return (count () == rhs.count());
 }
 
-HBool   
+bool   
 HostInterlockedCount::operator!=(const HostInterlockedCount& rhs) const
 {
    if (this == &rhs)
@@ -69,7 +69,7 @@ HostInterlockedCount::operator!=(const HostInterlockedCount& rhs) const
    return (count () != rhs.count());
 }
 
-HBool   
+bool   
 HostInterlockedCount::operator<(const HostInterlockedCount& rhs) const
 {
    if (this == &rhs)
@@ -78,7 +78,7 @@ HostInterlockedCount::operator<(const HostInterlockedCount& rhs) const
    return (count () < rhs.count());
 }
 
-HBool   
+bool   
 HostInterlockedCount::operator<= (const HostInterlockedCount& rhs) const
 {
    if (this == &rhs)
@@ -86,7 +86,7 @@ HostInterlockedCount::operator<= (const HostInterlockedCount& rhs) const
    return (count () <= rhs.count());
 }
 
-HBool   
+bool   
 HostInterlockedCount::operator>(const HostInterlockedCount& rhs) const
 {
    if (this == &rhs)
@@ -94,7 +94,7 @@ HostInterlockedCount::operator>(const HostInterlockedCount& rhs) const
    return (count () > rhs.count());
 }
 
-HBool   
+bool   
 HostInterlockedCount::operator>=(const HostInterlockedCount& rhs) const
 {
    if (this == &rhs)

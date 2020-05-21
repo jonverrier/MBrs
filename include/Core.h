@@ -21,6 +21,8 @@
 #endif
 #endif
 
+#define CORE_PACKAGE_FRIENDLY_NAME L"Core"
+
 #if (defined LINUX)
 #ifdef NDEBUG
 #error "Linux release package not yet defined."

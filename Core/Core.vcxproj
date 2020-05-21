@@ -184,12 +184,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Core.h" />
+    <ClInclude Include="..\include\CoreCompoundName.h" />
     <ClInclude Include="..\include\CoreFile.h" />
     <ClInclude Include="..\include\CoreQueue.h" />
     <ClInclude Include="CoreInternal.h" />
     <ClInclude Include="CorePrecompile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CoreCompoundName.cpp" />
     <ClCompile Include="CoreDirectory.cpp" />
     <ClCompile Include="CoreFile.cpp" />
     <ClCompile Include="CoreImageFile.cpp" />

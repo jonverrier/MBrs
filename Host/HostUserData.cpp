@@ -20,6 +20,8 @@
 #include <utility>          // std::swap, std::pair
 #include <vector>           // std::vector
 
+#include <shlobj.h>
+
 
 class HostWrapper {
    public:
@@ -991,7 +993,7 @@ HostUserData::operator=(const HostUserData& src)
    return *this; 
 }
    
-HBool   
+bool   
 HostUserData::operator==(const HostUserData& rhs) const
 {
    if (this == &rhs)
@@ -1000,7 +1002,7 @@ HostUserData::operator==(const HostUserData& rhs) const
    return (m_fullPath == rhs.m_fullPath);
 }
 
-HBool   
+bool   
 HostUserData::operator!=(const HostUserData& rhs) const
 {
    if (this == &rhs)
@@ -1045,7 +1047,7 @@ HostUserData::writeMultiString(const HString& key, const std::vector<HString>& d
    m_pKey->setMultiStringValue(key, data);
 }
 
-HBool
+bool
 HostUserData::isDataStored (const HString& key)
 {
    // Return the DWORD type ID for the input registry key
@@ -1068,3 +1070,19 @@ HostUserData::removeAllData ()
    wrapper.deleteTree(m_subPath);
 }
 
+
+HString
+HostUserData::defaultImageDirectory()
+{
+   WCHAR myPictures[MAX_PATH] = H_TEXT("");
+   
+   BOOL result = SHGetSpecialFolderPathW(NULL, myPictures, CSIDL_MYPICTURES, TRUE);
+
+   if (!result)
+      result = SHGetSpecialFolderPathW(NULL, myPictures, CSIDL_COMMON_PICTURES, TRUE);
+   
+   if (!result)
+      THROW(HostException, __HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND));
+
+   return myPictures;
+}

@@ -50,7 +50,7 @@ CoreFileSystemEntity::operator=(const CoreFileSystemEntity& src)
    return *this; 
 }
    
-HBool   
+bool   
 CoreFileSystemEntity::operator==(const CoreFileSystemEntity& rhs) const
 {
    if (this == &rhs)
@@ -59,7 +59,7 @@ CoreFileSystemEntity::operator==(const CoreFileSystemEntity& rhs) const
    return (m_path == rhs.m_path);
 }
 
-HBool   
+bool   
 CoreFileSystemEntity::operator!=(const CoreFileSystemEntity& rhs) const
 {
    if (this == &rhs)
@@ -74,7 +74,7 @@ CoreFileSystemEntity::path() const
    return m_path;
 }
 
-HBool
+bool
 CoreFileSystemEntity::existsOnFileSystem() const
 {
    error_code ec;
@@ -83,7 +83,7 @@ CoreFileSystemEntity::existsOnFileSystem() const
    return filesystem::exists (m_path, ec);
 }
 
-HBool 
+bool 
 CoreFileSystemEntity::lastWriteTime(filesystem::file_time_type& writeTime) const
 {
    error_code ec;
@@ -94,7 +94,7 @@ CoreFileSystemEntity::lastWriteTime(filesystem::file_time_type& writeTime) const
    return (ec.value() == 0);
 }
 
-HBool
+bool
 CoreFileSystemEntity::isDirectory() const
 {
    error_code ec;
@@ -103,7 +103,7 @@ CoreFileSystemEntity::isDirectory() const
    return  filesystem::is_directory(m_path, ec);
 }
 
-HBool
+bool
 CoreFileSystemEntity::isFile() const
 {
    error_code ec;
@@ -112,13 +112,13 @@ CoreFileSystemEntity::isFile() const
    return filesystem::is_regular_file(m_path, ec);
 }
 
-HBool
+bool
 CoreFileSystemEntity::isImageFile() const
 {
    error_code ec;
 
    // Use the version that does not throw an exception if file does not exist
-   HBool isFile = filesystem::is_regular_file(m_path, ec);
+   bool isFile = filesystem::is_regular_file(m_path, ec);
    if (isFile)
    {
       HString extension((filesystem::path(m_path)).extension());

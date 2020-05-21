@@ -11,7 +11,6 @@
 #define TESTNOTEQUALTHROWLASTERROR(code, noerr) \
    if (code != noerr) throw HostException (MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__)
 
-
 #define TESTEXPRESSIONTHROWLASTERROR(fExprResult) \
    if (fExprResult) throw HostException (MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__)
 

@@ -90,43 +90,22 @@ namespace TestCore
 
          Assert::IsTrue(tagsAfter == tagsBefore);
       }
+
+      TEST_METHOD(defaultDir)
+      {
+         HString pathIn = CoreImageFile::loadImageDirectory();
+
+         // A default directory always exists
+         Assert::IsTrue(pathIn.size() > 0);
+
+         HString pathOut = H_TEXT("test");
+         CoreImageFile::saveImageDirectory(pathOut);
+
+         pathIn = CoreImageFile::loadImageDirectory();
+
+         // A default directory always exists
+         Assert::IsTrue(pathIn == pathOut);
+      }
    };
 }
 
-void readFile()
-{
-   char* file = "test.jpg";
-
-   Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(file);
-   assert(image.get() != 0);
-   image->readMetadata();
-
-   Exiv2::ExifData& exifData = image->exifData();
-
-   ostringstream os1, os2;
-
-   os1 << exifData["Exif.Image.XPKeywords"];
-
-   HString tag(H_TEXT("Tag1fromtest;Tag2fromtest;"));
-   const Exiv2::byte* p = reinterpret_cast<const Exiv2::byte*> (tag.c_str());
-
-   Exiv2::DataValue value(p, (long)tag.size() * 2l + 2l, Exiv2::ByteOrder::invalidByteOrder, Exiv2::TypeId::unsignedByte);
-
-   exifData["Exif.Image.XPKeywords"] = value;
-     
-   exifData["Exif.Photo.UserComment"]
-      = "charset=\"Unicode\" Unicode Exif comment added with Exiv2";
-
-   image->writeMetadata();
-   image.release();
-
-   image = Exiv2::ImageFactory::open(file);
-   assert(image.get() != 0);
-   image->readMetadata();
-
-   exifData = image->exifData();
-
-   os2 << exifData["Exif.Image.XPKeywords"];
-
-   return; 
-}

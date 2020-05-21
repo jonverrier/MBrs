@@ -40,10 +40,10 @@ public :
 
    // Comparison Operators
 
-   HBool 
+   bool 
    operator== (const HostException& rhs) const;
       
-   HBool 
+   bool 
    operator!= (const HostException& rhs) const;
 
    // Operations

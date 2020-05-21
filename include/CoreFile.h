@@ -30,19 +30,19 @@ public :
    HString
    path() const;
 
-   HBool
+   bool
    existsOnFileSystem () const;
 
-   HBool 
+   bool 
    lastWriteTime(std::filesystem::file_time_type& writeTime) const;
 
-   HBool
+   bool
    isDirectory () const;
 
-   HBool
+   bool
    isFile() const;
 
-   HBool
+   bool
    isImageFile() const;
    
 // Operations
@@ -52,10 +52,10 @@ public :
 
 // Comparison Operators
    
-   HBool   
+   bool   
    operator==(const CoreFileSystemEntity& rhs) const;
 
-   HBool
+   bool
    operator!=(const CoreFileSystemEntity& rhs) const;
 
 protected :
@@ -93,10 +93,10 @@ public:
 
    // Comparison Operators
 
-   HBool
+   bool
       operator==(const CoreDirectory& rhs) const;
 
-   HBool
+   bool
       operator!=(const CoreDirectory& rhs) const;
 
 protected:
@@ -144,11 +144,19 @@ public:
 
    // Comparison Operators
 
-   HBool
-      operator==(const CoreImageFile& rhs) const;
+   bool
+   operator==(const CoreImageFile& rhs) const;
 
-   HBool
-      operator!=(const CoreImageFile& rhs) const;
+   bool
+   operator!=(const CoreImageFile& rhs) const;
+
+
+   // Operations
+   static void
+   saveImageDirectory(const HString& folder);
+
+   static HString
+   loadImageDirectory();
 
 protected:
 
@@ -228,14 +236,14 @@ public:
    void
    listImagesAsynch (SearchQueue& queueIn, SearchQueue& queueOut);
 
-   HBool
+   bool
    isActive() const;
 
    // Comparison Operators
-   HBool
+   bool
       operator==(const CoreDirectorySearch& rhs) const;
 
-   HBool
+   bool
       operator!=(const CoreDirectorySearch& rhs) const;
 
 protected:
@@ -246,6 +254,24 @@ private:
    HostInterlockedCount m_activeThreadCount; 
 
    CoreDirectory m_rootDir;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreUserImageFolder
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreUserImageFolder
+{
+public:
+
+
+
+protected:
+
+private:
+
+   CoreUserImageFolder(); // Cannot create without a path 
+   ~CoreUserImageFolder(void);
 };
 
 #endif // COREFILE_INCLUDED
