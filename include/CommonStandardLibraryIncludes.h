@@ -40,6 +40,7 @@
 #include <algorithm>
 #include <iterator>
 #include <functional>
+#include <memory>
 
 #if (defined WINXX || defined LINUX)
    #include <wchar.h>

@@ -186,6 +186,7 @@
     <ClInclude Include="..\include\Core.h" />
     <ClInclude Include="..\include\CoreCompoundName.h" />
     <ClInclude Include="..\include\CoreFile.h" />
+    <ClInclude Include="..\include\CoreModelCommand.h" />
     <ClInclude Include="..\include\CoreQueue.h" />
     <ClInclude Include="CoreInternal.h" />
     <ClInclude Include="CorePrecompile.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="CoreDirectory.cpp" />
     <ClCompile Include="CoreFile.cpp" />
     <ClCompile Include="CoreImageFile.cpp" />
+    <ClCompile Include="CoreModelCommand.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="CorePrecompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

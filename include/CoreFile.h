@@ -65,7 +65,7 @@ public :
 protected :
 
 private :
-   CoreFileSystemEntity(); // Cannot create without a path 
+   CoreFileSystemEntity() = delete; // Cannot create without a path 
 
    HString m_path;
 };
