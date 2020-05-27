@@ -4,14 +4,6 @@
 /////////////////////////////////////////
 
 #include "CorePrecompile.h"
-
-#include "CommonStandardLibraryIncludes.h"
-#include "CommonDefinitions.h"
-
-#include "Host.h"
-#include "HostException.h"
-
-#include "Core.h"
 #include "CoreCompoundName.h"
 
 using namespace std;

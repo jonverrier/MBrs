@@ -6,8 +6,9 @@
 #ifndef HOSTSTRINGLOADER_INCLUDED
 #define HOSTSTRINGLOADER_INCLUDED
 
-#include <CommonDefinitions.h>
-#include <Host.h>
+#include "CommonDefinitions.h"
+#include "CommonStandardLibraryIncludes.h"
+#include "Host.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // HostStringLoader - loads resource strings

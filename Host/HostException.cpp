@@ -4,20 +4,13 @@
 /////////////////////////////////////////
 
 #include "HostPrecompile.h"
+#include "HostException.h"
+#include "HostInternal.h"
 
 #include <atlbase.h> 
 #include <OleAuto.h>
 #include <D2DErr.h>
 #include <mferror.h>
-
-#include "CommonStandardLibraryIncludes.h"
-#include "CommonDefinitions.h"
-
-#include "Host.h"
-#include "HostLocks.h"
-#include "HostException.h"
-
-#include "HostInternal.h"
 
 //#define CODEFROMHRESULT(hr)        (((hr & 0xFFFF0000) == MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, 0)) ? HRESULT_CODE(hr) : (hr == S_OK ? 0 : -1))
 //#define TEXTFROMHRESULT(hr)        (_com_error(hr).ErrorMessage())

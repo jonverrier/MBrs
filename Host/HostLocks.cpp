@@ -4,14 +4,7 @@
 /////////////////////////////////////////
 
 #include "HostPrecompile.h"
-
-#include "CommonStandardLibraryIncludes.h"
-#include "CommonDefinitions.h"
-
-#include "Host.h"
 #include "HostLocks.h"
-#include "HostException.h"
-
 #include "HostInternal.h"
 
 ////////////////////////////////////////////////////////////////////////////

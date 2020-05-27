@@ -7,8 +7,12 @@
 #define COREFILE_INCLUDED
 
 #include <exiv2/exiv2.hpp>
+#include "CommonDefinitions.h"
+#include "CommonStandardLibraryIncludes.h"
 #include "Host.h"
+#include "HostException.h"
 #include "HostLocks.h"
+#include "Core.h"
 #include "CoreQueue.h"
 
 ///////////////////////////////////////////////////////////////////////////////

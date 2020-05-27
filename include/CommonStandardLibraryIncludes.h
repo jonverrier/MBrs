@@ -1,6 +1,6 @@
 /////////////////////////////////////////
 // CommonStandardLibraryIncludes.h
-// Pull in external include files
+// Pull in common external include files
 /////////////////////////////////////////
 
 #ifndef COMMON_STANDARD_LIBRARY_INCLUDES_INCLUDED
@@ -33,13 +33,13 @@
 #include <memory.h>
 #include <malloc.h>
 #include <limits.h>
-#include <time.h>
-#include <stdarg.h>
-#include <process.h>
 #include <vector>
 #include <list>
 #include <map>
 #include <filesystem>
+#include <algorithm>
+#include <iterator>
+#include <functional>
 
 #if (defined WINXX || defined LINUX)
    #include <wchar.h>
@@ -52,17 +52,6 @@
       #include <crtdbg.h>
    #endif
 #endif
-
-// =========================================================================
-// STL Headers
-// =========================================================================
-
-#include <algorithm>
-#include <iterator>
-#include <functional>
-#include <list>
-#include <map>
-#include <vector>
 
 
 #endif // COMMON_STANDARD_LIBRARY_INCLUDES_INCLUDED

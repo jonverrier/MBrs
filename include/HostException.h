@@ -6,8 +6,9 @@
 #ifndef HOSTEXCEPTION_INCLUDED
 #define HOSTEXCEPTION_INCLUDED
 
-#include <CommonDefinitions.h>
-#include <Host.h>
+#include "CommonDefinitions.h"
+#include "CommonStandardLibraryIncludes.h"
+#include "Host.h"
 
 /// <summary>
 /// HostException - describes exceptions specific to the underlying operating system

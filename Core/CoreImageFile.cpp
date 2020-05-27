@@ -4,20 +4,10 @@
 /////////////////////////////////////////
 
 #include "CorePrecompile.h"
-
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
-
-#include "Host.h"
-#include "HostException.h"
+#include "CoreFile.h"
 #include "HostUserData.h"
 
-#include "Core.h"
-#include "CoreFile.h"
-
-#include "CoreInternal.h"
-
-
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////
 // CoreImageFile

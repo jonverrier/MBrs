@@ -6,6 +6,12 @@
 #ifndef CORECOMPOUNDNAME_INCLUDED
 #define CORECOMPOUNDNAME_INCLUDED
 
+#include "CommonDefinitions.h"
+#include "CommonStandardLibraryIncludes.h"
+#include "Host.h"
+#include "HostException.h"
+#include "Core.h"
+
 class CorePathParser;
 
 /**

@@ -4,17 +4,7 @@
 /////////////////////////////////////////
 
 #include "CorePrecompile.h"
-
-#include "CommonStandardLibraryIncludes.h"
-#include "CommonDefinitions.h"
-
-#include "Host.h"
-#include "HostException.h"
-
-#include "Core.h"
 #include "CoreFile.h"
-
-//#include "CoreInternal.h"
 
 using namespace std;
 

@@ -7,6 +7,8 @@
 #define HOSTLOCKS_INCLUDED
 
 #include "CommonDefinitions.h"
+#include "CommonStandardLibraryIncludes.h"
+#include "Host.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // HostInterlockedCount

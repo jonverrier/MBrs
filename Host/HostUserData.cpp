@@ -4,22 +4,9 @@
 /////////////////////////////////////////
 
 #include "HostPrecompile.h"
-
-#include "CommonStandardLibraryIncludes.h"
-#include "CommonDefinitions.h"
-
-#include "Host.h"
 #include "HostUserData.h"
 #include "HostException.h"
-
 #include "HostInternal.h"
-
-#include <memory>           // std::unique_ptr
-#include <stdexcept>        // std::runtime_error
-#include <string>           // std::wstring
-#include <utility>          // std::swap, std::pair
-#include <vector>           // std::vector
-
 #include <shlobj.h>
 
 
