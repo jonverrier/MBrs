@@ -27,30 +27,21 @@ public :
    ~HostException (void);
    
    // Attributes
-   HUint  
-   errorCode () const;
+   HUint errorCode () const;
 
-   HString  
-   sourceFilename () const;
+   HString sourceFilename () const;
 
-   HUint  
-   sourceLineNumber () const;
+   HUint sourceLineNumber () const;
 
-   HString
-   formattedAsString() const;
+   HString formattedAsString() const;
 
    // Comparison Operators
-
-   bool 
-   operator== (const HostException& rhs) const;
+   bool operator== (const HostException& rhs) const;
       
-   bool 
-   operator!= (const HostException& rhs) const;
+   bool operator!= (const HostException& rhs) const;
 
    // Operations
-   
-   HostException& 
-   operator= (const HostException& copyMe);
+   HostException& operator= (const HostException& copyMe);
 
 protected :
    
@@ -74,25 +65,19 @@ class HOST_API HostExceptionLogger
 public :
 
    HostExceptionLogger ();
-
-   virtual  
-   ~HostExceptionLogger (void);
+   virtual ~HostExceptionLogger (void);
    
    // Operations
-   static void
-   initialise();
+   static void initialise();
 
-   static void
-   terminate();
+   static void terminate();
 
-   void 
-   logException (HUint code,
+   void logException (HUint code,
                  const HString& file,
                  HUint line,
                  const HString& desc);
 
-   static void 
-   logAssertionFailure (const HString& expr,
+   static void logAssertionFailure (const HString& expr,
                         const HString& file,
                         HUint line);
 
@@ -104,8 +89,7 @@ private :
    HostExceptionLogger (const HostExceptionLogger& copyMe);
    HostExceptionLogger& operator= (const HostExceptionLogger& copyMe);
 
-   static void
-   writeAlways (const HString& event);
+   static void writeAlways (const HString& event);
 };
 
 #define THROW(e, code) throw e(code, H_TEXT(__FILE__), __LINE__)

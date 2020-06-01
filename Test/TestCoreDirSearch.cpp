@@ -41,20 +41,10 @@ namespace TestCore
          CoreDirectorySearch dir1(path1);
          CoreDirectorySearch::SearchQueue queueIn, queueOut;
 
-         dir1.listImagesSynch(queueIn, queueOut);
+         dir1.listImages (queueIn, queueOut);
 
          Assert::IsTrue(queueOut.size() > 0);   // Always > 1 JPG file in test directory
          Assert::IsTrue(queueIn.size() > 0);    // Always > 1 sub directory in test directory
-
-         CoreDirectorySearch::SearchQueue asyncQueueIn, asynchQueueOut;
-         dir1.listImagesAsynch (asyncQueueIn, asynchQueueOut);
-
-         while (dir1.isActive())
-         {
-            Sleep(100);
-         }
-
-         Assert::IsTrue(asynchQueueOut.size() > 0);   // Always > 1 JPG file in test directory
       }
    };
 }

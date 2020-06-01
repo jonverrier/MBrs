@@ -37,35 +37,29 @@ public:
 	virtual ~CoreCompoundName ();
 
 /** @group Comparison and query methods */
-	bool			
-	operator== (const CoreCompoundName& anotherPath) const;
+	bool operator== (const CoreCompoundName& anotherPath) const;
 
-	bool			
-   operator!= (const CoreCompoundName& anotherPath) const;
+	bool operator!= (const CoreCompoundName& anotherPath) const;
 
 	/**
 	 * Is it a fully qualified path? 
 	 */
-	bool
-   isFullPath() const;
+	bool isFullPath() const;
 
 	/**
 	 * Return the number of components in the path
 	 */
-	HUint 
-	numberOfComponents () const;
+	HUint numberOfComponents () const;
 
 	/**
 	 * Return the nth component of the path, starting at an initial index of 0
 	 */
-	HString			
-	componentAt (HUint index) const;	
+	HString componentAt (HUint index) const;	
 
 	/**
 	 * Does the compound mame have an n'th component ? 
 	 */
-	bool
-	hasComponentAt(HUint index) const;
+	bool hasComponentAt(HUint index) const;
 
 private:
 	std::vector<HString> m_nameComponents;
@@ -87,15 +81,13 @@ public:
 	/**
 	 * Convert a text string into a CoreCompoundName 
 	 */
-	virtual CoreCompoundName
-	parsePath  (const HString&) const = 0;
+	virtual CoreCompoundName parsePath  (const HString&) const = 0;
 	
 	/**
 	 * Convert an CoreCompoundName into a text string
 	 
 	 */
-	virtual HString
-	formatPath (const CoreCompoundName&) const = 0;
+	virtual HString formatPath (const CoreCompoundName&) const = 0;
 
 protected:
 /**  Construction for use by subclasses */
@@ -113,11 +105,9 @@ public:
 	virtual ~CoreUnixPathParser();
 
 	/** @group Parsing methods */
-	virtual CoreCompoundName	
-   parsePath (const HString& name) const;
+	virtual CoreCompoundName parsePath (const HString& name) const;
 	
-	virtual HString	
-	formatPath(const CoreCompoundName& name) const;
+	virtual HString formatPath(const CoreCompoundName& name) const;
 
 private:
 	// Internal functions and data...
@@ -136,7 +126,7 @@ public:
 
 	/** @group Parsing methods */
 	virtual CoreCompoundName parsePath(const HString& name) const;
-	virtual HString	formatPath(const CoreCompoundName& name) const;
+	virtual HString formatPath(const CoreCompoundName& name) const;
 
 private:
 };

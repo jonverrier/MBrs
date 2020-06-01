@@ -1035,7 +1035,7 @@ HostUserData::writeMultiString(const HString& key, const std::vector<HString>& d
 }
 
 bool
-HostUserData::isDataStored (const HString& key)
+HostUserData::isDataStoredAt (const HString& key)
 {
    // Return the DWORD type ID for the input registry key
    DWORD ret = m_pKey->testValueType(key);

@@ -18,19 +18,16 @@ class HOST_API HostStringLoader
 {
 
 public:
-   static void
-   loadSystemResourceString (const HUint uID, HString& out);
+   static void loadSystemResourceString (const HUint uID, HString& out);
 
-   static void
-   loadResourceString (const HString& libraryName,
-                       const HUint id, HString& out);
+   static void loadResourceString (const HString& libraryName,
+                                   const HUint id, HString& out);
 
-   static void
-   loadResourceStringWithParms (const HString& libraryName,
-                                HUint id, 
-                                HString& out,
-                                const HString& parm1, const HString& parm2,
-                                const HString& parm3, const HString& parm4);
+   static void loadResourceStringWithParms (const HString& libraryName,
+                                            HUint id, 
+                                            HString& out,
+                                            const HString& parm1, const HString& parm2,
+                                            const HString& parm3, const HString& parm4);
 
 private:
    HostStringLoader ();

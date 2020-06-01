@@ -27,41 +27,30 @@ public :
    ~HostInterlockedCount (void);
    
 // Attributes
-   HUint  
-   count () const;
+   HUint count () const;
 
-   void 
-   set (HUint uValue);
+   void set (HUint uValue);
    
 // Operations
-   HUint  
-   increment ();
+   HUint increment ();
 
-   HUint 
-   decrement ();
+   HUint decrement ();
 
-   HostInterlockedCount&   
-   operator=(const HostInterlockedCount& copyMe);
+   HostInterlockedCount& operator=(const HostInterlockedCount& copyMe);
 
 // Comparison Operators
    
-   bool   
-   operator==(const HostInterlockedCount& rhs) const;
+   bool operator==(const HostInterlockedCount& rhs) const;
 
-   bool   
-   operator!=(const HostInterlockedCount& rhs) const;
+   bool operator!=(const HostInterlockedCount& rhs) const;
 
-   bool   
-   operator<(const HostInterlockedCount& rhs) const;
+   bool operator<(const HostInterlockedCount& rhs) const;
 
-   bool   
-   operator<=(const HostInterlockedCount& rhs) const;
+   bool operator<=(const HostInterlockedCount& rhs) const;
 
-   bool 
-   operator>(const HostInterlockedCount& rhs) const;
+   bool operator>(const HostInterlockedCount& rhs) const;
 
-   bool 
-   operator>=(const HostInterlockedCount& rhs) const;
+   bool operator>=(const HostInterlockedCount& rhs) const;
 
 protected :
 

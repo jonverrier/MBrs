@@ -90,12 +90,12 @@ namespace TestHost
          data.writeUint(testKey, testValue);
          data.removeData(testKey);
 
-         Assert::IsTrue(data.isDataStored(testKey) == false);
+         Assert::IsTrue(data.isDataStoredAt(testKey) == false);
 
          data.writeUint(testKey, testValue);
          data.removeAllData();
 
-         Assert::IsTrue(data.isDataStored (testKey) == false);
+         Assert::IsTrue(data.isDataStoredAt (testKey) == false);
       }
 
       TEST_METHOD(PictureDirectory)

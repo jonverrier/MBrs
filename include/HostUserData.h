@@ -28,48 +28,34 @@ public :
    ~HostUserData (void);
    
 // Attributes
-   bool
-   isDataStored (const HString& key);
-
+   bool isDataStoredAt (const HString& key);
    
 // Operations
-   void  
-   writeUint (const HString& key, const HUint value);
+   void writeUint (const HString& key, const HUint value);
 
-   HUint
-   readUint(const HString& key) const;
+   HUint readUint(const HString& key) const;
 
-   void
-   writeString(const HString& key, const HString& value);
+   void writeString(const HString& key, const HString& value);
 
-   HString
-   readString(const HString& key) const;
+   HString readString(const HString& key) const;
 
-   std::vector<HString>
-   readMultiString(const HString& key) const;
+   std::vector<HString> readMultiString(const HString& key) const;
 
-   void 
-   writeMultiString (const HString& key, const std::vector<HString>& data);
+   void writeMultiString (const HString& key, const std::vector<HString>& data);
 
-   void
-   removeData(const HString& key);
+   void removeData(const HString& key);
 
-   void
-   removeAllData();
+   void removeAllData();
 
-   HostUserData&   
-   operator=(const HostUserData& copyMe);
+   HostUserData& operator=(const HostUserData& copyMe);
 
-   static HString 
-   defaultImageDirectory();
+   static HString defaultImageDirectory();
 
 // Comparison Operators
    
-   bool   
-   operator==(const HostUserData& rhs) const;
+   bool operator==(const HostUserData& rhs) const;
 
-   bool
-   operator!=(const HostUserData& rhs) const;
+   bool operator!=(const HostUserData& rhs) const;
 
 protected :
 

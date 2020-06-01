@@ -414,7 +414,7 @@ CoreImageFile::deduplicateTags(list<HString>& consolidatedList, const list<HStri
 }
 
 
-static const HChar* folderKey = H_TEXT("LastFolder");
+static const HChar* folderKey = H_TEXT("LastImageFolder");
 
 void CoreImageFile::saveImageDirectory (const HString& folder)
 {
@@ -427,7 +427,7 @@ HString CoreImageFile::loadImageDirectory()
 {
    HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
    
-   if (data.isDataStored(folderKey))
+   if (data.isDataStoredAt(folderKey))
    {
       return data.readString(folderKey);
    }

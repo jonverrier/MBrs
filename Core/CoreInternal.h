@@ -3,8 +3,4 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-using namespace std;
 
-#ifndef NDEBUG
-
-#endif
