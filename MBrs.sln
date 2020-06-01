@@ -12,8 +12,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Host", "Host\Host.vcxproj", "{9C9E51E6-1717-4A16-8913-A4150FAE74E2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{AD741D27-2A63-4FD9-86F5-F2405DB2A112}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C9E51E6-1717-4A16-8913-A4150FAE74E2} = {9C9E51E6-1717-4A16-8913-A4150FAE74E2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{133986A7-E0FF-4421-BE78-0D19610164A7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AD741D27-2A63-4FD9-86F5-F2405DB2A112} = {AD741D27-2A63-4FD9-86F5-F2405DB2A112}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

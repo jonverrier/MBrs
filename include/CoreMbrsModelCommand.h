@@ -15,6 +15,33 @@
 #include "CoreQueue.h"
 #include "CoreModelCommand.h"
 
+///////////////////////////////////////////////////////////////////////////////
+// CoreImageListModel
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreImageListModel : public CoreModel
+{
+public:
+   // Constructors
+   CoreImageListModel();
+   CoreImageListModel(const HString& path);
+   virtual ~CoreImageListModel(void);
+
+   // Attributes
+   HString path () const;
+
+   // Operations
+   CoreImageListModel& operator=(const CoreImageListModel& copyMe) = delete;
+
+   // Commands
+   void setPath(const HString& path);
+
+protected:
+   void refreshImageList ();
+
+private:
+   HString m_path;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreChangeDirectoryCommand
@@ -24,7 +51,7 @@ class CORE_API CoreChangeDirectoryCommand : public CoreCommand
 {
 public:
    // Constructors
-   CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath);
+   CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, std::shared_ptr< CoreImageListModel> pModel);
    virtual ~CoreChangeDirectoryCommand();
 
    // Attributes
@@ -41,6 +68,7 @@ public:
 protected:
 
 private:
+   std::shared_ptr< CoreImageListModel> m_pModel;
    HString m_newPath;
    HString m_oldPath;
 };

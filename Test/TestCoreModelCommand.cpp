@@ -41,33 +41,37 @@ namespace TestCore
 
       TEST_METHOD(ConstructAndCopy)
       {
-         CoreChangeDirectoryCommand cmd1 (m_newPath, m_oldPath),
-                                    cmd2 (m_oldPath, m_newPath);
+         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel());
+
+         CoreChangeDirectoryCommand cmd1 (m_newPath, m_oldPath, pModel),
+                                    cmd2 (m_oldPath, m_newPath, pModel);
 
          testConstructionAndCopy(cmd1, cmd2);         
       }
 
       TEST_METHOD(DoUndo)
       {
-         shared_ptr<CoreCommand> pCmd1 (COMMON_NEW CoreChangeDirectoryCommand(m_newPath, m_oldPath)),
-                                 pCmd2 (COMMON_NEW CoreChangeDirectoryCommand(m_oldPath, m_newPath));
+         std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
+
+         shared_ptr<CoreCommand> pCmd1 (COMMON_NEW CoreChangeDirectoryCommand(m_newPath, m_oldPath, pModel)),
+                                 pCmd2 (COMMON_NEW CoreChangeDirectoryCommand(m_oldPath, m_newPath, pModel));
 
          CoreCommandProcessor processor1;
 
          processor1.adoptAndDo(pCmd1);
-         HString currentPath = std::filesystem::current_path(); 
+         HString currentPath = pModel->path();
          Assert::IsTrue(currentPath == m_newPath);
          Assert::IsTrue(processor1.canUndo());
          Assert::IsFalse(processor1.canRedo());
 
          processor1.undo();
-         currentPath = std::filesystem::current_path();
+         currentPath = pModel->path();
          Assert::IsFalse(processor1.canUndo());
          Assert::IsTrue(processor1.canRedo());
          Assert::IsTrue(currentPath == m_oldPath);
 
          processor1.redo();
-         currentPath = std::filesystem::current_path();
+         currentPath = pModel->path();
          Assert::IsTrue(currentPath == m_newPath);
          Assert::IsTrue(processor1.canUndo());
          Assert::IsFalse(processor1.canRedo());
