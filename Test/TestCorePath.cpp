@@ -17,6 +17,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
 void testFormatParse(CorePathParser& parser, const HString& path);
+void testUIFormat(CorePathParser& parser, CorePathParser& formatter, const HString& path, const HString& ui);
 
 namespace TestCore
 {
@@ -40,30 +41,37 @@ namespace TestCore
       {
          HString path; 
          CoreWindowsPathParser parser;
+         CoreUIPathFormatter formatter;
 
          // Simple file name only 
          path = H_TEXT("TestFile1");
          testFormatParse(parser, path);
+         testUIFormat(parser, formatter, path, H_TEXT("TestFile1"));
 
          // Director and file name  
          path = H_TEXT("dir\\TestFile1");
          testFormatParse(parser, path);
+         testUIFormat(parser, formatter, path, H_TEXT("dir > TestFile1"));
 
          // Multiple directories and file name  
          path = H_TEXT("dir\\dir\\TestFile1");
          testFormatParse(parser, path);
+         testUIFormat(parser, formatter, path, H_TEXT("dir > dir > TestFile1"));
 
          // Full local path to multiple directories and file name  
          path = H_TEXT("\\dir\\dir\\TestFile1");
          testFormatParse(parser, path);
+         testUIFormat(parser, formatter, path, H_TEXT("dir > dir > TestFile1"));
 
          // Full local path from root to multiple directories and file name  
          path = H_TEXT("c:\\dir\\dir\\TestFile1");
          testFormatParse(parser, path);
+         testUIFormat(parser, formatter, path, H_TEXT("c: > dir > dir > TestFile1"));
 
          // Full local path from root to multiple directories and file name  
          path = H_TEXT("\\server\\dir\\TestFile1");
          testFormatParse(parser, path);
+         testUIFormat(parser, formatter, path, H_TEXT("server > dir > TestFile1"));
       }
 
    };
@@ -80,3 +88,13 @@ void testFormatParse (CorePathParser& parser, const HString& path)
    Assert::IsTrue(formatted == path);
 }
 
+void testUIFormat(CorePathParser& parser, CorePathParser& formatter, const HString& path, const HString& ui)
+{
+   HString formatted;
+   CoreCompoundName compound;
+
+   compound = parser.parsePath(path);
+   formatted = formatter.formatPath(compound);
+
+   Assert::IsTrue(formatted == ui);
+}

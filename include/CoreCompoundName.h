@@ -105,8 +105,7 @@ public:
 	virtual ~CoreUnixPathParser();
 
 	/** @group Parsing methods */
-	virtual CoreCompoundName parsePath (const HString& name) const;
-	
+	virtual CoreCompoundName parsePath (const HString& name) const;	
 	virtual HString formatPath(const CoreCompoundName& name) const;
 
 private:
@@ -121,8 +120,7 @@ class CORE_API CoreWindowsPathParser : public CorePathParser {
 public:
 	/** @group Construction, destruction, and assignment */
 	CoreWindowsPathParser();
-	virtual				
-	~CoreWindowsPathParser();
+	virtual ~CoreWindowsPathParser();
 
 	/** @group Parsing methods */
 	virtual CoreCompoundName parsePath(const HString& name) const;
@@ -131,4 +129,19 @@ public:
 private:
 };
 
+/**
+ *	Parses and formats UI-style file system path names "C: > Users > Jonathan"
+ */
+class CORE_API CoreUIPathFormatter : public CorePathParser {
+public:
+	/** @group Construction, destruction, and assignment */
+	CoreUIPathFormatter();
+	virtual ~CoreUIPathFormatter();
+
+	/** @group Parsing methods */
+	virtual CoreCompoundName parsePath(const HString& name) const;
+	virtual HString formatPath(const CoreCompoundName& name) const;
+
+private:
+};
 #endif // CORECOMPOUNDNAME_INCLUDED

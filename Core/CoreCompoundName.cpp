@@ -191,7 +191,7 @@ CoreWindowsPathParser::~CoreWindowsPathParser()
 
 //--------------------------------------------------------------------------
 // parsePath
-//	Convert a Windows-style path name string into an IPathName.  
+//	Convert a Windows-style path name string into an CoreCompoundName.  
 //	The simple case is easy: just search for \ characters.
 //	But we also have to handle UNC names like \\host\share\dir\file.txt
 //	and paths containing drive letters, which complicate matters quite a bit
@@ -316,7 +316,52 @@ CoreWindowsPathParser::formatPath(const CoreCompoundName& aPath) const
 	return newPath;
 }
 
+//--------------------------------------------------------------------------
+// CoreUIPathFormatter implementation....
+// 
 
+//--------------------------------------------------------------------------
+// Constructors, etc.....
+// 
+CoreUIPathFormatter::CoreUIPathFormatter()
+{
+}
+
+CoreUIPathFormatter::~CoreUIPathFormatter()
+{
+}
+
+//--------------------------------------------------------------------------
+// parsePath
+//	Null implementation - these paths are only used for display
+// 
+CoreCompoundName
+CoreUIPathFormatter::parsePath(const HString& path) const
+{
+	return CoreCompoundName();
+}
+
+//--------------------------------------------------------------------------
+// formatPath
+//	Append each component, separated by " > " string
+// 
+HString
+CoreUIPathFormatter::formatPath(const CoreCompoundName& aPath) const
+{
+	HString newPath;
+	HUint componentCount = aPath.numberOfComponents();
+
+	int start = 0;
+
+	for (unsigned long count = start; count < componentCount; count++)
+	{
+		newPath += aPath.componentAt(count);
+		if (count < componentCount - 1)
+			newPath += H_TEXT(" > ");
+	}
+
+	return newPath;
+}
 
 
 
