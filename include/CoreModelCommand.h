@@ -6,7 +6,6 @@
 #ifndef COREMODELCOMMAND_INCLUDED
 #define COREMODELCOMMAND_INCLUDED
 
-#include <exiv2/exiv2.hpp>
 #include "CommonDefinitions.h"
 #include "CommonStandardLibraryIncludes.h"
 #include "Host.h"
@@ -23,14 +22,11 @@ class CORE_API CoreModel
 {
 public :
 // Constructors
-
    CoreModel();
-
    virtual ~CoreModel (void);
    
    
 // Operations
-
    CoreModel&
    operator=(const CoreModel& copyMe) = delete;
 
@@ -48,16 +44,17 @@ class CORE_API CoreCommand
 {
 public:
    // Constructors
-
    CoreCommand();
-
    virtual ~CoreCommand(void);
 
 
-   // Operations
+   // Attributes
+   virtual bool canUndo() = 0;
 
-   CoreCommand&
-   operator=(const CoreCommand& copyMe) = delete;
+   // Operations
+   CoreCommand& operator=(const CoreCommand& copyMe) = delete;
+   virtual void apply() = 0;
+   virtual void undo() = 0;
 
 protected:
 
@@ -73,29 +70,25 @@ class CORE_API CoreCommandProcessor
 {
 public:
    // Constructors
-
    CoreCommandProcessor();
-
    virtual ~CoreCommandProcessor(void);
 
-   bool
-      operator==(const CoreCommandProcessor& rhs) const;
-
-   bool
-      operator!=(const CoreCommandProcessor& rhs) const;
+   bool operator==(const CoreCommandProcessor& rhs) const;
+   bool operator!=(const CoreCommandProcessor& rhs) const;
 
    // Operations
-
-   CoreCommandProcessor&
-   operator=(const CoreCommandProcessor& copyMe);
-
-  void
-  adoptAndProcess(std::shared_ptr<CoreCommand> pCommand);
+   CoreCommandProcessor& operator=(const CoreCommandProcessor& copyMe);
+   void adoptAndDo(std::shared_ptr<CoreCommand> pCommand);
+   bool canUndo();
+   void undo();
+   bool canRedo();
+   void redo();
 
 protected:
 
 private:
    std::list<std::shared_ptr<CoreCommand>> m_commands;
+   std::list<std::shared_ptr<CoreCommand>>::iterator m_lastDone;
 };
 
 #endif // COREMODELCOMMAND_INCLUDED
