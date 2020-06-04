@@ -7,6 +7,8 @@
 
 #include "MainPage.g.h"
 
+#include "CoreMbrsModelCommand.h"
+
 namespace UI
 {
 	/// <summary>
@@ -20,5 +22,7 @@ namespace UI
 	private:
 		void onLoad(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void changeDirectory(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+
+		std::shared_ptr< CoreImageListModel> m_pModel;
 	};
 }

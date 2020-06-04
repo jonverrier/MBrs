@@ -180,8 +180,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\CommonDefinitions.h" />
-    <ClInclude Include="..\include\CommonStandardLibraryIncludes.h" />
     <ClInclude Include="..\include\Host.h" />
     <ClInclude Include="..\include\HostException.h" />
     <ClInclude Include="..\include\HostLocks.h" />

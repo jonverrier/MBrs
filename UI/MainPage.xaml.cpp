@@ -24,9 +24,12 @@ using namespace Windows::Storage::Pickers;
 using namespace Windows::UI::Xaml;
 using namespace concurrency;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+#include "Host.h"
 
-MainPage::MainPage()
+
+
+MainPage::MainPage() 
+   // : m_pModel (COMMON_NEW CoreImageListModel())
 {
 	InitializeComponent();
 }
