@@ -5,11 +5,15 @@
 
 // Import / export for DLL linkage 
 #if (defined WINXX)
-   #ifdef HOST_EXPORTS
-   #define HOST_API __declspec(dllexport)
-   #else
-   #define HOST_API __declspec(dllimport)
-   #endif
+#ifdef HOST_NOEXPORTS
+#define HOST_API 
+#else
+#ifdef HOST_EXPORTS
+#define HOST_API __declspec(dllexport)
+#else
+#define HOST_API __declspec(dllimport)
+#endif
+#endif
 #endif
 
 // Package name for resource strings

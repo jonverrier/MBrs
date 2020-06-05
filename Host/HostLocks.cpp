@@ -3,7 +3,7 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-#include "HostPrecompile.h"
+#include "Common.h"
 #include "HostLocks.h"
 #include "HostInternal.h"
 

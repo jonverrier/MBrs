@@ -6,8 +6,7 @@
 #ifndef HOSTLOCKS_INCLUDED
 #define HOSTLOCKS_INCLUDED
 
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
+#include "Common.h"
 #include "Host.h"
 
 ///////////////////////////////////////////////////////////////////////////////

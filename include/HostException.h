@@ -6,8 +6,7 @@
 #ifndef HOSTEXCEPTION_INCLUDED
 #define HOSTEXCEPTION_INCLUDED
 
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
+#include "Common.h"
 #include "Host.h"
 
 /// <summary>

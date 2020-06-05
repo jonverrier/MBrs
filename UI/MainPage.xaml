@@ -24,6 +24,7 @@
                <ColumnDefinition Width="250" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
+               
                <TextBlock Padding="5,10,5,10" TextWrapping="Wrap" x:Name="directoryPath" Text="C Programs Blah"/>
             </StackPanel>
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">

@@ -3,7 +3,7 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-#include "HostPrecompile.h"
+#include "Common.h"
 #include "HostStringLoader.h"
 #include "HostException.h"
 #include "HostInternal.h"
@@ -22,7 +22,8 @@ HostStringLoader::loadSystemResourceString (const HUint id, HString& out)
       COMMON_STRING_BUFFER_SIZE - 1,
                               NULL);
 
-   TESTEQUALTHROWLASTERROR (lRet, 0);
+   if (lRet == 0)
+      throw HostException(MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__);
 
    out = sz;
 }
@@ -38,7 +39,8 @@ HostStringLoader::loadResourceString (const HString& packageName,
                             sz, 
                             COMMON_STRING_BUFFER_SIZE - 1);
 
-   TESTEQUALTHROWLASTERROR (lRet, 0);
+   if (lRet == 0)
+      throw HostException(MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__);
 
    out = sz;
 }
@@ -55,7 +57,8 @@ HostStringLoader::loadResourceStringWithParms (const HString& packageName,
    ULONG lRet = LoadString ((HMODULE)hModule, id,
                             workingBuffer, 
                             COMMON_STRING_BUFFER_SIZE - 1);
-   TESTEQUALTHROWLASTERROR (lRet, 0);
+   if (lRet == 0)
+      throw HostException(MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__);
 
    HString inputs[4];
    TCHAR *pInputBuffers[5];
@@ -77,7 +80,8 @@ HostStringLoader::loadResourceStringWithParms (const HString& packageName,
                          COMMON_STRING_BUFFER_SIZE - 1, 
                          reinterpret_cast<va_list *> (& pInputBuffers[0]));
 
-   TESTEQUALTHROWLASTERROR (lRet, 0);
+   if (lRet == 0)
+      throw HostException(MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__);
 
    out = sz;
 }

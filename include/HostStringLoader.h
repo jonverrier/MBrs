@@ -6,8 +6,7 @@
 #ifndef HOSTSTRINGLOADER_INCLUDED
 #define HOSTSTRINGLOADER_INCLUDED
 
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
+#include "Common.h"
 #include "Host.h"
 
 ///////////////////////////////////////////////////////////////////////////////

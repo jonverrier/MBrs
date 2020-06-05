@@ -6,9 +6,8 @@
 #ifndef COREFILE_INCLUDED
 #define COREFILE_INCLUDED
 
+#include "Common.h"
 #include <exiv2/exiv2.hpp>
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
 #include "Host.h"
 #include "HostException.h"
 #include "HostLocks.h"

@@ -6,8 +6,7 @@
 #ifndef COREMBRSMODELCOMMAND_INCLUDED
 #define COREMBRSMODELCOMMAND_INCLUDED
 
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
+#include "Common.h"
 #include "Host.h"
 #include "HostException.h"
 #include "HostLocks.h"

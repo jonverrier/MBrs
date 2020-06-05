@@ -6,15 +6,14 @@
 #ifndef HOSTUSERDATA_INCLUDED
 #define HOSTUSERDATA_INCLUDED
 
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
+#include "Common.h"
 #include "Host.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // HostUserData
 ///////////////////////////////////////////////////////////////////////////////
 
-class HostWrapper;
+class HostRegWrapper;
 
 class HOST_API HostUserData
 {
@@ -63,7 +62,7 @@ private :
    HostUserData(); // Cannot create without an application key. 
 
    HString m_subPath, m_fullPath;
-   std::unique_ptr<HostWrapper> m_pKey;
+   std::unique_ptr<HostRegWrapper> m_pKey;
 };
 
 #endif // HOSTUSERDATA_INCLUDED

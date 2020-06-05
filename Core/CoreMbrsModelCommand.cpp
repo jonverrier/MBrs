@@ -3,8 +3,8 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-#include "pch.h"
-#include "CorePrecompile.h"
+#include "Common.h"
+
 #include "CoreModelCommand.h"
 #include "CoreMbrsModelCommand.h"
 

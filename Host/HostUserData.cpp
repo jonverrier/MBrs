@@ -3,14 +3,13 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-#include "HostPrecompile.h"
+#include "Common.h"
 #include "HostUserData.h"
 #include "HostException.h"
 #include "HostInternal.h"
 #include <shlobj.h>
 
-
-class HostWrapper {
+class HostRegWrapper {
    public:
 
       //
@@ -18,29 +17,29 @@ class HostWrapper {
       // 
 
       // Initialize as an empty key handle
-      HostWrapper() noexcept = default;
+      HostRegWrapper() noexcept = default;
       
       // Open a subkey
-      HostWrapper(const HKEY hKeyParent, const HString& subKey);
+      HostRegWrapper(const HKEY hKeyParent, const HString& subKey);
 
 
       // Take ownership of the input key handle
-      explicit HostWrapper(HKEY hKey) noexcept;
+      explicit HostRegWrapper(HKEY hKey) noexcept;
 
       // Take ownership of the input key handle.
       // The input key handle wrapper is reset to an empty state.
-      HostWrapper(HostWrapper&& other) noexcept;
+      HostRegWrapper(HostRegWrapper&& other) noexcept;
 
       // Move-assign from the input key handle.
       // Properly check against self-move-assign (which is safe and does nothing).
-      HostWrapper& operator=(HostWrapper&& other) noexcept;
+      HostRegWrapper& operator=(HostRegWrapper&& other) noexcept;
 
       // Ban copy
-      HostWrapper(const HostWrapper&) = delete;
-      HostWrapper& operator=(const HostWrapper&) = delete;
+      HostRegWrapper(const HostRegWrapper&) = delete;
+      HostRegWrapper& operator=(const HostRegWrapper&) = delete;
 
       // Safely close the wrapped key handle (if any)
-      ~HostWrapper() noexcept;
+      ~HostRegWrapper() noexcept;
 
       //
       // Properties
@@ -88,7 +87,7 @@ class HostWrapper {
 
       // Non-throwing swap;
       // Note: There's also a non-member swap overload
-      void swapWith(HostWrapper& other) noexcept;
+      void swapWith(HostRegWrapper& other) noexcept;
 
 
       //
@@ -161,7 +160,7 @@ class HostWrapper {
       void deleteValue(const std::wstring& valueName);
       void deleteKey(const std::wstring& subKey, REGSAM desiredAccess);
       void deleteTree(const std::wstring& subKey);
-      void copyTree(const std::wstring& sourceSubKey, const HostWrapper& destKey);
+      void copyTree(const std::wstring& sourceSubKey, const HostRegWrapper& destKey);
       void flushKey();
       void loadKey(const std::wstring& subKey, const std::wstring& filename);
       void saveKey(const std::wstring& filename, SECURITY_ATTRIBUTES* securityAttributes);
@@ -181,12 +180,12 @@ class HostWrapper {
 //------------------------------------------------------------------------------
 //          Overloads of relational comparison operators for KeyWrapper
 //------------------------------------------------------------------------------
-inline bool operator==(const HostWrapper& a, const HostWrapper& b) noexcept
+inline bool operator==(const HostRegWrapper& a, const HostRegWrapper& b) noexcept
 {
       return a.value() == b.value();
 }
 
-inline bool operator!=(const HostWrapper& a, const HostWrapper& b) noexcept
+inline bool operator!=(const HostRegWrapper& a, const HostRegWrapper& b) noexcept
 {
       return a.value() != b.value();
  }
@@ -194,24 +193,24 @@ inline bool operator!=(const HostWrapper& a, const HostWrapper& b) noexcept
 //------------------------------------------------------------------------------
 //                          HostWrapper Inline Methods
 //------------------------------------------------------------------------------
-inline HostWrapper::HostWrapper(const HKEY hKey) noexcept
+inline HostRegWrapper::HostRegWrapper(const HKEY hKey) noexcept
       : m_hKey{ hKey }
 {}
 
 
-inline HostWrapper::HostWrapper(const HKEY hKeyParent, const std::wstring& subKey)
+inline HostRegWrapper::HostRegWrapper(const HKEY hKeyParent, const std::wstring& subKey)
 {
    create(hKeyParent, subKey);
 }
 
-inline HostWrapper::HostWrapper(HostWrapper&& other) noexcept
+inline HostRegWrapper::HostRegWrapper(HostRegWrapper&& other) noexcept
    : m_hKey{ other.m_hKey }
 {
    // Other doesn't own the handle anymore
    other.m_hKey = nullptr;
 }
 
-inline HostWrapper& HostWrapper::operator=(HostWrapper&& other) noexcept
+inline HostRegWrapper& HostRegWrapper::operator=(HostRegWrapper&& other) noexcept
 {
    // Prevent self-move-assign
    if ((this != &other) && (m_hKey != other.m_hKey))
@@ -228,18 +227,18 @@ inline HostWrapper& HostWrapper::operator=(HostWrapper&& other) noexcept
    return *this;
 }
 
-inline HostWrapper::~HostWrapper() noexcept
+inline HostRegWrapper::~HostRegWrapper() noexcept
 {
    // Release the owned handle (if any)
    close();
 }
 
-inline HKEY HostWrapper::value() const noexcept
+inline HKEY HostRegWrapper::value() const noexcept
 {
    return m_hKey;
 }
 
-inline void HostWrapper::close() noexcept
+inline void HostRegWrapper::close() noexcept
 {
    if (isValid())
    {
@@ -253,17 +252,17 @@ inline void HostWrapper::close() noexcept
    }
 }
 
-inline bool HostWrapper::isValid() const noexcept
+inline bool HostRegWrapper::isValid() const noexcept
 {
    return m_hKey != nullptr;
 }
 
-inline HostWrapper::operator bool() const noexcept
+inline HostRegWrapper::operator bool() const noexcept
 {
    return isValid();
 }
 
-inline bool HostWrapper::isPredefined() const noexcept
+inline bool HostRegWrapper::isPredefined() const noexcept
 {
    // Predefined keys
    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724836(v=vs.85).aspx
@@ -283,7 +282,7 @@ inline bool HostWrapper::isPredefined() const noexcept
    return false;
 }
 
-inline HKEY HostWrapper::detach() noexcept
+inline HKEY HostRegWrapper::detach() noexcept
 {
    HKEY hKey{ m_hKey };
 
@@ -293,7 +292,7 @@ inline HKEY HostWrapper::detach() noexcept
    return hKey;
 }
 
-inline void HostWrapper::attach(const HKEY hKey) noexcept
+inline void HostRegWrapper::attach(const HKEY hKey) noexcept
 {
    // Prevent self-attach
    if (m_hKey != hKey)
@@ -307,7 +306,7 @@ inline void HostWrapper::attach(const HKEY hKey) noexcept
    }
 }
 
-inline void HostWrapper::swapWith(HostWrapper& other) noexcept
+inline void HostRegWrapper::swapWith(HostRegWrapper& other) noexcept
 {
    // Enable ADL (not necessary in this case, but good practice)
    using std::swap;
@@ -316,12 +315,12 @@ inline void HostWrapper::swapWith(HostWrapper& other) noexcept
    swap(m_hKey, other.m_hKey);
 }
 
-inline void swap(HostWrapper& a, HostWrapper& b) noexcept
+inline void swap(HostRegWrapper& a, HostRegWrapper& b) noexcept
 {
    a.swapWith(b);
 }
 
-inline void HostWrapper::create(
+inline void HostRegWrapper::create(
       const HKEY hKeyParent,
       const std::wstring& subKey,
       const REGSAM desiredAccess
@@ -335,7 +334,7 @@ inline void HostWrapper::create(
       );
 }
 
-inline void HostWrapper::create(
+inline void HostRegWrapper::create(
    const HKEY                  hKeyParent,
    const std::wstring& subKey,
    const REGSAM                desiredAccess,
@@ -369,7 +368,7 @@ inline void HostWrapper::create(
    m_hKey = hKey;
 }
 
-inline void HostWrapper::open(
+inline void HostRegWrapper::open(
    const HKEY              hKeyParent,
    const std::wstring& subKey,
    const REGSAM            desiredAccess)
@@ -394,7 +393,7 @@ inline void HostWrapper::open(
    m_hKey = hKey;
 }
 
-inline void HostWrapper::setUintValue(const std::wstring& valueName, const DWORD data)
+inline void HostRegWrapper::setUintValue(const std::wstring& valueName, const DWORD data)
 {
    _ASSERTE(isValid());
 
@@ -412,7 +411,7 @@ inline void HostWrapper::setUintValue(const std::wstring& valueName, const DWORD
    }
 }
 
-inline void HostWrapper::setStringValue(const std::wstring& valueName, const std::wstring& data)
+inline void HostRegWrapper::setStringValue(const std::wstring& valueName, const std::wstring& data)
 {
    _ASSERTE(isValid());
 
@@ -480,7 +479,7 @@ namespace details
 } // namespace details
 
 
-inline void HostWrapper::setMultiStringValue(
+inline void HostRegWrapper::setMultiStringValue(
            const std::wstring& valueName,
            const std::vector<std::wstring>& data)
 {
@@ -506,7 +505,7 @@ inline void HostWrapper::setMultiStringValue(
    }
 }
 
-inline DWORD HostWrapper::uintValue(const std::wstring& valueName) const
+inline DWORD HostRegWrapper::uintValue(const std::wstring& valueName) const
 {
    _ASSERTE(isValid());
 
@@ -530,7 +529,7 @@ inline DWORD HostWrapper::uintValue(const std::wstring& valueName) const
    return data;
 }
 
-inline std::wstring HostWrapper::stringValue(const std::wstring& valueName) const
+inline std::wstring HostRegWrapper::stringValue(const std::wstring& valueName) const
 {
    _ASSERTE(isValid());
 
@@ -579,7 +578,7 @@ inline std::wstring HostWrapper::stringValue(const std::wstring& valueName) cons
    return result;
 }
 
-inline std::vector<std::wstring> HostWrapper::multiStringValue (const std::wstring& valueName) const
+inline std::vector<std::wstring> HostRegWrapper::multiStringValue (const std::wstring& valueName) const
 {
    _ASSERTE(isValid());
 
@@ -651,7 +650,7 @@ inline std::vector<std::wstring> HostWrapper::multiStringValue (const std::wstri
    return result;
 }
 
-inline DWORD HostWrapper::valueType(const std::wstring& valueName) const
+inline DWORD HostRegWrapper::valueType(const std::wstring& valueName) const
 {
    _ASSERTE(isValid());
 
@@ -673,7 +672,7 @@ inline DWORD HostWrapper::valueType(const std::wstring& valueName) const
    return typeId;
 }
 
-inline DWORD HostWrapper::testValueType(const std::wstring& valueName) const
+inline DWORD HostRegWrapper::testValueType(const std::wstring& valueName) const
 {
    _ASSERTE(isValid());
 
@@ -695,7 +694,7 @@ inline DWORD HostWrapper::testValueType(const std::wstring& valueName) const
    return typeId;
 }
 
-inline void HostWrapper::keyInfo(DWORD& subKeys, DWORD& values, FILETIME& lastWriteTime) const
+inline void HostRegWrapper::keyInfo(DWORD& subKeys, DWORD& values, FILETIME& lastWriteTime) const
 {
    _ASSERTE(isValid());
 
@@ -719,7 +718,7 @@ inline void HostWrapper::keyInfo(DWORD& subKeys, DWORD& values, FILETIME& lastWr
    }
 }
 
-inline std::vector<std::wstring> HostWrapper::enumSubKeys() const
+inline std::vector<std::wstring> HostRegWrapper::enumSubKeys() const
 {
    _ASSERTE(isValid());
 
@@ -789,7 +788,7 @@ inline std::vector<std::wstring> HostWrapper::enumSubKeys() const
    return subkeyNames;
 }
 
-inline std::vector<std::pair<std::wstring, DWORD>> HostWrapper::EnumValues() const
+inline std::vector<std::pair<std::wstring, DWORD>> HostRegWrapper::EnumValues() const
 {
    _ASSERTE(isValid());
 
@@ -865,7 +864,7 @@ inline std::vector<std::pair<std::wstring, DWORD>> HostWrapper::EnumValues() con
    return valueInfo;
 }
 
-inline void HostWrapper::deleteValue(const std::wstring& valueName)
+inline void HostRegWrapper::deleteValue(const std::wstring& valueName)
 {
    _ASSERTE(isValid());
 
@@ -877,7 +876,7 @@ inline void HostWrapper::deleteValue(const std::wstring& valueName)
    }
 }
 
-inline void HostWrapper::deleteKey(const std::wstring& subKey, const REGSAM desiredAccess)
+inline void HostRegWrapper::deleteKey(const std::wstring& subKey, const REGSAM desiredAccess)
 {
    _ASSERTE(isValid());
 
@@ -889,7 +888,7 @@ inline void HostWrapper::deleteKey(const std::wstring& subKey, const REGSAM desi
    }
 }
 
-inline void HostWrapper::deleteTree(const std::wstring& subKey)
+inline void HostRegWrapper::deleteTree(const std::wstring& subKey)
 {
    _ASSERTE(isValid());
 
@@ -901,7 +900,7 @@ inline void HostWrapper::deleteTree(const std::wstring& subKey)
    }
 }
 
-inline void HostWrapper::flushKey()
+inline void HostRegWrapper::flushKey()
 {
    _ASSERTE(isValid());
 
@@ -913,7 +912,7 @@ inline void HostWrapper::flushKey()
    }
 }
 
-inline void HostWrapper::loadKey(const std::wstring& subKey, const std::wstring& filename)
+inline void HostRegWrapper::loadKey(const std::wstring& subKey, const std::wstring& filename)
 {
    close();
 
@@ -925,7 +924,7 @@ inline void HostWrapper::loadKey(const std::wstring& subKey, const std::wstring&
    }
 }
 
-inline void HostWrapper::saveKey(
+inline void HostRegWrapper::saveKey(
       const std::wstring& filename,
       SECURITY_ATTRIBUTES* const securityAttributes
 )
@@ -951,7 +950,7 @@ static const HString g_stem(H_TEXT("Software\\TXPCO\\Media Bowser\\"));
 HostUserData::HostUserData (const HString& applicationKey) :
    m_subPath(applicationKey),
    m_fullPath (g_stem + applicationKey + HString(H_TEXT("\\"))),
-   m_pKey (COMMON_NEW HostWrapper(HKEY_CURRENT_USER, m_fullPath))
+   m_pKey (COMMON_NEW HostRegWrapper(HKEY_CURRENT_USER, m_fullPath))
 {
 }
    
@@ -962,7 +961,7 @@ HostUserData::~HostUserData (void)
  HostUserData::HostUserData (const HostUserData& src) :
     m_subPath(src.m_subPath),
     m_fullPath(src.m_fullPath),
-    m_pKey (COMMON_NEW HostWrapper(HKEY_CURRENT_USER, src.m_fullPath))
+    m_pKey (COMMON_NEW HostRegWrapper(HKEY_CURRENT_USER, src.m_fullPath))
 {
 
 }
@@ -975,7 +974,7 @@ HostUserData::operator=(const HostUserData& src)
 
    m_subPath = src.m_subPath;
    m_fullPath = src.m_fullPath;
-   m_pKey.reset (COMMON_NEW HostWrapper(HKEY_CURRENT_USER, src.m_fullPath));
+   m_pKey.reset (COMMON_NEW HostRegWrapper(HKEY_CURRENT_USER, src.m_fullPath));
 
    return *this; 
 }
@@ -1052,7 +1051,7 @@ HostUserData::removeData (const HString& key)
 void
 HostUserData::removeAllData ()
 {
-   HostWrapper wrapper(HKEY_CURRENT_USER, g_stem);
+   HostRegWrapper wrapper(HKEY_CURRENT_USER, g_stem);
 
    wrapper.deleteTree(m_subPath);
 }

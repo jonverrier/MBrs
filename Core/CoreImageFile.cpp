@@ -3,7 +3,7 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-#include "CorePrecompile.h"
+#include "Common.h"
 #include "CoreFile.h"
 #include "HostUserData.h"
 

@@ -4,9 +4,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#include "CommonDefinitions.h"
-#include "CommonStandardLibraryIncludes.h"
-
+#include "Common.h"
 #include "Host.h"
 #include "HostLocks.h"
 #include "HostException.h"

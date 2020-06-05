@@ -3,7 +3,10 @@
 // Implementation of the MainPage class.
 //
 
-#include "pch.h"
+#include "Common.h"
+#include <collection.h>
+#include <ppltasks.h>
+#include "App.xaml.h"
 #include "MainPage.xaml.h"
 
 using namespace UI;
@@ -24,12 +27,8 @@ using namespace Windows::Storage::Pickers;
 using namespace Windows::UI::Xaml;
 using namespace concurrency;
 
-#include "Host.h"
-
-
-
 MainPage::MainPage() 
-   // : m_pModel (COMMON_NEW CoreImageListModel())
+   : m_pModel (COMMON_NEW CoreImageListModel())
 {
 	InitializeComponent();
 }

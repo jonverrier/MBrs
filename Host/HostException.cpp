@@ -3,7 +3,7 @@
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
-#include "HostPrecompile.h"
+#include "Common.h"
 #include "HostException.h"
 #include "HostInternal.h"
 
@@ -113,13 +113,15 @@ HostException::logException (HUint errorCode,
    if (HRESULT_FACILITY(errorCode) == FACILITY_WIN32) {
 
       TCHAR sz[COMMON_STRING_BUFFER_SIZE];
-      HUint uRet = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
+      LONG lRet = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
          NULL, errorCode, 0,
          sz,
          COMMON_STRING_BUFFER_SIZE - 1,
          NULL);
 
-      TESTEQUALTHROWLASTERROR(uRet, 0);
+      if (lRet == 0)
+         throw HostException(MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, ::GetLastError()), H_TEXT(__FILE__), __LINE__);
+
       out = sz;
    }
    else

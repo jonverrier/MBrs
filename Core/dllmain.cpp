@@ -1,5 +1,5 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
-#include "CorePrecompile.h"
+#include "Common.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"

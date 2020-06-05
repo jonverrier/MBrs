@@ -5,11 +5,15 @@
 
 // Import / export for DLL linkage 
 #if (defined WINXX)
-   #ifdef CORE_EXPORTS
-   #define CORE_API __declspec(dllexport)
-   #else
-   #define CORE_API __declspec(dllimport)
-   #endif
+#ifdef CORE_NOEXPORTS
+#define CORE_API
+#else
+#ifdef CORE_EXPORTS
+#define CORE_API __declspec(dllexport)
+#else
+#define CORE_API __declspec(dllimport)
+#endif
+#endif
 #endif
 
 // Package name for resource strings

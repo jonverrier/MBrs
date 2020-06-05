@@ -18,16 +18,10 @@
     <ClInclude Include="..\include\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CorePrecompile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\CoreFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\CoreQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CoreInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\CoreCompoundName.h">

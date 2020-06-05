@@ -24,9 +24,6 @@
     <ClInclude Include="..\include\HostException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HostPrecompile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\HostLocks.h">
       <Filter>Header Files</Filter>
     </ClInclude>

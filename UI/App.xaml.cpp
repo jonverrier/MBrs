@@ -3,7 +3,10 @@
 // Implementation of the App class.
 //
 
-#include "pch.h"
+#include "Common.h"
+#include <collection.h>
+#include <ppltasks.h>
+#include "App.xaml.h"
 #include "MainPage.xaml.h"
 
 using namespace UI;
