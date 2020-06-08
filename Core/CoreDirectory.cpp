@@ -78,7 +78,7 @@ void CoreDirectory::imageDirContents(std::list<HString>& images, std::list<HStri
 ////////////////////////////////////////////////////////////////////////////
 
 CoreDirectorySearch::CoreDirectorySearch(const HString& path) :
-   m_rootDir (path), m_activeThreadCount(0)
+   m_rootDir (path)
 {
 }
 
@@ -87,7 +87,7 @@ CoreDirectorySearch::~CoreDirectorySearch(void)
 }
 
 CoreDirectorySearch::CoreDirectorySearch(const CoreDirectorySearch& src) : 
-   m_rootDir (src.m_rootDir), m_activeThreadCount(0)
+   m_rootDir (src.m_rootDir)
 {
 
 }

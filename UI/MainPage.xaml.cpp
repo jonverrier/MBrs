@@ -4,10 +4,12 @@
 //
 
 #include "Common.h"
+#include "exiv2/exiv2.hpp"
 #include <collection.h>
 #include <ppltasks.h>
 #include "App.xaml.h"
 #include "MainPage.xaml.h"
+#include "CoreFile.h"
 
 using namespace UI;
 
@@ -33,9 +35,32 @@ MainPage::MainPage()
 	InitializeComponent();
 }
 
+
+void setPath(std::shared_ptr< CoreImageListModel> pModel, CoreCommandProcessor& processor, const HString& path)
+{
+   std::shared_ptr<CoreCommand> pCmd (COMMON_NEW CoreChangeDirectoryCommand(path, pModel->path(), pModel));
+   processor.adoptAndDo(pCmd);
+}
+
+HString getPath(std::shared_ptr< CoreImageListModel> pModel, CoreCommandProcessor& processor)
+{
+   HString pathIn = pModel->path();
+
+   if (pathIn.length() == 0)
+   {
+      pathIn = CoreImageFile::loadImageDirectory();
+      setPath(pModel, processor, pathIn);
+   }
+
+   return pathIn;
+}
+
 void UI::MainPage::onLoad(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-   Platform::String^ newValue(L"C > Documents > Images");
+   HString pathIn = getPath(m_pModel, m_processor);
+   HChar* p = const_cast<HChar*> (pathIn.c_str());
+   
+   Platform::String^ newValue = ref new Platform::String (p);
 
    directoryPath->Text = newValue;
 }
@@ -49,12 +74,16 @@ void UI::MainPage::changeDirectory(Platform::Object^ sender, Windows::UI::Xaml::
    folderPicker->FileTypeFilter->Append(".jpg");
 
    auto _this = this;
+   std::shared_ptr< CoreImageListModel> _pModel = m_pModel;
+   auto* _pProcessor = &m_processor;
 
-   create_task(folderPicker->PickSingleFolderAsync()).then([_this](StorageFolder^ folder)
+   create_task(folderPicker->PickSingleFolderAsync()).then([_this, _pModel, _pProcessor](StorageFolder^ folder)
       {
          if (folder)
          {
-            _this->directoryPath->Text = L"Picked folder: " + folder->Path;
+            setPath (_pModel, *_pProcessor, folder->Path->Begin());
+
+            _this->directoryPath->Text = folder->Path;
          }
       });
 }

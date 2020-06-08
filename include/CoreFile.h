@@ -7,7 +7,7 @@
 #define COREFILE_INCLUDED
 
 #include "Common.h"
-#include <exiv2/exiv2.hpp>
+#include "exiv2/exiv2.hpp"
 #include "Host.h"
 #include "HostException.h"
 #include "HostLocks.h"
@@ -174,7 +174,6 @@ protected:
 private:
    CoreDirectorySearch(); // Cannot create without a path 
 
-   HostInterlockedCount m_activeThreadCount; 
    CoreDirectory m_rootDir;
 };
 

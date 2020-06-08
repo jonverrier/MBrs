@@ -24,5 +24,6 @@ namespace UI
 		void changeDirectory(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 
 		std::shared_ptr< CoreImageListModel> m_pModel;
+		CoreCommandProcessor m_processor;
 	};
 }

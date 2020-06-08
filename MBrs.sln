@@ -22,10 +22,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj",
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "UI\UI.vcxproj", "{9B3F8137-F370-4DF4-AA57-A4A5898011C2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AD741D27-2A63-4FD9-86F5-F2405DB2A112} = {AD741D27-2A63-4FD9-86F5-F2405DB2A112}
+		{9C9E51E6-1717-4A16-8913-A4150FAE74E2} = {9C9E51E6-1717-4A16-8913-A4150FAE74E2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxitems", "{B441DFCF-2D83-4FB6-A7A7-8BA7D26AC67A}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Common\Common.vcxitems*{b441dfcf-2d83-4fb6-a7a7-8ba7d26ac67a}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|ARM64 = Debug|ARM64

@@ -126,6 +126,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>Common.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <ShowIncludes>false</ShowIncludes>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories);..\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -170,6 +172,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>Common.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories);..\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
