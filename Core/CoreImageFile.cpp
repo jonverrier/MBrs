@@ -117,6 +117,8 @@ CoreImageFile::readSubjectTags(HUint& fileError)
    Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
    if (fileError == 0)
    {
+      readExifDateTime(pImage, fileError);
+
       exifSubjects = readExifSubjectTags(pImage, fileError);
 
       if (fileError == 0)
@@ -157,6 +159,44 @@ CoreImageFile::writeSubjectTags(HUint& fileError)
       pImage.release();
    }
    return m_tagCache;
+}
+
+void
+CoreImageFile::readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
+{
+   if (fileError == 0)
+   {
+      Exiv2::ExifData& exifData = pImage->exifData();
+
+      if (!exifData.empty())
+      {
+         // check the image tags are set before trying to read them
+         char key[] = "Exif.Photo.DateTimeOriginal";
+         Exiv2::ExifKey exifKey(key);
+         Exiv2::ExifData::iterator iter;
+         iter = exifData.findKey(exifKey);
+         if (iter != exifData.end())
+         {
+            ostringstream os;
+            os << exifData[key];
+
+            // read as byte stream then convert to time
+            string streamString = os.str();
+
+            int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+            int r = 0;
+            r = sscanf(streamString.c_str(), "%d:%d:%d %d:%d:%d", &year, &month, &day,
+                                           &hour, &minute, &second);
+            if (r == 6)
+            {
+               //std::chrono::hours chrono_years = std::chrono::hours (year * 365 * 24); 
+               //std::chrono::hours chrono_days = std::chrono::hours ((months[month] + day * 24); // plus leap year 
+            }
+         }
+      }
+   }
+
+   return;
 }
 
 list<HString>
