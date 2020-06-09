@@ -54,7 +54,9 @@ namespace TestCore
          shared_ptr<CoreCommand> pCmd1 (COMMON_NEW CoreChangeDirectoryCommand(m_newPath, m_oldPath, pModel)),
                                  pCmd2 (COMMON_NEW CoreChangeDirectoryCommand(m_oldPath, m_newPath, pModel));
 
-         CoreCommandProcessor processor1;
+         CoreCommandProcessor processor1 (pModel);
+         Assert::IsFalse(processor1.canUndo());
+         Assert::IsFalse(processor1.canRedo());
 
          processor1.adoptAndDo(pCmd1);
          HString currentPath = pModel->path();
@@ -67,6 +69,8 @@ namespace TestCore
          Assert::IsFalse(processor1.canUndo());
          Assert::IsTrue(processor1.canRedo());
          Assert::IsTrue(currentPath == m_oldPath);
+         list<CoreImageFile> files = pModel->images();
+         Assert::IsTrue(files.size() > 0); // Always > 0 image files in original directory
 
          processor1.redo();
          currentPath = pModel->path();

@@ -6,8 +6,9 @@
 #pragma once
 
 #include "MainPage.g.h"
-
+#if 0
 #include "CoreMbrsModelCommand.h"
+#endif
 
 namespace UI
 {

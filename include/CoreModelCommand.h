@@ -69,7 +69,7 @@ class CORE_API CoreCommandProcessor
 {
 public:
    // Constructors
-   CoreCommandProcessor();
+   CoreCommandProcessor(std::shared_ptr<CoreModel> pModel);
    virtual ~CoreCommandProcessor(void);
 
    bool operator==(const CoreCommandProcessor& rhs) const;
@@ -86,6 +86,7 @@ public:
 protected:
 
 private:
+   std::shared_ptr<CoreModel>  m_pModel;
    std::list<std::shared_ptr<CoreCommand>> m_commands;
    std::list<std::shared_ptr<CoreCommand>>::iterator m_lastDone;
 };

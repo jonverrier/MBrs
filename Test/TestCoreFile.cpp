@@ -34,15 +34,11 @@ namespace TestCore
       {
          const HString path1 = H_TEXT("TestFile1");
          const HString path2 = H_TEXT("TestFile2");
-         const HString path3 = H_TEXT("TestFile3.jpg");
+         const HString path3 = H_TEXT("Test.jpg"); // This file does exist in the Test directory 
 
          std::ofstream outfile2 (path2);
          outfile2 << "Test data in file" << std::endl;
          outfile2.close();
-
-         std::ofstream outfile3 (path3);
-         outfile3 << "Test data in file" << std::endl;
-         outfile3.close();
 
          // file doesnt exist
          CoreFileSystemEntity fileThatDoesNotExist(path1);
@@ -102,11 +98,28 @@ namespace TestCore
          CoreDirectory emptyDir(path1), realDir(path2);
 
          list<HString> contents, dirs;
-         emptyDir.imageDirContents(contents, dirs);
+         emptyDir.listImagesDirs(contents, dirs);
          Assert::IsTrue(contents.size() == 0);
 
-         realDir.imageDirContents(contents, dirs);
+         realDir.listImagesDirs(contents, dirs);
          Assert::IsTrue(contents.size() == 2); // 2 image files called .jpg 
+      }
+
+      TEST_METHOD(defaultImageDir)
+      {
+         HString pathIn = CoreFileSystemEntity::loadImageDirectory();
+
+         // A default directory always exists
+         Assert::IsTrue(pathIn.size() > 0);
+
+         HString pathOut = H_TEXT("testImageDir");
+         filesystem::create_directories(pathOut);
+         CoreFileSystemEntity::saveImageDirectory(pathOut);
+
+         HString newPath = CoreFileSystemEntity::loadImageDirectory();
+
+         // The new path must be a component of the saved path
+         Assert::IsTrue(newPath.find(pathOut) > 0);
       }
    };
 }

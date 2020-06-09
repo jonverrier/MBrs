@@ -37,7 +37,7 @@ public :
    CoreFileSystemEntity& operator=(const CoreFileSystemEntity& copyMe);
 
    // Operations
-   static void saveImageDirectory(const HString& folder);
+   static bool saveImageDirectory(const HString& folder);
    static HString loadImageDirectory();
 
 // Comparison Operators   
@@ -66,7 +66,8 @@ public:
 
    // Operations
    CoreDirectory& operator=(const CoreDirectory& copyMe);
-   void imageDirContents(std::list<HString>& images, std::list<HString>& dirs) const;
+   void listImagesDirs(std::list<HString>& images, std::list<HString>& dirs) const;
+   void listImages (std::list<HString>& images) const;
 
    // Comparison Operators
    bool operator==(const CoreDirectory& rhs) const;
@@ -99,7 +100,7 @@ public:
 
    // Operations
    CoreDirectorySearch& operator=(const CoreDirectorySearch& copyMe);
-   void listImages (SearchQueue& queueIn, SearchQueue& queueOut);
+   void listImages (SearchQueue& queueImg, SearchQueue& queueDir);
 
 
    // Comparison Operators

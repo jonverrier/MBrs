@@ -5,6 +5,7 @@
 
 #include "Common.h"
 
+#include "CoreFile.h"
 #include "CoreModelCommand.h"
 #include "CoreMbrsModelCommand.h"
 
@@ -14,8 +15,11 @@ using namespace std;
 // CoreImageListModel
 ///////////////////////////////////////////////////////////////////////////////
 
+
 CoreImageListModel::CoreImageListModel()
+   : m_path(CoreFileSystemEntity::loadImageDirectory())
 {
+   refreshImageList();
 }
 
 CoreImageListModel::CoreImageListModel(const HString& path)
@@ -29,20 +33,36 @@ CoreImageListModel::~CoreImageListModel(void)
 }
 
 
-HString CoreImageListModel::path() const
+const HString CoreImageListModel::path() const
 {
    return m_path;
+}
+
+const list<CoreImageFile> CoreImageListModel::images() const
+{
+   return m_images;
 }
 
 void CoreImageListModel::setPath(const HString& path)
 {
    m_path = path;
+   CoreFileSystemEntity::saveImageDirectory(path);
    refreshImageList();
 }
 
 void CoreImageListModel::refreshImageList()
 {
-   // TODO
+   list<HString> imagePaths;
+   CoreDirectory dir(m_path);
+   dir.listImages(imagePaths);
+
+   m_images.clear();
+
+   for (auto path : imagePaths)
+   {
+      CoreImageFile image(path);
+      m_images.push_back (image);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

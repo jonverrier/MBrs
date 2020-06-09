@@ -13,6 +13,7 @@
 #include "Core.h"
 #include "CoreQueue.h"
 #include "CoreModelCommand.h"
+#include "CoreImageFile.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageListModel
@@ -27,7 +28,8 @@ public:
    virtual ~CoreImageListModel(void);
 
    // Attributes
-   HString path () const;
+   const HString path () const;
+   const std::list<CoreImageFile> images() const;
 
    // Operations
    CoreImageListModel& operator=(const CoreImageListModel& copyMe) = delete;
@@ -40,6 +42,7 @@ protected:
 
 private:
    HString m_path;
+   std::list<CoreImageFile> m_images;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

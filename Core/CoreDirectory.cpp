@@ -50,7 +50,7 @@ bool CoreDirectory::operator!=(const CoreDirectory& rhs) const
    return (CoreFileSystemEntity::operator!=(rhs));
 }
 
-void CoreDirectory::imageDirContents(std::list<HString>& images, std::list<HString>& dirs) const
+void CoreDirectory::listImagesDirs(std::list<HString>& images, std::list<HString>& dirs) const
 {
    filesystem::directory_iterator iter(path());
    images.clear();
@@ -69,6 +69,24 @@ void CoreDirectory::imageDirContents(std::list<HString>& images, std::list<HStri
       if (directoryEntry.isDirectory())
       {
          dirs.push_back(contentPath);
+      }
+   }
+}
+
+void CoreDirectory::listImages(std::list<HString>& images) const
+{
+   filesystem::directory_iterator iter(path());
+   images.clear();
+
+   for (auto& p : iter)
+   {
+      HString contentPath((*iter).path());
+
+      CoreFileSystemEntity directoryEntry(contentPath);
+
+      if (directoryEntry.isImageFile())
+      {
+         images.push_back(contentPath);
       }
    }
 }
@@ -115,21 +133,21 @@ bool CoreDirectorySearch::operator!=(const CoreDirectorySearch& rhs) const
    return (m_rootDir != rhs.m_rootDir);
 }
 
-void CoreDirectorySearch::listImages(CoreDirectorySearch::SearchQueue& queueIn,
-                                     CoreDirectorySearch::SearchQueue& queueOut)
+void CoreDirectorySearch::listImages(CoreDirectorySearch::SearchQueue& queueImg,
+                                     CoreDirectorySearch::SearchQueue& queueDir)
 {
    CoreDirectory dir(m_rootDir);
    list<HString> images, subDirectories;
 
-   dir.imageDirContents(images, subDirectories);
+   dir.listImagesDirs(images, subDirectories);
 
    for (auto subDir : subDirectories)
    {
-      queueIn.push(subDir);
+      queueDir.push(subDir);
    }
 
    for (auto image : images)
    {
-      queueOut.push(image);
+      queueImg.push(image);
    }
 }

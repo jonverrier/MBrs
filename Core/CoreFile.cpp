@@ -130,23 +130,32 @@ CoreFileSystemEntity::isImageFile() const
 
 static const HChar* folderKey = H_TEXT("LastImageFolder");
 
-void CoreFileSystemEntity::saveImageDirectory(const HString& folder)
+bool CoreFileSystemEntity::saveImageDirectory(const HString& folder)
 {
-   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
+   // Make the path an absolute path, check it is a directory, then store it
+   HString fullPath = std::filesystem::absolute(folder);
+   CoreFileSystemEntity dir(fullPath);
 
-   data.writeString(folderKey, folder);
+   if (dir.isDirectory())
+   {
+      HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
+      data.writeString(folderKey, fullPath);
+      return true;
+   }
+   return false;
 }
 
 HString CoreFileSystemEntity::loadImageDirectory()
 {
    HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
 
+   // If there is a prior key, and it points to a directory, then use it, otherwise (no data or not a director) return the system-wide default
    if (data.isDataStoredAt(folderKey))
    {
-      return data.readString(folderKey);
+      HString lastPath = data.readString(folderKey);
+      CoreFileSystemEntity dir(lastPath);
+      if (dir.isDirectory())
+         return lastPath;
    }
-   else
-   {
-      return HostUserData::defaultImageDirectory();
-   }
+   return HostUserData::defaultImageDirectory();
 }

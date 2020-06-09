@@ -38,8 +38,8 @@ CoreCommand::~CoreCommand(void)
 // CoreCommandProcessor
 ///////////////////////////////////////////////////////////////////////////////
 
-CoreCommandProcessor::CoreCommandProcessor()
-   : m_commands (), m_lastDone (m_commands.end())
+CoreCommandProcessor::CoreCommandProcessor(std::shared_ptr<CoreModel> pModel)
+   : m_pModel (pModel), m_commands (), m_lastDone (m_commands.end())
 {
 }
 

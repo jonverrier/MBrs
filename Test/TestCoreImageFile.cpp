@@ -14,8 +14,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace std;
 
-void readFile();
-
 namespace TestCore
 {
    TEST_CLASS(TestCoreImageFile)
@@ -24,8 +22,9 @@ namespace TestCore
 
       TEST_METHOD(ConstuctAndCopy)
       {
-         const HString path1 = H_TEXT("TestFile1");
-         const HString path2 = H_TEXT("TestFile2");
+         // These two files exist in home bin directory
+         const HString path1 = H_TEXT("Test.jpg");
+         const HString path2 = H_TEXT("test7.jpg");
 
          CoreImageFile file1(path1), file2(path2);
 
@@ -87,22 +86,6 @@ namespace TestCore
          tagsAfter.sort();
 
          Assert::IsTrue(tagsAfter == tagsBefore);
-      }
-
-      TEST_METHOD(defaultDir)
-      {
-         HString pathIn = CoreImageFile::loadImageDirectory();
-
-         // A default directory always exists
-         Assert::IsTrue(pathIn.size() > 0);
-
-         HString pathOut = H_TEXT("test");
-         CoreImageFile::saveImageDirectory(pathOut);
-
-         pathIn = CoreImageFile::loadImageDirectory();
-
-         // A default directory always exists
-         Assert::IsTrue(pathIn == pathOut);
       }
    };
 }

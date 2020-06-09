@@ -17,6 +17,9 @@ CoreImageFile::CoreImageFile(const HString& path) :
    CoreFileSystemEntity (path),
    m_tagCache ()
 {
+   HUint fileError = 0;
+
+   readSubjectTags(fileError);
 }
 
 CoreImageFile::~CoreImageFile(void)
@@ -45,7 +48,7 @@ CoreImageFile::operator==(const CoreImageFile& rhs) const
    if (this == &rhs)
       return TRUE;
 
-   return (CoreFileSystemEntity::operator==(rhs));
+   return (m_tagCache == rhs.m_tagCache && CoreFileSystemEntity::operator==(rhs));
 }
 
 bool
@@ -54,7 +57,7 @@ CoreImageFile::operator!=(const CoreImageFile& rhs) const
    if (this == &rhs)
       return FALSE;
 
-   return (CoreFileSystemEntity::operator!=(rhs));
+   return (m_tagCache != rhs.m_tagCache || CoreFileSystemEntity::operator!=(rhs));
 }
 
 list<HString>
@@ -76,6 +79,33 @@ CoreImageFile::removeSubjectTags(const list<HString>& remove)
    return m_tagCache;
 }
 
+
+Exiv2::Image::AutoPtr
+CoreImageFile::openImage(const HString& path, HUint& fileError) const
+{
+   fileError = 0;
+
+   // test the file before trying to read it properly
+   // If this passes we know it has valid extension and also valid initial contents
+   int type = Exiv2::ImageFactory::getType(path);
+   if (type != Exiv2::ImageType::none)
+   {
+      Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path);
+
+      if (image.get())
+      {
+         image->readMetadata();
+         fileError = 0;
+      }
+      else
+         fileError = EACCES;
+
+      return image;
+   }
+   fileError = EACCES;
+   return Exiv2::Image::AutoPtr(nullptr);
+}
+
 list<HString>
 CoreImageFile::readSubjectTags(HUint& fileError)
 {
@@ -84,26 +114,26 @@ CoreImageFile::readSubjectTags(HUint& fileError)
    list<HString> iptcSubjects;
    list<HString> xmpSubjects;
 
-   Exiv2::Image::AutoPtr image = openImage(path(), fileError);
+   Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
    if (fileError == 0)
    {
-      exifSubjects = readExifSubjectTags(image, fileError);
+      exifSubjects = readExifSubjectTags(pImage, fileError);
 
       if (fileError == 0)
       {
          m_tagCache = exifSubjects;
 
-         iptcSubjects = readIptcSubjectTags(image, fileError);
+         iptcSubjects = readIptcSubjectTags(pImage, fileError);
          if (fileError == 0)
             deduplicateTags(m_tagCache, iptcSubjects);
          if (fileError == 0)
-            xmpSubjects = readXmpSubjectTags(image, fileError);
+            xmpSubjects = readXmpSubjectTags(pImage, fileError);
          if (fileError == 0)
             deduplicateTags(m_tagCache, xmpSubjects);
          m_tagCache.sort();
       } 
 
-      image.release();
+      pImage.release();
    }
 
    return m_tagCache;
@@ -114,49 +144,29 @@ CoreImageFile::writeSubjectTags(HUint& fileError)
 {
    fileError = 0;
 
-   Exiv2::Image::AutoPtr image = openImage(path(), fileError);
+   Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
    if (fileError == 0)
    {
-      writeExifSubjectTags(image, m_tagCache, fileError);
+      writeExifSubjectTags(pImage, m_tagCache, fileError);
       if (fileError == 0)
-         writeIptcSubjectTags(image, m_tagCache, fileError);
+         writeIptcSubjectTags(pImage, m_tagCache, fileError);
       if (fileError == 0)
-        writeXmpSubjectTags(image, m_tagCache, fileError);
+        writeXmpSubjectTags(pImage, m_tagCache, fileError);
 
-      image->writeMetadata();
-      image.release();
+      pImage->writeMetadata();
+      pImage.release();
    }
    return m_tagCache;
 }
 
-Exiv2::Image::AutoPtr
-CoreImageFile::openImage(const HString& path, HUint& fileError) const
-{
-   fileError = 0;
-
-   Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path);
-
-   if (image.get())
-   {
-      image->readMetadata();
-      fileError = 0;
-   }
-   else
-   {
-      fileError = EACCES;
-   }
-
-   return image;
-}
-
 list<HString>
-CoreImageFile::readExifSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileError) 
+CoreImageFile::readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 
 {
    list<HString> exifSubjects;
 
    if (fileError == 0)
    {
-      Exiv2::ExifData& exifData = image->exifData();
+      Exiv2::ExifData& exifData = pImage->exifData();
 
       if (!exifData.empty()) 
       {
@@ -184,13 +194,13 @@ CoreImageFile::readExifSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileErro
 }
 
 void
-CoreImageFile::writeExifSubjectTags(Exiv2::Image::AutoPtr& image, const list<HString>& tags, HUint& fileError) const
+CoreImageFile::writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) const
 {
    HString delimited = makeDelimited(tags, H_TEXT(";")); 
    
    if (fileError == 0)
    {
-      Exiv2::ExifData& exifData = image->exifData();
+      Exiv2::ExifData& exifData = pImage->exifData();
 
       // Remove existing Exif subject data if it exists
       Exiv2::ExifKey key("Exif.Image.XPKeywords");
@@ -208,13 +218,13 @@ CoreImageFile::writeExifSubjectTags(Exiv2::Image::AutoPtr& image, const list<HSt
 }
 
 list<HString>
-CoreImageFile::readIptcSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileError) 
+CoreImageFile::readIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 
 {
    list<HString> iptcSubjects;
 
    if (fileError == 0) 
    {
-      Exiv2::IptcData& iptcData = image->iptcData();
+      Exiv2::IptcData& iptcData = pImage->iptcData();
 
       if (!iptcData.empty())
       {
@@ -239,11 +249,11 @@ CoreImageFile::readIptcSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileErro
 }
 
 void
-CoreImageFile::writeIptcSubjectTags(Exiv2::Image::AutoPtr& image, const list<HString>& tags, HUint& fileError) const
+CoreImageFile::writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) const
 {
    if (fileError == 0)
    {
-      Exiv2::IptcData& iptcData = image->iptcData();
+      Exiv2::IptcData& iptcData = pImage->iptcData();
 
       // Remove existing IPTC subject data if it exists
       Exiv2::IptcKey key("Iptc.Application2.Keywords");
@@ -262,13 +272,13 @@ CoreImageFile::writeIptcSubjectTags(Exiv2::Image::AutoPtr& image, const list<HSt
 }
 
 list<HString>
-CoreImageFile::readXmpSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileError)
+CoreImageFile::readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
 {
    list<HString> xmpSubjects;
 
    if (fileError == 0) 
    {
-      Exiv2::XmpData& xmpData = image->xmpData();
+      Exiv2::XmpData& xmpData = pImage->xmpData();
       if (!xmpData.empty())
       {
          // check the image tags are set before trying to read them
@@ -294,11 +304,11 @@ CoreImageFile::readXmpSubjectTags(Exiv2::Image::AutoPtr& image, HUint& fileError
 }
 
 void
-CoreImageFile::writeXmpSubjectTags(Exiv2::Image::AutoPtr& image, const list<HString>& tags, HUint& fileError) const
+CoreImageFile::writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) const
 {
    if (fileError == 0) 
    {
-      Exiv2::XmpData& xmpData = image->xmpData();
+      Exiv2::XmpData& xmpData = pImage->xmpData();
       
       // Remove existing XMP subject data if it exists
       Exiv2::XmpKey key ("Xmp.dc.subject");
