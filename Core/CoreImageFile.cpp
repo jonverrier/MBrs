@@ -4,7 +4,7 @@
 /////////////////////////////////////////
 
 #include "Common.h"
-#include "CoreFile.h"
+#include "CoreImageFile.h"
 #include "HostUserData.h"
 
 using namespace std;
@@ -414,25 +414,3 @@ CoreImageFile::deduplicateTags(list<HString>& consolidatedList, const list<HStri
 }
 
 
-static const HChar* folderKey = H_TEXT("LastImageFolder");
-
-void CoreImageFile::saveImageDirectory (const HString& folder)
-{
-   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
-
-   data.writeString(folderKey, folder);
-}
-
-HString CoreImageFile::loadImageDirectory()
-{
-   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
-   
-   if (data.isDataStoredAt(folderKey))
-   {
-      return data.readString(folderKey);
-   }
-   else
-   {
-      return HostUserData::defaultImageDirectory();
-   }
-}

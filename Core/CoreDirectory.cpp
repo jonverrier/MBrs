@@ -37,7 +37,7 @@ CoreDirectory& CoreDirectory::operator=(const CoreDirectory& src)
 bool CoreDirectory::operator==(const CoreDirectory& rhs) const
 {
    if (this == &rhs)
-      return TRUE;
+      return true;
 
    return (CoreFileSystemEntity::operator==(rhs));
 }
@@ -45,7 +45,7 @@ bool CoreDirectory::operator==(const CoreDirectory& rhs) const
 bool CoreDirectory::operator!=(const CoreDirectory& rhs) const
 {
    if (this == &rhs)
-      return FALSE;
+      return false;
 
    return (CoreFileSystemEntity::operator!=(rhs));
 }
@@ -102,7 +102,7 @@ CoreDirectorySearch& CoreDirectorySearch::operator=(const CoreDirectorySearch& s
 bool CoreDirectorySearch::operator==(const CoreDirectorySearch& rhs) const
 {
    if (this == &rhs)
-      return TRUE;
+      return true;
 
    return (m_rootDir == rhs.m_rootDir);
 }
@@ -110,7 +110,7 @@ bool CoreDirectorySearch::operator==(const CoreDirectorySearch& rhs) const
 bool CoreDirectorySearch::operator!=(const CoreDirectorySearch& rhs) const
 {
    if (this == &rhs)
-      return FALSE;
+      return false;
 
    return (m_rootDir != rhs.m_rootDir);
 }

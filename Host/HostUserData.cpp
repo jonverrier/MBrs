@@ -139,7 +139,6 @@ class HostRegWrapper {
       //
       // Query Operations
       // 
-      void keyInfo(DWORD& subKeys, DWORD& values, FILETIME& lastWriteTime) const;
 
       // Return the DWORD type ID for the input registry value
       DWORD valueType(const std::wstring& valueName) const; // this one throws exception if nothing stored
@@ -152,7 +151,6 @@ class HostRegWrapper {
       // Returns a vector of pairs: In each pair, the wstring is the value name, 
       // the DWORD is the value type.
       std::vector<std::pair<std::wstring, DWORD>> EnumValues() const;
-
 
       //
       // Misc Registry API Wrappers
@@ -692,30 +690,6 @@ inline DWORD HostRegWrapper::testValueType(const std::wstring& valueName) const
       typeId = 0;
    }
    return typeId;
-}
-
-inline void HostRegWrapper::keyInfo(DWORD& subKeys, DWORD& values, FILETIME& lastWriteTime) const
-{
-   _ASSERTE(isValid());
-
-   LONG retCode = ::RegQueryInfoKey(
-         m_hKey,
-         nullptr,
-         nullptr,
-         nullptr,
-         &subKeys,
-         nullptr,
-         nullptr,
-         &values,
-         nullptr,
-         nullptr,
-         nullptr,
-         &lastWriteTime);
-
-   if (retCode != ERROR_SUCCESS)
-   {
-      THROW(HostException, retCode);
-   }
 }
 
 inline std::vector<std::wstring> HostRegWrapper::enumSubKeys() const

@@ -22,8 +22,9 @@ namespace UI
 	private:
 		void onLoad(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void changeDirectory(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
-
+#if 0
 		std::shared_ptr< CoreImageListModel> m_pModel;
 		CoreCommandProcessor m_processor;
+#endif
 	};
 }

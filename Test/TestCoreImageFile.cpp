@@ -9,7 +9,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "HostException.h"
 #include "Core.h"
 #include "CoreFile.h"
-
+#include "CoreImageFile.h"
 #include "Test.h"
 
 using namespace std;

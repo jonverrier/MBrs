@@ -189,6 +189,7 @@
     <ClInclude Include="..\include\Core.h" />
     <ClInclude Include="..\include\CoreCompoundName.h" />
     <ClInclude Include="..\include\CoreFile.h" />
+    <ClInclude Include="..\include\CoreImageFile.h" />
     <ClInclude Include="..\include\CoreMbrsModelCommand.h" />
     <ClInclude Include="..\include\CoreModelCommand.h" />
     <ClInclude Include="..\include\CoreQueue.h" />

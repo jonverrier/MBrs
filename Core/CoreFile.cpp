@@ -5,6 +5,7 @@
 
 #include "Common.h"
 #include "CoreFile.h"
+#include "HostUserData.h"
 
 using namespace std;
 
@@ -44,7 +45,7 @@ bool
 CoreFileSystemEntity::operator==(const CoreFileSystemEntity& rhs) const
 {
    if (this == &rhs)
-      return TRUE;
+      return true;
 
    return (m_path == rhs.m_path);
 }
@@ -53,7 +54,7 @@ bool
 CoreFileSystemEntity::operator!=(const CoreFileSystemEntity& rhs) const
 {
    if (this == &rhs)
-      return FALSE;
+      return false;
 
    return (m_path != rhs.m_path);
 }
@@ -126,3 +127,26 @@ CoreFileSystemEntity::isImageFile() const
    return false;
 }
 
+
+static const HChar* folderKey = H_TEXT("LastImageFolder");
+
+void CoreFileSystemEntity::saveImageDirectory(const HString& folder)
+{
+   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
+
+   data.writeString(folderKey, folder);
+}
+
+HString CoreFileSystemEntity::loadImageDirectory()
+{
+   HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
+
+   if (data.isDataStoredAt(folderKey))
+   {
+      return data.readString(folderKey);
+   }
+   else
+   {
+      return HostUserData::defaultImageDirectory();
+   }
+}
