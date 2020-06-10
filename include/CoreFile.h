@@ -27,8 +27,11 @@ public :
    
 // Attributes
    HString path() const;
+   HString filename() const;
+   std::filesystem::file_time_type lastWriteTime() const;
+   bool setLastWriteTime(const std::filesystem::file_time_type& writeTime) const;
+
    bool existsOnFileSystem () const;
-   bool lastWriteTime(std::filesystem::file_time_type& writeTime) const;
    bool isDirectory () const;
    bool isFile() const;
    bool isImageFile() const;

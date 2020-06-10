@@ -65,6 +65,39 @@ CoreFileSystemEntity::path() const
    return m_path;
 }
 
+HString
+CoreFileSystemEntity::filename() const
+{
+   std::filesystem::path path(m_path);
+   if (path.has_stem())
+      return path.stem();
+   else
+      return HString();
+}
+
+bool
+CoreFileSystemEntity::setLastWriteTime(const filesystem::file_time_type& writeTime) const
+{
+   error_code ec;
+
+   // Use the version that does not throw an exception if file does not exist
+   filesystem::last_write_time(m_path, writeTime, ec);
+
+   return (ec.value() == 0);
+}
+
+std::filesystem::file_time_type
+CoreFileSystemEntity::lastWriteTime() const
+{
+   error_code ec;
+   filesystem::file_time_type writeTime;
+
+   // Use the version that does not throw an exception if file does not exist
+   writeTime = filesystem::last_write_time(m_path, ec);
+
+   return (writeTime);
+}
+
 bool
 CoreFileSystemEntity::existsOnFileSystem() const
 {
@@ -72,17 +105,6 @@ CoreFileSystemEntity::existsOnFileSystem() const
 
    // Use the version that does not throw an exception if file does not exist
    return filesystem::exists (m_path, ec);
-}
-
-bool 
-CoreFileSystemEntity::lastWriteTime(filesystem::file_time_type& writeTime) const
-{
-   error_code ec;
-
-   // Use the version that does not throw an exception if file does not exist
-   writeTime = filesystem::last_write_time(m_path, ec);
-
-   return (ec.value() == 0);
 }
 
 bool

@@ -161,6 +161,65 @@ CoreImageFile::writeSubjectTags(HUint& fileError)
    return m_tagCache;
 }
 
+// To store number of days in all months from January to Dec. 
+const int g_monthDays[12] = { 31, 28, 31, 30, 31, 30,
+                           31, 31, 30, 31, 30, 31 };
+
+// given date 
+HInt countLeapYears(HInt year, HInt month)
+{
+   // Check if the current year needs to be considered 
+   // for the count of leap years or not 
+   if (month < 2)
+      year--;
+
+   // An year is a leap year if it is a multiple of 4, 
+   // multiple of 400 and not a multiple of 100. 
+   return year / 4 - year / 100 + year / 400;
+}
+
+HInt yearMonthDayToHours(HInt year, HInt month, HInt day)
+{
+   // initialize count using years and day 
+   HInt n = year * 365;
+
+   // Add days for months in given date 
+   for (int i = 0; i < month - 1; i++)
+      n += g_monthDays[i];
+
+   // Since every leap year is of 366 days, 
+   // Add a day for every leap year 
+   n += countLeapYears(year, month);
+
+   // Add day in month
+   n += (day - 1);
+
+   return n * 24;
+}
+
+std::chrono::seconds yearMonthDayHoursMinSecondsToSeconds (HInt year, HInt month, HInt day, HInt hour, HInt minute, HInt second)
+{
+   std::chrono::hours hours = std::chrono::hours(yearMonthDayToHours(year, month, day) + hour);
+   std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds> (hours) + std::chrono::seconds(minute * 60 + second);
+
+   return seconds;
+}
+
+void secondsToYearMonthDayHoursMinSeconds (const std::chrono::seconds& seconds, HInt& year, HInt& month, HInt& day, HInt& hour, HInt& minute, HInt& second)
+{
+   std::chrono::seconds epoch = yearMonthDayHoursMinSecondsToSeconds (1970, 1, 1, 0, 0, 0); 
+   
+   std::chrono::seconds delta = seconds - epoch;
+   const time_t t = delta.count();
+   struct tm* tm = gmtime(&t);
+   year = tm->tm_year + 1900;      // struct tm starts in 1900
+   month = tm->tm_mon + 1;         // struct tm is zero based
+   day = tm->tm_mday;
+   hour = tm->tm_hour;
+   minute = tm->tm_min;
+   second = tm->tm_sec;
+}
+
 void
 CoreImageFile::readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
 {
@@ -183,14 +242,15 @@ CoreImageFile::readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
             // read as byte stream then convert to time
             string streamString = os.str();
 
-            int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+            HInt year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+            HInt year2 = 0, month2 = 0, day2 = 0, hour2 = 0, minute2 = 0, second2 = 0;
             int r = 0;
             r = sscanf(streamString.c_str(), "%d:%d:%d %d:%d:%d", &year, &month, &day,
                                            &hour, &minute, &second);
             if (r == 6)
             {
-               //std::chrono::hours chrono_years = std::chrono::hours (year * 365 * 24); 
-               //std::chrono::hours chrono_days = std::chrono::hours ((months[month] + day * 24); // plus leap year 
+               std::chrono::seconds seconds = yearMonthDayHoursMinSecondsToSeconds(year, month, day, hour, minute, second);
+               secondsToYearMonthDayHoursMinSeconds(seconds, year2, month2, day2, hour2, minute2, second2);
             }
          }
       }

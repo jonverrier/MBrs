@@ -49,9 +49,9 @@ namespace TestCore
          Assert::IsTrue(fileThatExists.existsOnFileSystem());
 
          // Check correct date stamp is returned
-         filesystem::file_time_type last_write_time;
-         fileThatExists.lastWriteTime(last_write_time);
-         Assert::IsTrue(last_write_time == filesystem::last_write_time(path2));
+         filesystem::file_time_type last_write_time = fileThatExists.lastWriteTime();
+         fileThatExists.setLastWriteTime(last_write_time);
+         Assert::IsTrue(last_write_time == fileThatExists.lastWriteTime());
 
          // file does not exist, therefore is not a file or a directory
          Assert::IsFalse(fileThatDoesNotExist.isFile());
@@ -65,6 +65,7 @@ namespace TestCore
          CoreFileSystemEntity imageFile (path3);
          Assert::IsTrue(imageFile.isFile());
          Assert::IsTrue(imageFile.isImageFile());
+         Assert::IsTrue(imageFile.filename().length() > 0);
       }
 
    };
