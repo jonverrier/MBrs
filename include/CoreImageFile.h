@@ -14,8 +14,6 @@
 #include "Core.h"
 #include "CoreFile.h"
 
-typedef  std::list<HString> CoreImageTagList;
-
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageFile
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,12 +27,14 @@ public:
    ~CoreImageFile(void);
 
    // Attributes
+   std::list<HString> subjectTags() const;
+   time_t takenAt() const;
 
    // Operations
-   CoreImageTagList readSubjectTags(HUint &fileError);
-   CoreImageTagList addSubjectTags(const CoreImageTagList& add);
-   CoreImageTagList removeSubjectTags(const CoreImageTagList& add);
-   CoreImageTagList writeSubjectTags(HUint& fileError);
+   std::list<HString> addSubjectTags(const std::list<HString>& add);
+   std::list<HString> removeSubjectTags(const std::list<HString>& add);
+   std::list<HString> writeSubjectTags();
+
    CoreImageFile& operator=(const CoreImageFile& copyMe);
 
    // Comparison Operators
@@ -46,35 +46,40 @@ protected:
 private:
    CoreImageFile(); // Cannot create without a path 
 
+   void readMetaData();
+
    Exiv2::Image::AutoPtr openImage(const HString& path, HUint& fileError) const;
 
-   void readExifDateTime (Exiv2::Image::AutoPtr& pImage, HUint& fileError);
-
-   CoreImageTagList readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+   time_t readExifDateTime (Exiv2::Image::AutoPtr& pImage, HUint& fileError);
    
-   void writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const CoreImageTagList& tags, HUint& fileError) const;
+   std::list<HString> readSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+   std::list<HString> readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
    
-   CoreImageTagList readIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
-
-   void writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const CoreImageTagList& tags, HUint& fileError) const;
-
-   CoreImageTagList readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
-
-   void writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const CoreImageTagList& tags, HUint& fileError) const;
-
-   CoreImageTagList deduplicateTags (CoreImageTagList& consolidatedList, const CoreImageTagList& newList);
-
-   CoreImageTagList parseDelimiters(const HString& input, const HString& delimiter) const;
+   void writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError) const;
    
-   CoreImageTagList storeSubjectTag(CoreImageTagList& tags, const HString& input) const;
+   std::list<HString> readIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+   void writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError) const;
+
+   std::list<HString> readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+   void writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError) const;
+
+   std::list<HString> deduplicateTags (std::list<HString>& consolidatedList, const std::list<HString>& newList);
+
+   std::list<HString> parseDelimiters(const HString& input, const HString& delimiter) const;
    
-   HString makeDelimited(const  CoreImageTagList& input, const HString& delimiter) const;
+   std::list<HString> storeSubjectTag(std::list<HString>& tags, const HString& input) const;
+   
+   HString makeDelimited(const  std::list<HString>& input, const HString& delimiter) const;
 
    HString convertToWide(const std::string& orig) const;
    
    std::string convertToNarrow(const HString& orig) const;
  
-   CoreImageTagList m_tagCache;
+   std::list<HString> m_tagCache;
+   time_t        m_takenAt;
 };
 
 #endif // COREIMAGEFILE_INCLUDED

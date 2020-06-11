@@ -190,6 +190,7 @@
     <ClInclude Include="..\include\CoreCompoundName.h" />
     <ClInclude Include="..\include\CoreFile.h" />
     <ClInclude Include="..\include\CoreImageFile.h" />
+    <ClInclude Include="..\include\CoreKeywords.h" />
     <ClInclude Include="..\include\CoreMbrsModelCommand.h" />
     <ClInclude Include="..\include\CoreModelCommand.h" />
     <ClInclude Include="..\include\CoreQueue.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="CoreDirectory.cpp" />
     <ClCompile Include="CoreFile.cpp" />
     <ClCompile Include="CoreImageFile.cpp" />
+    <ClCompile Include="CoreKeywords.cpp" />
     <ClCompile Include="CoreMbrsModelCommand.cpp" />
     <ClCompile Include="CoreModelCommand.cpp" />
     <ClCompile Include="dllmain.cpp" />

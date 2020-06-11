@@ -190,6 +190,7 @@
     <ClCompile Include="TestCoreDirSearch.cpp" />
     <ClCompile Include="TestCoreFile.cpp" />
     <ClCompile Include="TestCoreImageFile.cpp" />
+    <ClCompile Include="TestCoreKeywords.cpp" />
     <ClCompile Include="TestCoreModelCommand.cpp" />
     <ClCompile Include="TestCorePath.cpp" />
     <ClCompile Include="TestHostException.cpp" />

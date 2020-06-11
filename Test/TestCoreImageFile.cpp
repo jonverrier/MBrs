@@ -34,7 +34,6 @@ namespace TestCore
       TEST_METHOD(addSubjects)
       {
          const HString path = H_TEXT("Test.jpg");
-         HUint error = 0;
 
          CoreImageFile image (path);
 
@@ -43,7 +42,7 @@ namespace TestCore
 
          // Read existing tags (before), add some (added), then merge the lists for a 'before and added' 
          // against which can test the end result
-         list<HString> tagsBefore = image.readSubjectTags(error);
+         list<HString> tagsBefore = image.subjectTags();
          list<HString> tagsIn = { H_TEXT("TestTag1"), H_TEXT("TestTag2") };
          list<HString> tagsBeforeAndAdded = tagsBefore;
          for (auto item : tagsIn)
@@ -51,8 +50,10 @@ namespace TestCore
                tagsBeforeAndAdded.push_back(item);
 
          image.addSubjectTags(tagsIn);
-         image.writeSubjectTags(error);
-         list<HString> tagsAfter = image.readSubjectTags(error);
+         image.writeSubjectTags();
+
+         CoreImageFile image2(path);
+         list<HString> tagsAfter = image2.subjectTags();
 
          tagsBeforeAndAdded.sort();
          tagsAfter.sort();
@@ -62,7 +63,6 @@ namespace TestCore
       TEST_METHOD(removeSubjects)
       {
          const HString path = H_TEXT("Test2.jpg");
-         HUint error = 0;
 
          CoreImageFile image(path);
 
@@ -70,17 +70,18 @@ namespace TestCore
          Assert::IsTrue(image.existsOnFileSystem());
 
 
-         list<HString> tagsBefore = image.readSubjectTags(error);
+         list<HString> tagsBefore = image.subjectTags();
          list<HString> tagsIn = { H_TEXT("TestTag1"), H_TEXT("TestTag2") };
 
          image.addSubjectTags(tagsIn);
-         image.writeSubjectTags(error);
+         image.writeSubjectTags();
 
          // Remove the tags we just added
          image.removeSubjectTags(tagsIn);
-         image.writeSubjectTags(error);
+         image.writeSubjectTags();
 
-         list<HString> tagsAfter = image.readSubjectTags(error);
+         CoreImageFile image2(path);
+         list<HString> tagsAfter = image2.subjectTags();
 
          tagsBefore.sort();
          tagsAfter.sort();
