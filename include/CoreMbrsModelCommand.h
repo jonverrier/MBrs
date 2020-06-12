@@ -30,6 +30,8 @@ public:
    // Attributes
    const HString path () const;
    const std::list<CoreImageFile> images() const;
+   const std::list<CoreImageFile> imagesFor (HInt year) const;
+   const std::list<CoreImageFile> imagesFor (HInt year, HInt month) const;
 
    // Operations
    CoreImageListModel& operator=(const CoreImageListModel& copyMe) = delete;

@@ -78,6 +78,17 @@ namespace TestCore
          Assert::IsTrue(processor1.canUndo());
          Assert::IsFalse(processor1.canRedo());
       }
+
+      TEST_METHOD(Filtering)
+      {
+         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel(H_TEXT("."))); // 2 images stored in working directory for test
+
+         Assert::IsTrue(pModel->images().size() == 2);
+         Assert::IsTrue(pModel->imagesFor(2014).size() == 0);
+         Assert::IsTrue(pModel->imagesFor(2015).size() == 2); // both taken in 2015
+         Assert::IsTrue(pModel->imagesFor(2015, 6).size() == 0);
+         Assert::IsTrue(pModel->imagesFor(2015, 7).size() == 2); // both taken in july 2015
+      }
    };
 
    HString TestModelCommand::m_newPath;

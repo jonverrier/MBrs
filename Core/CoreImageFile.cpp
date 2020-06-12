@@ -58,6 +58,10 @@ bool CoreImageFile::operator!=(const CoreImageFile& rhs) const
    return (m_tagCache != rhs.m_tagCache || m_takenAt != rhs.m_takenAt || CoreFileSystemEntity::operator!=(rhs));
 }
 
+time_t CoreImageFile::takenAt() const
+{
+   return m_takenAt;
+}
 
 list<HString> CoreImageFile::subjectTags() const
 {

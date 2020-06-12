@@ -43,11 +43,47 @@ const list<CoreImageFile> CoreImageListModel::images() const
    return m_images;
 }
 
+const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year) const
+{
+   list<CoreImageFile> images;
+
+   for (auto image : m_images)
+   {
+      struct tm tm;
+      time_t t = image.takenAt();
+      localtime_s(&tm, &t);
+      if (tm.tm_year + 1900 == year) // localtime return years since 1900 
+         images.push_back(image);
+   }
+   return images;
+}
+
+const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year, HInt month) const
+{
+   list<CoreImageFile> images;
+
+   for (auto image : m_images)
+   {
+      struct tm tm;
+      time_t t = image.takenAt();
+      localtime_s(&tm, &t);
+      if (tm.tm_year + 1900 == year && tm.tm_mon + 1  == month) // localtime return years since 1900, months are zero based
+         images.push_back(image);
+   }
+   return images;
+}
+
 void CoreImageListModel::setPath(const HString& path)
 {
    m_path = path;
    CoreFileSystemEntity::saveImageDirectory(path);
    refreshImageList();
+}
+
+// order the list by date-time taken, newest first (highest takenAt() 
+bool compare (const CoreImageFile& i, const CoreImageFile& j) 
+{ 
+   return (j.takenAt() < i.takenAt()); 
 }
 
 void CoreImageListModel::refreshImageList()
@@ -63,6 +99,8 @@ void CoreImageListModel::refreshImageList()
       CoreImageFile image(path);
       m_images.push_back (image);
    }
+
+   m_images.sort (compare);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
