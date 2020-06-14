@@ -37,22 +37,35 @@ namespace TestCore
          makePaths(m_newPath, m_oldPath);
       }
 
-      TEST_METHOD(ConstructAndCopy)
+      TEST_METHOD(ConstructAndCopyDirCommand)
       {
          std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel());
+         std::shared_ptr< CoreSelection> pSelection (COMMON_NEW CoreSelection());
 
-         CoreChangeDirectoryCommand cmd1 (m_newPath, m_oldPath, pModel),
-                                    cmd2 (m_oldPath, m_newPath, pModel);
+         CoreChangeDirectoryCommand cmd1 (m_newPath, m_oldPath, pModel, pSelection),
+                                    cmd2 (m_oldPath, m_newPath, pModel, pSelection);
 
          testConstructionAndCopy(cmd1, cmd2);         
       }
 
-      TEST_METHOD(DoUndo)
+      TEST_METHOD(ConstructAndCopyImageSelection)
+      {
+         std::list<HString> imagePaths1 = { H_TEXT("Test1.jpg") };
+         std::list<HString> imagePaths2 = { H_TEXT("Test2.jpg") };
+
+         CoreImageListSelection sel1 (imagePaths1);
+         CoreImageListSelection sel2 (imagePaths2);
+
+         testConstructionAndCopy(sel1, sel2);
+      }
+
+      TEST_METHOD(DoUndoDirChange)
       {
          std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
+         std::shared_ptr< CoreSelection> pSelection(COMMON_NEW CoreSelection());
 
-         shared_ptr<CoreCommand> pCmd1 (COMMON_NEW CoreChangeDirectoryCommand(m_newPath, m_oldPath, pModel)),
-                                 pCmd2 (COMMON_NEW CoreChangeDirectoryCommand(m_oldPath, m_newPath, pModel));
+         shared_ptr<CoreCommand> pCmd1 (COMMON_NEW CoreChangeDirectoryCommand(m_newPath, m_oldPath, pModel, pSelection)),
+                                 pCmd2 (COMMON_NEW CoreChangeDirectoryCommand(m_oldPath, m_newPath, pModel, pSelection));
 
          CoreCommandProcessor processor1 (pModel);
          Assert::IsFalse(processor1.canUndo());

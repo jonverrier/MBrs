@@ -107,8 +107,10 @@ void CoreImageListModel::refreshImageList()
 // CoreChangeDirectoryCommand
 ///////////////////////////////////////////////////////////////////////////////
 
-CoreChangeDirectoryCommand::CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, std::shared_ptr< CoreImageListModel> pModel)
-   : m_newPath (newPath), m_oldPath (oldPath), m_pModel (pModel)
+CoreChangeDirectoryCommand::CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, 
+    std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreSelection> pSelection)
+   : CoreCommand (), 
+     m_newPath (newPath), m_oldPath (oldPath), m_pModel (pModel), m_pSelection (pSelection)
 {
 }
 
@@ -135,6 +137,16 @@ bool CoreChangeDirectoryCommand::operator!=(const CoreChangeDirectoryCommand& rh
    return m_newPath != rhs.m_newPath || m_oldPath != rhs.m_oldPath || m_pModel != rhs.m_pModel;
 }
 
+CoreModel& CoreChangeDirectoryCommand::model() const
+{
+   return *m_pModel;
+}
+
+CoreSelection& CoreChangeDirectoryCommand::selection() const
+{
+   return *m_pSelection;
+}
+
 bool CoreChangeDirectoryCommand::canUndo()
 {
    return m_oldPath.size() > 0;
@@ -148,4 +160,39 @@ void CoreChangeDirectoryCommand::apply()
 void CoreChangeDirectoryCommand::undo()
 {
    m_pModel->setPath(m_oldPath);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreImageListSelection
+///////////////////////////////////////////////////////////////////////////////
+
+CoreImageListSelection::CoreImageListSelection(std::list<HString>& imagePaths)
+   : m_imagePaths (imagePaths)
+{
+}
+
+CoreImageListSelection::~CoreImageListSelection(void)
+{
+}
+
+std::list<HString> CoreImageListSelection::imagePaths() const
+{
+   return m_imagePaths;
+}
+
+CoreImageListSelection& CoreImageListSelection::operator=(const CoreImageListSelection& copyMe)
+{
+   m_imagePaths = copyMe.m_imagePaths;
+
+   return *this;
+}
+
+bool CoreImageListSelection::operator==(const CoreImageListSelection& rhs) const
+{
+   return m_imagePaths == rhs.m_imagePaths;
+}
+
+bool CoreImageListSelection::operator!=(const CoreImageListSelection& rhs) const
+{
+   return m_imagePaths != rhs.m_imagePaths;
 }

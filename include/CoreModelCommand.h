@@ -26,12 +26,32 @@ public :
    
    
 // Operations
-   CoreModel&
-   operator=(const CoreModel& copyMe) = delete;
+   CoreModel& operator=(const CoreModel& copyMe) = delete;
 
 protected :
 
 private :
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreSelection
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreSelection
+{
+public:
+   // Constructors
+   CoreSelection();
+   virtual ~CoreSelection(void);
+
+
+   // Operations
+   CoreSelection& operator=(const CoreSelection& copyMe) = delete;
+
+protected:
+
+private:
 
 };
 
@@ -46,19 +66,18 @@ public:
    CoreCommand();
    virtual ~CoreCommand(void);
 
-
    // Attributes
    virtual bool canUndo() = 0;
+   virtual CoreModel& model() const = 0;
+   virtual CoreSelection& selection() const = 0;
 
    // Operations
-   CoreCommand& operator=(const CoreCommand& copyMe) = delete;
    virtual void apply() = 0;
    virtual void undo() = 0;
 
 protected:
 
 private:
-
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,11 +91,14 @@ public:
    CoreCommandProcessor(std::shared_ptr<CoreModel> pModel);
    virtual ~CoreCommandProcessor(void);
 
-   bool operator==(const CoreCommandProcessor& rhs) const;
-   bool operator!=(const CoreCommandProcessor& rhs) const;
+   // Attributes
+   std::shared_ptr<CoreModel> model() const;
 
    // Operations
    CoreCommandProcessor& operator=(const CoreCommandProcessor& copyMe);
+
+   bool operator==(const CoreCommandProcessor& rhs) const;
+   bool operator!=(const CoreCommandProcessor& rhs) const;
    void adoptAndDo(std::shared_ptr<CoreCommand> pCommand);
    bool canUndo();
    void undo();

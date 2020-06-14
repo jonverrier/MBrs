@@ -20,6 +20,17 @@ CoreModel::~CoreModel(void)
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// CoreSelection
+///////////////////////////////////////////////////////////////////////////////
+
+CoreSelection::CoreSelection()
+{
+}
+
+CoreSelection::~CoreSelection(void)
+{
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreCommand
@@ -62,6 +73,11 @@ CoreCommandProcessor& CoreCommandProcessor::operator=(const CoreCommandProcessor
    m_commands = copyMe.m_commands;
    m_lastDone = copyMe.m_lastDone;
    return *this;
+}
+
+std::shared_ptr<CoreModel> CoreCommandProcessor::model() const
+{
+   return m_pModel;
 }
 
 void CoreCommandProcessor::adoptAndDo(std::shared_ptr<CoreCommand> pCommand)

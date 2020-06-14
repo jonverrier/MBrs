@@ -55,11 +55,14 @@ class CORE_API CoreChangeDirectoryCommand : public CoreCommand
 {
 public:
    // Constructors
-   CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, std::shared_ptr< CoreImageListModel> pModel);
+   CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, 
+                              std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreSelection> pSelection);
    virtual ~CoreChangeDirectoryCommand();
 
    // Attributes
    virtual bool canUndo();
+   virtual CoreModel& model() const;
+   virtual CoreSelection& selection() const;
 
    // Operations
 
@@ -73,9 +76,34 @@ protected:
 
 private:
    std::shared_ptr< CoreImageListModel> m_pModel;
+   std::shared_ptr< CoreSelection> m_pSelection;
    HString m_newPath;
    HString m_oldPath;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// CoreImageListSelection
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreImageListSelection : public CoreSelection
+{
+public:
+   // Constructors
+   CoreImageListSelection(std::list<HString>& imagePaths);
+   virtual ~CoreImageListSelection(void);
+
+   // Attributes
+   std::list<HString> imagePaths() const;
+
+   // Operations
+   CoreImageListSelection& operator=(const CoreImageListSelection& copyMe);
+   bool operator==(const CoreImageListSelection& rhs) const;
+   bool operator!=(const CoreImageListSelection& rhs) const;
+
+protected:
+
+private:
+   std::list<HString> m_imagePaths;
+};
 
 #endif // COREMBRSMODELCOMMAND_INCLUDED
