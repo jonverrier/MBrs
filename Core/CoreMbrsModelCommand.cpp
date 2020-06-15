@@ -329,3 +329,85 @@ void CoreAddImageTagCommand::unApplyTo(const std::list< HString >& paths)
    for (auto path : paths)
       m_pModel->removeTag(path, m_newTag);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreRemoveImageTagCommand
+///////////////////////////////////////////////////////////////////////////////
+
+CoreRemoveImageTagCommand::CoreRemoveImageTagCommand(const HString& oldTag,
+   std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreImageListSelection> pSelection)
+   : CoreCommand(),
+   m_oldTag(oldTag), m_pModel(pModel), m_pSelection(pSelection)
+{
+}
+
+CoreRemoveImageTagCommand::~CoreRemoveImageTagCommand(void)
+{
+}
+
+CoreRemoveImageTagCommand& CoreRemoveImageTagCommand::operator=(const CoreRemoveImageTagCommand& copyMe)
+{
+   m_oldTag = copyMe.m_oldTag;
+   m_pModel = copyMe.m_pModel;
+   m_pSelection = copyMe.m_pSelection;
+   m_listForUndo = copyMe.m_listForUndo;
+
+   return *this;
+}
+
+bool CoreRemoveImageTagCommand::operator==(const CoreRemoveImageTagCommand& rhs) const
+{
+   return m_oldTag == rhs.m_oldTag && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_listForUndo == rhs.m_listForUndo;
+}
+
+bool CoreRemoveImageTagCommand::operator!=(const CoreRemoveImageTagCommand& rhs) const
+{
+   return m_oldTag != rhs.m_oldTag || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_listForUndo != rhs.m_listForUndo;
+}
+
+CoreModel& CoreRemoveImageTagCommand::model() const
+{
+   return *m_pModel;
+}
+
+CoreSelection& CoreRemoveImageTagCommand::selection() const
+{
+   return *m_pSelection;
+}
+
+bool CoreRemoveImageTagCommand::canUndo()
+{
+   return m_listForUndo.size() > 0;
+}
+
+void CoreRemoveImageTagCommand::apply()
+{
+   std::list<HString> pathsWithTag;
+
+   for (auto path : m_pSelection->imagePaths())
+   {
+      if (m_pModel->doesImageHaveTag(path, m_oldTag))
+         pathsWithTag.push_back(path);
+   }
+
+   m_listForUndo = pathsWithTag;
+
+   applyTo(pathsWithTag);
+}
+
+void CoreRemoveImageTagCommand::undo()
+{
+   unApplyTo(m_listForUndo);
+}
+
+void CoreRemoveImageTagCommand::applyTo(const std::list< HString >& paths)
+{
+   for (auto path : paths)
+      m_pModel->removeTag(path, m_oldTag);
+}
+
+void CoreRemoveImageTagCommand::unApplyTo(const std::list< HString >& paths)
+{
+   for (auto path : paths)
+      m_pModel->addTag(path, m_oldTag);
+}

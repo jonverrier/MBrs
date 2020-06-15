@@ -111,7 +111,7 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// CoreChangeDirectoryCommand
+// CoreAddImageTagCommand
 ///////////////////////////////////////////////////////////////////////////////
 
 class CORE_API CoreAddImageTagCommand : public CoreCommand
@@ -146,6 +146,44 @@ private:
    std::shared_ptr<CoreImageListSelection> m_pSelection;
    std::list< HString > m_listForUndo;
    HString m_newTag;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreRemoveImageTagCommand
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreRemoveImageTagCommand : public CoreCommand
+{
+public:
+   // Constructors
+   CoreRemoveImageTagCommand(const HString& oldTag,
+      std::shared_ptr< CoreImageListModel> pModel,
+      std::shared_ptr< CoreImageListSelection> pSelection);
+   virtual ~CoreRemoveImageTagCommand();
+
+   // Attributes
+   virtual bool canUndo();
+   virtual CoreModel& model() const;
+   virtual CoreSelection& selection() const;
+
+   // Operations
+
+   CoreRemoveImageTagCommand& operator=(const CoreRemoveImageTagCommand& copyMe);
+   bool operator==(const CoreRemoveImageTagCommand& rhs) const;
+   bool operator!=(const CoreRemoveImageTagCommand& rhs) const;
+   virtual void apply();
+   virtual void undo();
+
+protected:
+
+private:
+   void applyTo(const std::list< HString >& paths);
+   void unApplyTo(const std::list< HString >& paths);
+
+   std::shared_ptr<CoreImageListModel> m_pModel;
+   std::shared_ptr<CoreImageListSelection> m_pSelection;
+   std::list< HString > m_listForUndo;
+   HString m_oldTag;
 };
 
 #endif // COREMBRSMODELCOMMAND_INCLUDED
