@@ -48,6 +48,24 @@ namespace TestCore
          testConstructionAndCopy(cmd1, cmd2);         
       }
 
+      TEST_METHOD(ConstructAndCopyAddCommand)
+      {
+         HString path = H_TEXT("Test1.jpg");
+         std::list<HString> sel;
+         sel.push_back ( path );
+
+         HString newTag1(H_TEXT("NewTag1"));
+         HString newTag2(H_TEXT("NewTag2"));
+
+         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel());
+         std::shared_ptr< CoreImageListSelection> pSelection(COMMON_NEW CoreImageListSelection(sel));
+
+         CoreAddImageTagCommand cmd1(newTag1, pModel, pSelection),
+            cmd2(newTag2, pModel, pSelection);
+
+         testConstructionAndCopy(cmd1, cmd2);
+      }
+
       TEST_METHOD(ConstructAndCopyImageSelection)
       {
          std::list<HString> imagePaths1 = { H_TEXT("Test1.jpg") };
@@ -71,12 +89,14 @@ namespace TestCore
          Assert::IsFalse(processor1.canUndo());
          Assert::IsFalse(processor1.canRedo());
 
+         // Change directory
          processor1.adoptAndDo(pCmd1);
          HString currentPath = pModel->path();
          Assert::IsTrue(currentPath == m_newPath);
          Assert::IsTrue(processor1.canUndo());
          Assert::IsFalse(processor1.canRedo());
 
+         // Undo to change back
          processor1.undo();
          currentPath = pModel->path();
          Assert::IsFalse(processor1.canUndo());
@@ -85,11 +105,56 @@ namespace TestCore
          list<CoreImageFile> files = pModel->images();
          Assert::IsTrue(files.size() > 0); // Always > 0 image files in original directory
 
+         // redo to change again
          processor1.redo();
          currentPath = pModel->path();
          Assert::IsTrue(currentPath == m_newPath);
          Assert::IsTrue(processor1.canUndo());
          Assert::IsFalse(processor1.canRedo());
+      }
+
+      TEST_METHOD(DoUndoAddTag)
+      {
+         HString path = std::filesystem::absolute (H_TEXT("test.JPG"));
+         std::list<HString> sel;
+         sel.push_back(path);
+
+         HString newTag(H_TEXT("NewTag"));
+
+         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel(H_TEXT(".")));
+         std::shared_ptr< CoreImageListSelection> pSelection(COMMON_NEW CoreImageListSelection(sel));
+         shared_ptr<CoreCommand> pCmd(COMMON_NEW CoreAddImageTagCommand(newTag, pModel, pSelection));
+
+         CoreCommandProcessor processor(pModel);
+         Assert::IsFalse(processor.canUndo());
+         Assert::IsFalse(processor.canRedo());
+
+         // Add a tag
+         processor.adoptAndDo(pCmd);
+         CoreImageFile file1(path); 
+         std::list<HString> tags = file1.subjectTags();
+         Assert::IsTrue(find (tags.begin(), tags.end(), newTag) != tags.end());
+         Assert::IsTrue(processor.canUndo());
+         Assert::IsFalse(processor.canRedo());
+
+         // Undo to remove it
+         processor.undo();
+         CoreImageFile file2(path);
+         tags = file2.subjectTags();
+         Assert::IsTrue(find(tags.begin(), tags.end(), newTag) == tags.end());
+         Assert::IsFalse(processor.canUndo());
+         Assert::IsTrue(processor.canRedo());
+
+         // Redo to add it back again
+         processor.redo();
+         CoreImageFile file3(path);
+         tags = file3.subjectTags();
+         Assert::IsTrue(find(tags.begin(), tags.end(), newTag) != tags.end());
+         Assert::IsTrue(processor.canUndo());
+         Assert::IsFalse(processor.canRedo());
+
+         // Undo at the end - so next run passes
+         processor.undo();
       }
 
       TEST_METHOD(Filtering)

@@ -64,11 +64,11 @@ void CoreDirectory::listImagesDirs(std::list<HString>& images, std::list<HString
 
       if (directoryEntry.isImageFile())
       {
-         images.push_back(contentPath);
+         images.push_back(std::filesystem::absolute(contentPath));
       }
       if (directoryEntry.isDirectory())
       {
-         dirs.push_back(contentPath);
+         dirs.push_back(std::filesystem::absolute(contentPath));
       }
    }
 }
@@ -86,7 +86,7 @@ void CoreDirectory::listImages(std::list<HString>& images) const
 
       if (directoryEntry.isImageFile())
       {
-         images.push_back(contentPath);
+         images.push_back(std::filesystem::absolute(contentPath));
       }
    }
 }

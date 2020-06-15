@@ -73,11 +73,61 @@ const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year, HInt month) c
    return images;
 }
 
+bool CoreImageListModel::doesImageHaveTag(const HString& path, const HString& tag) const
+{
+   for (auto image : m_images)
+   {
+      if (image.path() == path)
+      {
+         std::list<HString> tags = image.subjectTags();
+
+         if (find(tags.begin(), tags.end(), tag) != tags.end())
+            return true;
+         else
+            return false;
+      }
+   }
+
+   return false;
+}
+
 void CoreImageListModel::setPath(const HString& path)
 {
    m_path = path;
    CoreFileSystemEntity::saveImageDirectory(path);
    refreshImageList();
+}
+
+void CoreImageListModel::addTag(const HString& path, const HString& tag)
+{
+   list<CoreImageFile>::iterator iter;
+
+   for (iter = m_images.begin(); iter != m_images.end(); iter++)
+   {
+      if ((*iter).path() == path)
+      {
+         list<HString> add = { tag };
+         (*iter).addSubjectTags(add);
+         (*iter).writeSubjectTags();
+         return;
+      }
+   }
+}
+
+void CoreImageListModel::removeTag(const HString& path, const HString& tag)
+{
+   list<CoreImageFile>::iterator iter;
+
+   for (iter = m_images.begin(); iter != m_images.end(); iter++)
+   {
+      if ((*iter).path() == path)
+      {
+         list<HString> remove = { tag };
+         (*iter).removeSubjectTags(remove);
+         (*iter).writeSubjectTags();
+         return;
+      }
+   }
 }
 
 // order the list by date-time taken, newest first (highest takenAt() 
@@ -123,18 +173,19 @@ CoreChangeDirectoryCommand& CoreChangeDirectoryCommand::operator=(const CoreChan
    m_newPath = copyMe.m_newPath;
    m_oldPath = copyMe.m_oldPath;
    m_pModel = copyMe.m_pModel;
+   m_pSelection = copyMe.m_pSelection;
 
    return *this;
 }
 
 bool CoreChangeDirectoryCommand::operator==(const CoreChangeDirectoryCommand& rhs) const
 {
-   return m_newPath == rhs.m_newPath && m_oldPath == rhs.m_oldPath && m_pModel == rhs.m_pModel;
+   return m_newPath == rhs.m_newPath && m_oldPath == rhs.m_oldPath && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection;
 }
 
 bool CoreChangeDirectoryCommand::operator!=(const CoreChangeDirectoryCommand& rhs) const
 {
-   return m_newPath != rhs.m_newPath || m_oldPath != rhs.m_oldPath || m_pModel != rhs.m_pModel;
+   return m_newPath != rhs.m_newPath || m_oldPath != rhs.m_oldPath || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection;
 }
 
 CoreModel& CoreChangeDirectoryCommand::model() const
@@ -195,4 +246,86 @@ bool CoreImageListSelection::operator==(const CoreImageListSelection& rhs) const
 bool CoreImageListSelection::operator!=(const CoreImageListSelection& rhs) const
 {
    return m_imagePaths != rhs.m_imagePaths;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreAddImageTagCommand
+///////////////////////////////////////////////////////////////////////////////
+
+CoreAddImageTagCommand::CoreAddImageTagCommand (const HString& newTag, 
+   std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreImageListSelection> pSelection)
+   : CoreCommand(),
+   m_newTag(newTag), m_pModel(pModel), m_pSelection(pSelection)
+{
+}
+
+CoreAddImageTagCommand::~CoreAddImageTagCommand(void)
+{
+}
+
+CoreAddImageTagCommand& CoreAddImageTagCommand::operator=(const CoreAddImageTagCommand& copyMe)
+{
+   m_newTag = copyMe.m_newTag;
+   m_pModel = copyMe.m_pModel;
+   m_pSelection = copyMe.m_pSelection;
+   m_listForUndo = copyMe.m_listForUndo;
+
+   return *this;
+}
+
+bool CoreAddImageTagCommand::operator==(const CoreAddImageTagCommand& rhs) const
+{
+   return m_newTag == rhs.m_newTag && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_listForUndo == rhs.m_listForUndo;
+}
+
+bool CoreAddImageTagCommand::operator!=(const CoreAddImageTagCommand& rhs) const
+{
+   return m_newTag != rhs.m_newTag || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_listForUndo != rhs.m_listForUndo;
+}
+
+CoreModel& CoreAddImageTagCommand::model() const
+{
+   return *m_pModel;
+}
+
+CoreSelection& CoreAddImageTagCommand::selection() const
+{
+   return *m_pSelection;
+}
+
+bool CoreAddImageTagCommand::canUndo()
+{
+   return m_listForUndo.size() > 0;
+}
+
+void CoreAddImageTagCommand::apply()
+{
+   std::list<HString> pathsWithoutTag;
+
+   for (auto path : m_pSelection->imagePaths())
+   {
+      if (! m_pModel->doesImageHaveTag (path, m_newTag))
+         pathsWithoutTag.push_back (path);
+   }
+
+   m_listForUndo = pathsWithoutTag;
+
+   applyTo(pathsWithoutTag);
+}
+
+void CoreAddImageTagCommand::undo()
+{
+   unApplyTo(m_listForUndo);
+}
+
+void CoreAddImageTagCommand::applyTo(const std::list< HString >& paths)
+{
+   for (auto path : paths)
+      m_pModel->addTag(path, m_newTag);
+}
+
+void CoreAddImageTagCommand::unApplyTo(const std::list< HString >& paths)
+{
+   for (auto path : paths)
+      m_pModel->removeTag(path, m_newTag);
 }
