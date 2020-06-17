@@ -1,15 +1,15 @@
-﻿<Page 
-    x:Class="UI.MainPage"
+﻿<Page
+    x:Class="MbrsUI.Page"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:UI"
+    xmlns:local="using:MbrsUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="DimGray" Foreground="White" 
-    Loaded="onLoad">
+    Background="DimGray" Foreground="White"
+   >
 
-   <Grid Name="Root">
+   <Grid Name="Root" Background="DimGray" Loaded="onLoad">
 
       <Grid.RowDefinitions>
          <RowDefinition Height="Auto" />
@@ -24,7 +24,7 @@
                <ColumnDefinition Width="250" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-               
+
                <TextBlock Padding="5,10,5,10" TextWrapping="Wrap" x:Name="directoryPath" Text="C Programs Blah"/>
             </StackPanel>
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">

@@ -1,0 +1,14 @@
+﻿<Toolkit:XamlApplication
+    x:Class="MbrsUI.App"
+    xmlns:Toolkit="using:Microsoft.Toolkit.Win32.UI.XamlHost"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MbrsUI"
+   RequestedTheme="Dark">
+   <Application.Resources>
+      <ResourceDictionary>
+         <Color x:Key="SystemAccentColor">#0078D4</Color>
+         <Color x:Key="BackgroundColor">DimGray</Color>         
+      </ResourceDictionary>
+   </Application.Resources>   
+  </Toolkit:XamlApplication>
