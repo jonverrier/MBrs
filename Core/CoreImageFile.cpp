@@ -7,7 +7,39 @@
 #include "CoreImageFile.h"
 #include "HostUserData.h"
 
+#include "exiv2/exiv2.hpp"
+
 using namespace std;
+
+Exiv2::Image::AutoPtr openImage(const HString& path, HUint& fileError);
+
+time_t readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+std::list<HString> readSubjectTags(std::list<HString>& tagCache, Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+std::list<HString> readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+void writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError);
+
+std::list<HString> readIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+void writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError);
+
+std::list<HString> readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+
+void writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError);
+
+std::list<HString> deduplicateTags(std::list<HString>& consolidatedList, const std::list<HString>& newList);
+
+std::list<HString> parseDelimiters(const HString& input, const HString& delimiter);
+
+std::list<HString> storeSubjectTag(std::list<HString>& tags, const HString& input);
+
+HString makeDelimited(const  std::list<HString>& input, const HString& delimiter);
+
+HString convertToWide(const std::string& orig);
+
+std::string convertToNarrow(const HString& orig);
 
 ////////////////////////////////////////////////////////////////////////////
 // CoreImageFile
@@ -77,7 +109,7 @@ void CoreImageFile::readMetaData()
    {
       m_takenAt = readExifDateTime(pImage, fileError);
       if (fileError == 0)
-         m_tagCache = readSubjectTags(pImage, fileError);
+         m_tagCache = readSubjectTags(m_tagCache, pImage, fileError);
 
       pImage.release();
    }
@@ -101,7 +133,26 @@ list<HString> CoreImageFile::removeSubjectTags(const list<HString>& remove)
 }
 
 
-Exiv2::Image::AutoPtr CoreImageFile::openImage(const HString& path, HUint& fileError) const
+list<HString> CoreImageFile::writeSubjectTags()
+{
+   HUint fileError = 0;
+
+   Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
+   if (fileError == 0)
+   {
+      writeExifSubjectTags(pImage, m_tagCache, fileError);
+      if (fileError == 0)
+         writeIptcSubjectTags(pImage, m_tagCache, fileError);
+      if (fileError == 0)
+         writeXmpSubjectTags(pImage, m_tagCache, fileError);
+
+      pImage->writeMetadata();
+      pImage.release();
+   }
+   return m_tagCache;
+}
+
+Exiv2::Image::AutoPtr openImage(const HString& path, HUint& fileError) 
 {
    fileError = 0;
 
@@ -126,7 +177,7 @@ Exiv2::Image::AutoPtr CoreImageFile::openImage(const HString& path, HUint& fileE
    return Exiv2::Image::AutoPtr(nullptr);
 }
 
-std::list<HString> CoreImageFile::readSubjectTags (Exiv2::Image::AutoPtr& pImage, HUint& fileError)
+std::list<HString> readSubjectTags (std::list<HString>& tagCache, Exiv2::Image::AutoPtr& pImage, HUint& fileError)
 {
    list<HString> exifSubjects;
    list<HString> iptcSubjects;
@@ -142,34 +193,15 @@ std::list<HString> CoreImageFile::readSubjectTags (Exiv2::Image::AutoPtr& pImage
 
       iptcSubjects = readIptcSubjectTags(pImage, fileError);
       if (fileError == 0)
-         deduplicateTags(m_tagCache, iptcSubjects);
+         deduplicateTags(tagCache, iptcSubjects);
       if (fileError == 0)
          xmpSubjects = readXmpSubjectTags(pImage, fileError);
       if (fileError == 0)
-         deduplicateTags(m_tagCache, xmpSubjects);
+         deduplicateTags(tagCache, xmpSubjects);
       allSubjects.sort();
    } 
 
    return allSubjects;
-}
-
-list<HString> CoreImageFile::writeSubjectTags() 
-{
-   HUint fileError = 0;
-
-   Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
-   if (fileError == 0)
-   {
-      writeExifSubjectTags(pImage, m_tagCache, fileError);
-      if (fileError == 0)
-         writeIptcSubjectTags(pImage, m_tagCache, fileError);
-      if (fileError == 0)
-        writeXmpSubjectTags(pImage, m_tagCache, fileError);
-
-      pImage->writeMetadata();
-      pImage.release();
-   }
-   return m_tagCache;
 }
 
 // To store number of days in all months from January to Dec. 
@@ -226,7 +258,7 @@ time_t secondsToTime (const std::chrono::seconds& seconds)
    return t;
 }
 
-time_t CoreImageFile::readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
+time_t readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
 {
    // Initialise the time to start of epoch in case there is an error reading 
    time_t t = 0;
@@ -267,7 +299,7 @@ time_t CoreImageFile::readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fil
    return t;
 }
 
-list<HString> CoreImageFile::readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 
+list<HString> readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 
 {
    list<HString> exifSubjects;
 
@@ -297,7 +329,7 @@ list<HString> CoreImageFile::readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, 
    return exifSubjects;
 }
 
-void CoreImageFile::writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) const
+void writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) 
 {
    HString delimited = makeDelimited(tags, H_TEXT(";")); 
    
@@ -317,7 +349,7 @@ void CoreImageFile::writeExifSubjectTags(Exiv2::Image::AutoPtr& pImage, const li
    exifData["Exif.Image.XPKeywords"] = value;
 }
 
-std::list<HString> CoreImageFile::readIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 
+std::list<HString> readIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 
 {
    list<HString> iptcSubjects;
 
@@ -343,7 +375,7 @@ std::list<HString> CoreImageFile::readIptcSubjectTags(Exiv2::Image::AutoPtr& pIm
    return iptcSubjects;
 }
 
-void CoreImageFile::writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) const
+void writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) 
 {
    Exiv2::IptcData& iptcData = pImage->iptcData();
 
@@ -362,7 +394,7 @@ void CoreImageFile::writeIptcSubjectTags(Exiv2::Image::AutoPtr& pImage, const li
    }
 }
 
-list<HString> CoreImageFile::readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
+list<HString> readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
 {
    list<HString> xmpSubjects;
 
@@ -387,7 +419,7 @@ list<HString> CoreImageFile::readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, H
    return xmpSubjects;
 }
 
-void CoreImageFile::writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) const
+void writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tags, HUint& fileError) 
 {
    Exiv2::XmpData& xmpData = pImage->xmpData();
 
@@ -402,7 +434,7 @@ void CoreImageFile::writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const lis
       xmpData["Xmp.dc.subject"] = convertToNarrow(item);
 }
 
-HString CoreImageFile::convertToWide(const string& orig) const
+HString convertToWide(const string& orig) 
 {
    size_t newsize = orig.size() + 1;
 
@@ -417,7 +449,7 @@ HString CoreImageFile::convertToWide(const string& orig) const
    return returnString;
 }
 
-string CoreImageFile::convertToNarrow(const HString& orig) const
+string convertToNarrow(const HString& orig) 
 {
    size_t newsize = orig.size() + 1;
 
@@ -432,7 +464,7 @@ string CoreImageFile::convertToNarrow(const HString& orig) const
    return returnString;
 }
 
-list<HString> CoreImageFile::CoreImageFile::parseDelimiters (const HString& input, const HString& delimiter) const
+list<HString> parseDelimiters (const HString& input, const HString& delimiter) 
 {
    list<HString> tags;
    HString temp = input;
@@ -453,7 +485,7 @@ list<HString> CoreImageFile::CoreImageFile::parseDelimiters (const HString& inpu
    return tags;
 }
 
-list<HString> CoreImageFile::CoreImageFile::storeSubjectTag(list<HString>& tags, const HString& input) const
+list<HString> storeSubjectTag(list<HString>& tags, const HString& input) 
 {
    HString temp = input;
 
@@ -468,7 +500,7 @@ list<HString> CoreImageFile::CoreImageFile::storeSubjectTag(list<HString>& tags,
    return tags;
 }
 
-HString CoreImageFile::makeDelimited(const list<HString>& input, const HString& delimiter) const
+HString makeDelimited(const list<HString>& input, const HString& delimiter) 
 {
    HString delimited;
 
@@ -484,7 +516,7 @@ HString CoreImageFile::makeDelimited(const list<HString>& input, const HString& 
    return delimited; 
 }
 
-list<HString> CoreImageFile::deduplicateTags(list<HString>& consolidatedList, const list<HString>& newList)
+list<HString> deduplicateTags(list<HString>& consolidatedList, const list<HString>& newList)
 {
    for (auto item : newList)
    {

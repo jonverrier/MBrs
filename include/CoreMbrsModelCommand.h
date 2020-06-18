@@ -29,6 +29,7 @@ public:
 
    // Attributes
    const HString path () const;
+   const HString pathAsUserString () const;
    const std::list<CoreImageFile> images() const;
    const std::list<CoreImageFile> imagesFor (HInt year) const;
    const std::list<CoreImageFile> imagesFor (HInt year, HInt month) const;

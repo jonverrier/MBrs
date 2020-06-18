@@ -4,6 +4,8 @@
 #include "framework.h"
 #include "DesktopWin32App.h"
 
+#include "CoreMbrsModelCommand.h"
+
 using namespace winrt;
 using namespace Windows::UI;
 using namespace Windows::UI::Composition;
@@ -59,6 +61,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
    
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DESKTOPWIN32APP));
 
+    static std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
+    uint64_t u = reinterpret_cast<uint64_t> (pModel.get());
+    _myUserControl.setModel(u);
+
     MSG msg;
 
     // Main message loop:
@@ -69,9 +75,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-
-
     }
+
+    pModel.reset();
 
     return (int) msg.wParam;
 }
@@ -139,8 +145,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
        RECT windowRect;
        ::GetClientRect(hWnd, &windowRect);
        ::SetWindowPos(hWndXamlIsland, NULL, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_SHOWWINDOW);
+
        _myUserControl = winrt::MbrsUI::Page();
+       
        _desktopWindowXamlSource.Content(_myUserControl);
+
    }
    //END XAML Island
    ShowWindow(hWnd, nCmdShow);

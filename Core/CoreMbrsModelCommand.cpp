@@ -8,6 +8,7 @@
 #include "CoreFile.h"
 #include "CoreModelCommand.h"
 #include "CoreMbrsModelCommand.h"
+#include "CoreCompoundName.h"
 
 using namespace std;
 
@@ -32,10 +33,19 @@ CoreImageListModel::~CoreImageListModel(void)
 {
 }
 
-
 const HString CoreImageListModel::path() const
 {
    return m_path;
+}
+
+const HString CoreImageListModel::pathAsUserString() const
+{
+   HString formatted;
+   CoreWindowsPathParser parser;
+   CoreUIPathFormatter formatter;
+
+   CoreCompoundName compound (parser.parsePath(m_path));
+   return formatter.formatPath(compound);
 }
 
 const list<CoreImageFile> CoreImageListModel::images() const

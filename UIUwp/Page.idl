@@ -4,5 +4,7 @@ namespace MbrsUI
     runtimeclass Page : Windows.UI.Xaml.Controls.UserControl
     {
         Page();
+
+       void setModel(UInt64 ptrAsUint64);
     }
 }

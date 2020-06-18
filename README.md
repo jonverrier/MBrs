@@ -21,8 +21,9 @@ TXP Photographic Memory is created with:
 ## Design
 TXP Photographic Memory is composed of several different components, each of which is implemented as a separate library for development purposes:
 * Host - defines & implements wrappers to operating specific calls. At some point, a Linux port will be created, and this will be the first library to change. 
-* Core - has a light dependency on 'Host', but is mostly operating system independent. As much logic as possible is included here to maximise portability. Core contains the internal representation of the user's images, and commands to change the subject tags. In the 'Model View Controller' pattern, this is the Model & the Controller. This component is operating system independent. 
-* UI - this is the actual windows store application, which is fully windows specific. In the 'Model View Controller' pattern, this is the View. This component will require a full redesign & new implementation for Linux. 
+* Core - has a light dependency on 'Host', but is mostly operating system independent. As much logic as possible is included here to maximise portability. Core contains the internal representation of the user's images, and commands to change the subject tags. In the 'Model View Controller' pattern, this is the Model & the Controller. This component is operating system independent. It uses & encapsulates third party libraries such as Exiv2. 
+* UIWin32 - this is a shell application that creates a 'Xaml island' containing the UI. Fully windows specific. 
+* UIUwp - the actual windows UI, implemented in Xaml. Fully windows specific. In the 'Model View Controller' pattern, this is the View. 
 * Test - contains the test suite. 
 
 For deployment to the Windows store, the application is built as a single integrated executable. 
