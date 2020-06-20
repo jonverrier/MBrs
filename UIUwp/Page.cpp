@@ -8,6 +8,9 @@
 #include <future>
 #include <ppltasks.h>
 
+typedef DWORD SHGDNF;
+#include <shobjidl.h>
+
 using namespace winrt;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
@@ -38,40 +41,45 @@ namespace winrt::MbrsUI::implementation
        }
     }
 
-    bool myfn(StorageFolder folder)
-    {
-       if (folder != nullptr)
-       {
-          /* HString path(folder.Path().c_str());
-          pModel->setPath(path);
 
-          path = pModel->pathAsUserString();
-          _this->directoryPath().Text(path); */
-          return true;
-       }
-       return false;
-    }
-
-    void Page::changeDirectory(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    fire_and_forget Page::changeDirectory(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        if (m_pModel)
        {
-           FolderPicker picker; 
+           auto lifetime = get_strong();
 
-           picker.SuggestedStartLocation(PickerLocationId::PicturesLibrary); 
-           picker.FileTypeFilter().Append (H_TEXT("*"));
+           HWND hwnd;
 
-           auto _this = this;
-           auto pModel = m_pModel;
+           // set up a file picker to pick a directory wit no name restrictions
+           auto picker = winrt::Windows::Storage::Pickers::FolderPicker();
+           //picker.as<IInitializeWithWindow>()->Initialize(hwnd);
 
-           using Task_Type = bool(StorageFolder folder);
-           std::packaged_task<Task_Type> task (myfn);
-           //create_task(picker.PickSingleFolderAsync()).then ([] { folder
-           //   
-           //   });
-           //create_task(picker.PickSingleFolderAsync()).then([_this](StorageFolder folder)
-           //   {
-           //   });
+           picker.SuggestedStartLocation(PickerLocationId::PicturesLibrary);
+           picker.FileTypeFilter().Append(H_TEXT("*"));
+
+           // set up an asynch operations
+           StorageFolder folder = co_await  picker.PickSingleFolderAsync();
+
+           HString path(folder.Path().c_str());
+           m_pModel->setPath(path);
+
+           path = m_pModel->pathAsUserString();
+           this->directoryPath().Text(path);
+             
+          /*
+           FolderPicker picker;
+
+           picker.SuggestedStartLocation(PickerLocationId::PicturesLibrary);
+           picker.FileTypeFilter().Append(H_TEXT("*"));
+
+           auto folder { co_await picker.PickSingleFolderAsync() };
+
+           HString path(folder.Path().c_str());
+           m_pModel->setPath(path);
+
+           path = m_pModel->pathAsUserString();
+           this->directoryPath().Text(path);
+           */
        }
     }
 }
