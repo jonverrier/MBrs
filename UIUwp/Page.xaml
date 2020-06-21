@@ -28,7 +28,7 @@
                <TextBlock Padding="5,10,5,10" TextWrapping="Wrap" x:Name="directoryPath" Text="C Programs Blah"/>
             </StackPanel>
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-               <Button Margin="5,10,5,10" Click="changeDirectory">Change directory ...</Button>
+               <Button Margin="5,10,5,10" Click="onChangeDirectory">Change directory ...</Button>
             </StackPanel>
          </Grid>
       </StackPanel>

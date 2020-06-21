@@ -5,6 +5,7 @@
 #include "DesktopWin32App.h"
 
 #include "CoreMbrsModelCommand.h"
+#include "UIDesktopCallback.h"
 
 using namespace winrt;
 using namespace Windows::UI;
@@ -13,6 +14,18 @@ using namespace Windows::UI::Xaml::Hosting;
 using namespace Windows::Foundation::Numerics;
 using namespace Windows::UI::Xaml::Controls;
 
+class DesktopCallbackImpl : public DesktopCallback
+{
+public:
+   DesktopCallbackImpl(HWND hwnd);
+   virtual ~DesktopCallbackImpl();
+
+   virtual bool chooseFolder(HString& newPath);
+
+private:
+   HWND m_hwnd;
+};
+
 
 #define MAX_LOADSTRING 100
 
@@ -20,6 +33,7 @@ void AdjustLayout(HWND);
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
+HWND      hMainWindow;                          // Main window
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
@@ -28,6 +42,71 @@ winrt::MbrsUI::App hostApp{ nullptr };
 winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource _desktopWindowXamlSource{ nullptr };
 winrt::MbrsUI::Page _myUserControl{ nullptr };
 
+DesktopCallbackImpl::DesktopCallbackImpl(HWND hwnd)
+   : m_hwnd(hwnd)
+{
+}
+
+DesktopCallbackImpl::~DesktopCallbackImpl()
+{
+}
+
+bool DesktopCallbackImpl::chooseFolder(HString& newPath)
+{
+   PWSTR pszFilePath = NULL;
+   bool succeeded = false;
+   HRESULT hr;
+
+   // Create the FileOpenDialog object.
+   CComPtr<IFileOpenDialog> pFileOpen;
+   hr = pFileOpen.CoCreateInstance(__uuidof(FileOpenDialog));
+
+   if (SUCCEEDED(hr))
+   {
+      FILEOPENDIALOGOPTIONS options = FOS_PICKFOLDERS | FOS_NOCHANGEDIR | FOS_PATHMUSTEXIST;
+      pFileOpen->SetOptions(options);
+      pFileOpen->SetTitle(H_TEXT("Choose a different folder."));
+
+      // Set up current directory
+      LPITEMIDLIST pidl = SHSimpleIDListFromPath(newPath.c_str());
+      if (pidl)
+      {
+         IShellItem* pCurrentFolder;
+         SHCreateItemFromIDList(pidl, __uuidof(IShellItem),  (void **) &pCurrentFolder);
+         CoTaskMemFree(static_cast<void *> (pidl));
+         if (pCurrentFolder)
+         {
+            pFileOpen->SetFolder(pCurrentFolder);
+            pCurrentFolder->Release();
+         }
+      }
+
+      // Show the Open dialog box.
+      hr = pFileOpen->Show(NULL);
+
+      // Get the file name from the dialog box.
+      if (SUCCEEDED(hr))
+      {
+         CComPtr <IShellItem> pItem;
+         hr = pFileOpen->GetResult(&pItem);
+         if (SUCCEEDED(hr))
+         {
+            PWSTR pszFilePath;
+            hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+            // Put the path name in output value.
+            if (SUCCEEDED(hr))
+            {
+               newPath = HString(pszFilePath);
+               succeeded = true;
+               CoTaskMemFree(pszFilePath);
+            }
+         }
+      }
+   }
+
+   return succeeded;
+}
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -61,9 +140,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
    
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DESKTOPWIN32APP));
 
-    static std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
+    std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
     uint64_t u = reinterpret_cast<uint64_t> (pModel.get());
     _myUserControl.setModel(u);
+
+    DesktopCallbackImpl* pDesktopCallbackImpl = COMMON_NEW DesktopCallbackImpl (hMainWindow);
+    u = reinterpret_cast<uint64_t> (pDesktopCallbackImpl);
+    _myUserControl.setDesktopCallback(u);
 
     MSG msg;
 
@@ -131,6 +214,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
+
+   hMainWindow = hWnd;
+
    // XAML Island
    if (_desktopWindowXamlSource != nullptr)
    {

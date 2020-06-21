@@ -3,8 +3,9 @@ namespace MbrsUI
     [default_interface]
     runtimeclass Page : Windows.UI.Xaml.Controls.UserControl
     {
-        Page();
+       Page();
 
        void setModel(UInt64 ptrAsUint64);
+       void setDesktopCallback(UInt64 ptrAsUint64);
     }
 }
