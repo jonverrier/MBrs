@@ -22,6 +22,7 @@ namespace winrt::MbrsUI::implementation
     void Page::setModel(uint64_t ptrAsUint64)
     {
        m_pModel = reinterpret_cast<CoreImageListModel *>(ptrAsUint64);
+       // m_pCommandProcessor = COMMON_NEW CoreCommandProcessor (m_pModel);
     }
 
     void Page::setDesktopCallback(uint64_t ptrAsUint64)

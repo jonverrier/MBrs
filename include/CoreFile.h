@@ -69,7 +69,6 @@ public:
 
    // Operations
    CoreDirectory& operator=(const CoreDirectory& copyMe);
-   void listImagesDirs(std::list<HString>& images, std::list<HString>& dirs) const;
    void listImages (std::list<HString>& images) const;
 
    // Comparison Operators
@@ -80,8 +79,6 @@ protected:
 
 private:
    CoreDirectory(); // Cannot create without a path 
-
-   HString m_path;
 };
 
 
@@ -103,7 +100,7 @@ public:
 
    // Operations
    CoreDirectorySearch& operator=(const CoreDirectorySearch& copyMe);
-   void listImages (SearchQueue& queueImg, SearchQueue& queueDir);
+   void listImages (SearchQueue& queueImg);
 
 
    // Comparison Operators

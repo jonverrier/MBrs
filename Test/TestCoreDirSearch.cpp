@@ -37,12 +37,11 @@ namespace TestCore
          const HString path1 = H_TEXT(".");
 
          CoreDirectorySearch dir1(path1);
-         CoreDirectorySearch::SearchQueue queueImg, queueDir;
+         CoreDirectorySearch::SearchQueue queueImg;
 
-         dir1.listImages (queueImg, queueDir);
+         dir1.listImages (queueImg);
 
          Assert::IsTrue(queueImg.size() > 0);   // Always > 1 JPG file in test directory
-         Assert::IsTrue(queueDir.size() > 0);    // Always > 1 sub directory in test directory
       }
    };
 }

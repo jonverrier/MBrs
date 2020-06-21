@@ -87,23 +87,13 @@ namespace TestCore
       TEST_METHOD(Operations)
       {  
          const HString path1 = H_TEXT("emptySandbox");
-         const HString path2 = H_TEXT("realSandbox");
 
          filesystem::create_directories(path1);
-         filesystem::create_directories(path2);
-         std::ofstream("realSandbox/file1.txt");
-         std::ofstream("realSandbox/file2.txt");
-         std::ofstream("realSandbox/file1.jpg");
-         std::ofstream("realSandbox/file2.png");
+         CoreDirectory emptyDir(path1);
 
-         CoreDirectory emptyDir(path1), realDir(path2);
-
-         list<HString> contents, dirs;
-         emptyDir.listImagesDirs(contents, dirs);
+         list<HString> contents;
+         emptyDir.listImages(contents);
          Assert::IsTrue(contents.size() == 0);
-
-         realDir.listImagesDirs(contents, dirs);
-         Assert::IsTrue(contents.size() == 2); // 2 image files called .jpg 
       }
 
       TEST_METHOD(defaultImageDir)

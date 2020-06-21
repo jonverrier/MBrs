@@ -23,8 +23,9 @@ namespace winrt::MbrsUI::implementation
         void onLoad(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& e);
         void onChangeDirectory (winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
-        CoreImageListModel *m_pModel;
+
         DesktopCallback    *m_pDesktop;
+        CoreImageListModel *m_pModel;        
     };
 }
 
