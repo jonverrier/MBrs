@@ -62,11 +62,24 @@
                               <RowDefinition Height="Auto" />
                            </Grid.RowDefinitions>
 
-                           <StackPanel Grid.Row="0" Padding="10,5,5,10" VerticalAlignment="Center">
-                              <TextBlock Text="People"/>
-                              <CheckBox >Jon</CheckBox>
-                              <CheckBox >Claire</CheckBox>
-                              <Grid Name="AddEvent">
+                           <StackPanel Grid.Row="0" Padding="0" Margin="0" VerticalAlignment="Center">
+                              <TextBlock Text="People" Margin="5,5,5,5" />
+                              <ListView Margin="0" Padding="5,0,0,0" BorderThickness="0">
+                                 <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                       <Setter Property="Padding" Value="0"/>
+                                       <Setter Property="Margin" Value="0"/>
+                                    </Style>
+                                 </ListView.ItemContainerStyle>
+                                 <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                       <CheckBox Content="{x:Bind}"/>
+                                    </DataTemplate>
+                                 </ListView.ItemTemplate>
+                                 <x:String>Jon</x:String>
+                                 <x:String>Claire</x:String>
+                              </ListView>
+                              <Grid Name="AddPerson" Margin="5,5,5,5" >
                                  <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="30" />
@@ -91,18 +104,88 @@
                               </Grid>
                            </StackPanel>
                            <Border Grid.Row="0" BorderBrush="LightGray" BorderThickness="0,2,0,2" />
-                           <StackPanel Grid.Row="1" Padding="10,5,5,10" VerticalAlignment="Center">
-                              <TextBlock Text="Places"/>
-                              <CheckBox >France</CheckBox>
-                              <CheckBox >California</CheckBox>
-                              <TextBox Header="Add a new tag:" PlaceholderText="Place name" Margin="0,0,10,0"/>
+                           <StackPanel Grid.Row="1" Padding="0" Margin="0" VerticalAlignment="Center">
+                              <TextBlock Text="Places" Margin="5,5,5,5" />
+                              <ListView Margin="0" Padding="5,0,0,0" BorderThickness="0">
+                                 <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                       <Setter Property="Padding" Value="0"/>
+                                       <Setter Property="Margin" Value="0"/>
+                                    </Style>
+                                 </ListView.ItemContainerStyle>
+                                 <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                       <CheckBox Content="{x:Bind}"/>
+                                    </DataTemplate>
+                                 </ListView.ItemTemplate>
+                                 <x:String>Paris</x:String>
+                                 <x:String>London</x:String>
+                              </ListView>
+                              <Grid Name="AddPlace" Margin="5,5,5,5" >
+                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                 </Grid.ColumnDefinitions>
+                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBox Header="Add a new tag:" PlaceholderText="Place name" Margin="0,0,10,0"/>
+                                 </StackPanel>
+                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Padding="0" Margin="0">
+                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddPlace" Background="PaleGreen" Foreground="Black">
+                                       <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE73E;"/>
+                                       <Button.RenderTransform>
+                                          <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
+                                       </Button.RenderTransform>
+                                    </Button>
+                                    <Button Margin="0,0,0,0" Padding="0,0,0,0" Click="onCancelPlace" Background="PaleVioletRed" Foreground="Black">
+                                       <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;"/>
+                                       <Button.RenderTransform>
+                                          <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
+                                       </Button.RenderTransform>
+                                    </Button>
+                                 </StackPanel>
+                              </Grid>
                            </StackPanel>
                            <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
-                           <StackPanel Grid.Row="2" Padding="10,5,5,10" VerticalAlignment="Top">
-                              <TextBlock Text="Times"/>
-                              <CheckBox >Summer Holiday</CheckBox>
-                              <CheckBox >Christmas</CheckBox>
-                              <TextBox Header="Add a new tag:" PlaceholderText="What was happening?" Margin="0,0,10,0" />
+                           <StackPanel Grid.Row="2" Padding="0" Margin="0" VerticalAlignment="Center">
+                              <TextBlock Text="Times" Margin="5,5,5,5" />
+                              <ListView Margin="0" Padding="5,0,0,0" BorderThickness="0">
+                                 <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                       <Setter Property="Padding" Value="0"/>
+                                       <Setter Property="Margin" Value="0"/>
+                                    </Style>
+                                 </ListView.ItemContainerStyle>
+                                 <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                       <CheckBox Content="{x:Bind}"/>
+                                    </DataTemplate>
+                                 </ListView.ItemTemplate>
+                                 <x:String>Skiing</x:String>
+                                 <x:String>CrossFit</x:String>
+                              </ListView>
+                              <Grid Name="AddTime" Margin="5,5,5,5" >
+                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                 </Grid.ColumnDefinitions>
+                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBox Header="Add a new tag:" PlaceholderText="what was happening?" Margin="0,0,10,0"/>
+                                 </StackPanel>
+                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Padding="0" Margin="0">
+                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddTime" Background="PaleGreen" Foreground="Black">
+                                       <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE73E;"/>
+                                       <Button.RenderTransform>
+                                          <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
+                                       </Button.RenderTransform>
+                                    </Button>
+                                    <Button Margin="0,0,0,0" Padding="0,0,0,0" Click="onCancelTime" Background="PaleVioletRed" Foreground="Black">
+                                       <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;"/>
+                                       <Button.RenderTransform>
+                                          <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
+                                       </Button.RenderTransform>
+                                    </Button>
+                                 </StackPanel>
+                              </Grid>
                            </StackPanel>
                            <Border Grid.Row="3" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
                            <StackPanel Grid.Row="4" Padding="10,5,5,10" VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Center">
