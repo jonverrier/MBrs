@@ -14,20 +14,16 @@ using namespace Windows::Storage::Pickers;
 namespace winrt::MbrsUI::implementation
 {
     Page::Page()
-       : m_pDesktop(nullptr), m_pModel (nullptr)
+       : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr)
     {
        InitializeComponent();
+       m_pModel.reset (COMMON_NEW CoreImageListModel());
+       m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
     }
 
-    void Page::setModel(uint64_t ptrAsUint64)
+    void Page::setDesktopCallback(uint64_t p)
     {
-       m_pModel = reinterpret_cast<CoreImageListModel *>(ptrAsUint64);
-       // m_pCommandProcessor = COMMON_NEW CoreCommandProcessor (m_pModel);
-    }
-
-    void Page::setDesktopCallback(uint64_t ptrAsUint64)
-    {
-       m_pDesktop = reinterpret_cast<DesktopCallback *>(ptrAsUint64);
+       m_pDesktop = reinterpret_cast<DesktopCallback *>(p);
     }
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -68,12 +64,29 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->path();
           if (m_pDesktop->chooseFolder(path))
           {
-             m_pModel->setPath(path);
+             std::shared_ptr< CoreSelection> pSelection(COMMON_NEW CoreSelection());
+
+             std::shared_ptr<CoreCommand> pCmd (COMMON_NEW CoreChangeDirectoryCommand (path, m_pModel->path(), m_pModel, pSelection));
+
+             m_pCommandProcessor->adoptAndDo(pCmd);
+             // m_pModel->setPath(path);
 
              path = m_pModel->pathAsUserString();
              this->directoryPath().Text(path);
           }
        }
+    }
+
+    void Page::onAddPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+    }
+
+    void Page::onCancelPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
     }
 }
 

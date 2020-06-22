@@ -24,7 +24,6 @@
                <ColumnDefinition Width="250" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-
                <TextBlock Padding="5,10,5,10" TextWrapping="Wrap" x:Name="directoryPath" Text="C Programs Blah"/>
             </StackPanel>
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -42,7 +41,7 @@
                </Grid.ColumnDefinitions>
 
                <!--This grid is for the right hand of the screen, to display Subject tags -->
-               <StackPanel Grid.Column="1" >
+               <StackPanel Grid.Column="1">
                   <Grid Name="TagsPane">
                      <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -61,35 +60,49 @@
                               <RowDefinition Height="Auto" />
                               <RowDefinition Height="Auto" />
                               <RowDefinition Height="Auto" />
-                              <RowDefinition Height="Auto" />
                            </Grid.RowDefinitions>
 
                            <StackPanel Grid.Row="0" Padding="10,5,5,10" VerticalAlignment="Center">
                               <TextBlock Text="People"/>
                               <CheckBox >Jon</CheckBox>
                               <CheckBox >Claire</CheckBox>
-                              <TextBox Header="Add a new tag:" PlaceholderText="Person's name" Margin="0,0,10,0"/>
+                              <Grid Name="AddEvent">
+                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                 </Grid.ColumnDefinitions>
+                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBox Header="Add a new tag:" PlaceholderText="Person's name" Margin="0,0,10,0"/>
+                                 </StackPanel>
+                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Padding="0" Margin="0">
+                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddPerson" Background="PaleGreen" Foreground="Black">
+                                       <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE73E;"/>
+                                       <Button.RenderTransform>
+                                          <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
+                                       </Button.RenderTransform>
+                                    </Button>
+                                    <Button Margin="0,0,0,0" Padding="0,0,0,0" Click="onCancelPerson" Background="PaleVioletRed" Foreground="Black">
+                                       <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;"/>
+                                       <Button.RenderTransform>
+                                          <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
+                                       </Button.RenderTransform>                                       
+                                    </Button>
+                                 </StackPanel>
+                              </Grid>
                            </StackPanel>
                            <Border Grid.Row="0" BorderBrush="LightGray" BorderThickness="0,2,0,2" />
                            <StackPanel Grid.Row="1" Padding="10,5,5,10" VerticalAlignment="Center">
-                              <TextBlock  Text="Places"/>
+                              <TextBlock Text="Places"/>
                               <CheckBox >France</CheckBox>
                               <CheckBox >California</CheckBox>
                               <TextBox Header="Add a new tag:" PlaceholderText="Place name" Margin="0,0,10,0"/>
                            </StackPanel>
                            <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
                            <StackPanel Grid.Row="2" Padding="10,5,5,10" VerticalAlignment="Top">
-                              <TextBlock  Text="Events"/>
+                              <TextBlock Text="Times"/>
                               <CheckBox >Summer Holiday</CheckBox>
                               <CheckBox >Christmas</CheckBox>
-                              <TextBox Header="Add a new tag:" PlaceholderText="Event name" Margin="0,0,10,0"/>
-                           </StackPanel>
-                           <Border Grid.Row="2" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
-                           <StackPanel Grid.Row="3" Padding="10,5,5,10" VerticalAlignment="Top" Grid.ColumnSpan="2" >
-                              <TextBlock  Text="Activities"/>
-                              <CheckBox >Skiing</CheckBox>
-                              <CheckBox >CrossFit</CheckBox>
-                              <TextBox Header="Add a new tag:" PlaceholderText="Activity name" Margin="0,0,10,0"/>
+                              <TextBox Header="Add a new tag:" PlaceholderText="What was happening?" Margin="0,0,10,0" />
                            </StackPanel>
                            <Border Grid.Row="3" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
                            <StackPanel Grid.Row="4" Padding="10,5,5,10" VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Center">

@@ -3,7 +3,7 @@
   <Identity
     Name="cbf5ec59-ac41-4815-bbfd-625da7427cff"
     Publisher="CN=miguelrb"
-    Version="1.0.0.0" />
+    Version="0.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="cbf5ec59-ac41-4815-bbfd-625da7427cff" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
   <Properties>
     <DisplayName>Photographic Memory</DisplayName>

@@ -104,6 +104,10 @@ void CoreImageFile::readMetaData()
 {
    HUint fileError = 0;
 
+
+   if (!existsOnFileSystem() || (filesystem::file_size(path()) <= minFileSize))
+      return;
+
    Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
    if (fileError == 0)
    {
@@ -133,9 +137,12 @@ list<HString> CoreImageFile::removeSubjectTags(const list<HString>& remove)
 }
 
 
-list<HString> CoreImageFile::writeSubjectTags()
+bool CoreImageFile::writeSubjectTags()
 {
    HUint fileError = 0;
+
+   if (!existsOnFileSystem() || (filesystem::file_size(path()) <= minFileSize))
+      return false;
 
    Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
    if (fileError == 0)
@@ -148,8 +155,11 @@ list<HString> CoreImageFile::writeSubjectTags()
 
       pImage->writeMetadata();
       pImage.release();
+
+      return true;
    }
-   return m_tagCache;
+
+   return false;
 }
 
 Exiv2::Image::AutoPtr openImage(const HString& path, HUint& fileError) 

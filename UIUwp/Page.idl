@@ -5,7 +5,6 @@ namespace MbrsUI
     {
        Page();
 
-       void setModel(UInt64 ptrAsUint64);
-       void setDesktopCallback(UInt64 ptrAsUint64);
+       void setDesktopCallback(UInt64 ptr);
     }
 }

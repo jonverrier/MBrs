@@ -140,12 +140,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
    
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DESKTOPWIN32APP));
 
-    std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
-    uint64_t u = reinterpret_cast<uint64_t> (pModel.get());
-    _myUserControl.setModel(u);
-
     DesktopCallbackImpl* pDesktopCallbackImpl = COMMON_NEW DesktopCallbackImpl (hMainWindow);
-    u = reinterpret_cast<uint64_t> (pDesktopCallbackImpl);
+    uint64_t u = reinterpret_cast<uint64_t> (pDesktopCallbackImpl);
     _myUserControl.setDesktopCallback(u);
 
     MSG msg;
@@ -159,8 +155,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
-    pModel.reset();
 
     return (int) msg.wParam;
 }

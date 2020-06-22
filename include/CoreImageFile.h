@@ -33,7 +33,7 @@ public:
    // Operations
    std::list<HString> addSubjectTags(const std::list<HString>& add);
    std::list<HString> removeSubjectTags(const std::list<HString>& add);
-   std::list<HString> writeSubjectTags();
+   bool writeSubjectTags();
 
    CoreImageFile& operator=(const CoreImageFile& copyMe);
 
@@ -44,6 +44,8 @@ public:
 protected:
 
 private:
+   const HInt minFileSize = 1024; // Only try to open files >=  this size. 
+
    CoreImageFile(); // Cannot create without a path 
 
    void readMetaData();

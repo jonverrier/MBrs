@@ -8,7 +8,7 @@
    <Application.Resources>
       <ResourceDictionary>
          <Color x:Key="SystemAccentColor">#0078D4</Color>
-         <Color x:Key="BackgroundColor">DimGray</Color>         
-      </ResourceDictionary>
+         <Color x:Key="BackgroundColor">DimGray</Color>
+      </ResourceDictionary> 
    </Application.Resources>   
   </Toolkit:XamlApplication>
