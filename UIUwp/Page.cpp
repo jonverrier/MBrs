@@ -14,11 +14,18 @@ using namespace Windows::Storage::Pickers;
 namespace winrt::MbrsUI::implementation
 {
     Page::Page()
-       : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr)
+       : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
+         m_peopleTags (winrt::single_threaded_observable_vector<winrt::hstring>())
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
+
+       m_peopleTags.Append(H_TEXT("Jonathan"));
+       m_peopleTags.Append(H_TEXT("Clarissa"));
+       m_peopleTags.Append(H_TEXT("Harold"));
+
+
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -46,6 +53,7 @@ namespace winrt::MbrsUI::implementation
        if (m_pModel)
        {
           /* This section does not work as Pickers cannot currently be called from Xaml islands
+           * So instead we call back into the hosting application, which is Win32
            auto lifetime = get_strong();
 
            HWND hwnd;
@@ -74,6 +82,14 @@ namespace winrt::MbrsUI::implementation
              path = m_pModel->pathAsUserString();
              this->directoryPath().Text(path);
           }
+          
+          /* Windows::UI::Xaml::Controls::CheckBox checkbox;
+          auto in = checkbox.Content();
+          Windows::UI::Xaml::Controls::ListBoxItem item;
+          item.Content(checkbox);
+
+
+          this->people().Items().Append(item); */
        }
     }
 
@@ -111,6 +127,11 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+    }
+
+    Windows::Foundation::Collections::IObservableVector<winrt::hstring> Page::peopleTags()
+    {
+       return m_peopleTags;
     }
 }
 

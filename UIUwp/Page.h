@@ -30,9 +30,13 @@ namespace winrt::MbrsUI::implementation
         void onAddTime(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onCancelTime(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
+        Windows::Foundation::Collections::IObservableVector<winrt::hstring> peopleTags();
+
         DesktopCallback    *m_pDesktop;   
         std::shared_ptr<CoreCommandProcessor> m_pCommandProcessor;
         std::shared_ptr<CoreImageListModel> m_pModel;
+
+        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_peopleTags;
     };
 }
 
