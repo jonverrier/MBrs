@@ -1,5 +1,12 @@
 namespace MbrsUI
 {
+    runtimeclass StringWrapper : Windows.UI.Xaml.Data.INotifyPropertyChanged
+    {
+       StringWrapper(String text);
+
+       String text{ get; set; };
+    }
+
     [default_interface]
     runtimeclass Page : Windows.UI.Xaml.Controls.UserControl
     {
@@ -7,6 +14,6 @@ namespace MbrsUI
 
        void setDesktopCallback(UInt64 ptr);
 
-       Windows.Foundation.Collections.IObservableVector<String> peopleTags{ get; };
+       Windows.Foundation.Collections.IObservableVector<StringWrapper> peopleTags{ get; };
     }
 }

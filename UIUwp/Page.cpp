@@ -1,4 +1,10 @@
 ﻿#include "pch.h"
+
+#include "StringWrapper.h"
+#if __has_include("StringWrapper.g.cpp")
+#include "StringWrapper.g.cpp"
+#endif
+
 #include "Page.h"
 #if __has_include("Page.g.cpp")
 #include "Page.g.cpp"
@@ -13,19 +19,43 @@ using namespace Windows::Storage::Pickers;
 
 namespace winrt::MbrsUI::implementation
 {
+    StringWrapper::StringWrapper(winrt::hstring const& text)
+       : m_text (text)
+    {
+    }
+
+    winrt::hstring StringWrapper::text()
+    {
+       return m_text;
+    }
+
+   void StringWrapper::text(const winrt::hstring& in)
+    {
+       m_text = in;
+    }
+   winrt::event_token StringWrapper::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler)
+   {
+      return m_propertyChanged.add(handler);
+   }
+
+   void StringWrapper::PropertyChanged(winrt::event_token const& token)
+   {
+      m_propertyChanged.remove(token);
+   }
+
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
-         m_peopleTags (winrt::single_threaded_observable_vector<winrt::hstring>())
+         m_peopleTags (nullptr)
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
 
-       m_peopleTags.Append(H_TEXT("Jonathan"));
-       m_peopleTags.Append(H_TEXT("Clarissa"));
-       m_peopleTags.Append(H_TEXT("Harold"));
+       m_peopleTags = winrt::single_threaded_observable_vector<MbrsUI::StringWrapper>();
 
-
+       //m_peopleTags.Append((H_TEXT("Jonathan")));
+       //m_peopleTags.Append((H_TEXT("Clarissa")));
+       //m_peopleTags.Append((H_TEXT("Harold")));
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -72,7 +102,7 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->path();
           if (m_pDesktop->chooseFolder(path))
           {
-             std::shared_ptr< CoreSelection> pSelection(COMMON_NEW CoreSelection());
+             std::shared_ptr<CoreSelection> pSelection(COMMON_NEW CoreSelection());
 
              std::shared_ptr<CoreCommand> pCmd (COMMON_NEW CoreChangeDirectoryCommand (path, m_pModel->path(), m_pModel, pSelection));
 
@@ -129,7 +159,7 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
     }
 
-    Windows::Foundation::Collections::IObservableVector<winrt::hstring> Page::peopleTags()
+    Windows::Foundation::Collections::IObservableVector<MbrsUI::StringWrapper> Page::peopleTags()
     {
        return m_peopleTags;
     }

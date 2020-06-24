@@ -65,14 +65,12 @@
                            <StackPanel Grid.Row="0" Padding="0" Margin="0" VerticalAlignment="Center">
                               <TextBlock Text="People" Margin="5,5,5,5" />
                               <!--Temp temp -->
-                              <ListView Margin="0" Padding="5,0,0,0" BorderThickness="0" x:Name="people" >
+                              <ListView Margin="0" Padding="5,0,0,0" BorderThickness="0" x:Name="people" ItemsSource="{x:Bind Path=peopleTags, Mode=OneWay}">
                                  <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                       <CheckBox Content="{x:Bind}"/>
+                                    <DataTemplate x:DataType="local:StringWrapper">
+                                       <TextBlock Text="{x:Bind Path=text, Mode=OneWay}"/>
                                     </DataTemplate>
                                  </ListView.ItemTemplate>
-                                 <x:String>Jon2</x:String>
-                                 <x:String>Claire2</x:String>
                               </ListView>
                               <ListView Margin="0" Padding="5,0,0,0" BorderThickness="0">
                                  <ListView.ItemContainerStyle>
