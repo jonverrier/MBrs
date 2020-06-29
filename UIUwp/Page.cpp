@@ -29,10 +29,6 @@ namespace winrt::MbrsUI::implementation
        return m_text;
     }
 
-   void StringWrapper::text(const winrt::hstring& in)
-    {
-       m_text = in;
-    }
    winrt::event_token StringWrapper::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler)
    {
       return m_propertyChanged.add(handler);
@@ -45,17 +41,27 @@ namespace winrt::MbrsUI::implementation
 
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
-         m_peopleTags (nullptr)
+         m_peopleTags (nullptr), m_placeTags (nullptr), m_timeTags (nullptr)
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
 
-       m_peopleTags = winrt::single_threaded_observable_vector<MbrsUI::StringWrapper>();
+       m_peopleTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_placeTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_timeTags = winrt::single_threaded_observable_vector<winrt::hstring>();
 
-       //m_peopleTags.Append((H_TEXT("Jonathan")));
-       //m_peopleTags.Append((H_TEXT("Clarissa")));
-       //m_peopleTags.Append((H_TEXT("Harold")));
+       m_peopleTags.Append((H_TEXT("Jonathan")));
+       m_peopleTags.Append((H_TEXT("Clarissa")));
+       m_peopleTags.Append((H_TEXT("Harold")));
+
+       m_placeTags.Append((H_TEXT("London")));
+       m_placeTags.Append((H_TEXT("New York")));
+       m_placeTags.Append((H_TEXT("Paris")));
+
+       m_timeTags.Append((H_TEXT("Skiing")));
+       m_timeTags.Append((H_TEXT("CrossFit")));
+       m_timeTags.Append((H_TEXT("Summer Holiday")));
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -72,6 +78,23 @@ namespace winrt::MbrsUI::implementation
        {
           HString path = m_pModel->pathAsUserString();
           this->directoryPath().Text(path);
+
+          this->people().ItemsSource(m_peopleTags);
+          this->places().ItemsSource(m_placeTags);
+          this->times().ItemsSource(m_timeTags);
+
+          // All the 'addXXX' buttons are initially disabled because there are no changes in the text box
+          this->addPersonButton().IsEnabled(false);
+          this->addPlaceButton().IsEnabled(false);
+          this->addTimeButton().IsEnabled(false);
+
+          // Select no images, and then the tag lists are disabled as there is no selection to apply tag changes to
+          winrt::Windows::UI::Xaml::Data::ItemIndexRange range (0, 0);
+          this->imageGrid().SelectRange(range);
+
+          this->people().IsEnabled(false);
+          this->places().IsEnabled(false);
+          this->times().IsEnabled(false);
        }
     }
 
@@ -107,20 +130,39 @@ namespace winrt::MbrsUI::implementation
              std::shared_ptr<CoreCommand> pCmd (COMMON_NEW CoreChangeDirectoryCommand (path, m_pModel->path(), m_pModel, pSelection));
 
              m_pCommandProcessor->adoptAndDo(pCmd);
-             // m_pModel->setPath(path);
 
              path = m_pModel->pathAsUserString();
              this->directoryPath().Text(path);
           }
-          
-          /* Windows::UI::Xaml::Controls::CheckBox checkbox;
-          auto in = checkbox.Content();
-          Windows::UI::Xaml::Controls::ListBoxItem item;
-          item.Content(checkbox);
-
-
-          this->people().Items().Append(item); */
        }
+    }
+
+    void Page::onImageSelectionChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       bool enable = false;
+
+       if (this->imageGrid().SelectedItems().Size() > 0)
+          enable = true;
+
+       this->people().IsEnabled(enable);
+       this->places().IsEnabled(enable);
+       this->times().IsEnabled(enable);
+    }
+
+    void Page::onNewPersonChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       bool enable = false;
+
+       if (this->addPersonText().Text().size() > 0)
+          enable = true;
+
+       this->addPersonButton().IsEnabled(enable);
     }
 
     void Page::onAddPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -129,10 +171,17 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
     }
 
-    void Page::onCancelPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onNewPlaceChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+
+       bool enable = false;
+
+       if (this->addPlaceText().Text().size() > 0)
+          enable = true;
+
+       this->addPlaceButton().IsEnabled(enable);
     }
 
     void Page::onAddPlace(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -141,27 +190,23 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
     }
 
-    void Page::onCancelPlace(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onNewTimeChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+
+       bool enable = false;
+
+       if (this->addTimeText().Text().size() > 0)
+          enable = true;
+
+       this->addTimeButton().IsEnabled(enable);
     }
 
     void Page::onAddTime(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
-    }
-
-    void Page::onCancelTime(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
-    {
-       UNREFERENCED_PARAMETER(sender);
-       UNREFERENCED_PARAMETER(e);
-    }
-
-    Windows::Foundation::Collections::IObservableVector<MbrsUI::StringWrapper> Page::peopleTags()
-    {
-       return m_peopleTags;
     }
 }
 

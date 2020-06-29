@@ -4,7 +4,7 @@ namespace MbrsUI
     {
        StringWrapper(String text);
 
-       String text{ get; set; };
+       String text{ get;};
     }
 
     [default_interface]
@@ -13,7 +13,5 @@ namespace MbrsUI
        Page();
 
        void setDesktopCallback(UInt64 ptr);
-
-       Windows.Foundation.Collections.IObservableVector<StringWrapper> peopleTags{ get; };
     }
 }
