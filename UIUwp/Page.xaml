@@ -63,6 +63,11 @@
 
                            <StackPanel Grid.Row="0" Padding="0" Margin="0" VerticalAlignment="Center">
                               <ListView Margin="0" Padding="0,0,0,0" BorderThickness="0" x:Name="people" >
+                                 <ListView.ContextFlyout>
+                                    <MenuFlyout>
+                                       <MenuFlyoutItem Text="Remove from this list" Name="removePeopleMenuItem" Click="onRemovePersonTag" />
+                                    </MenuFlyout>
+                                 </ListView.ContextFlyout>
                                  <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                        <Setter Property="Padding" Value="5,0,0,5"/>

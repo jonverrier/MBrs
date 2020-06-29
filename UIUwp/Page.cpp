@@ -165,6 +165,12 @@ namespace winrt::MbrsUI::implementation
        this->addPersonButton().IsEnabled(enable);
     }
 
+    void Page::onRemovePersonTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+    }
+
     void Page::onAddPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
