@@ -14,7 +14,7 @@ static void manageSpace (vector<HString>& components, HUint index)
 {
 	if (components.capacity() <= index)
 		components.reserve(components.capacity() + g_vectorSizeIncrement);
-	components.resize(index + 1);
+	components.resize(static_cast<uint64_t>(index) + 1ll);
 }
 
 CoreCompoundName::CoreCompoundName ()

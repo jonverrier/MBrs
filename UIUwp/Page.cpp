@@ -10,6 +10,7 @@
 #include "Page.g.cpp"
 #endif
 
+#include "UIDesktopCallback.h"
 
 using namespace winrt;
 using namespace Windows::Foundation;
@@ -41,7 +42,8 @@ namespace winrt::MbrsUI::implementation
 
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
-         m_peopleTags (nullptr), m_placeTags (nullptr), m_timeTags (nullptr)
+         m_peopleTags (nullptr), m_placeTags (nullptr), m_timeTags (nullptr),
+         m_peopleDefaultTags(CoreCategoryKeywords::peopleKey())
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
@@ -69,6 +71,16 @@ namespace winrt::MbrsUI::implementation
        m_pDesktop = reinterpret_cast<DesktopCallback *>(p);
     }
 
+    void buildTagViewData (winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags, const CoreCategoryKeywords& peopleDefaults)
+    {
+       peopleTags.Clear();
+
+       for (auto key : peopleDefaults.keywords())
+       {
+          peopleTags.Append(key);
+       }
+    }
+
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
@@ -79,12 +91,19 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->pathAsUserString();
           this->directoryPath().Text(path);
 
-          this->people().ItemsSource(m_peopleTags);
+          const HString catName1 = H_TEXT("CategoryOp1");
+          const HString keyName1 = H_TEXT("Key1");
+          const HString keyName2 = H_TEXT("Key2");
+
+          // add keywords
+          buildTagViewData(m_peopleTags, m_peopleDefaultTags);
+
+          this->peopleDefaultTags().ItemsSource(m_peopleTags);
           this->places().ItemsSource(m_placeTags);
           this->times().ItemsSource(m_timeTags);
 
           // All the 'addXXX' buttons are initially disabled because there are no changes in the text box
-          this->addPersonButton().IsEnabled(false);
+          this->addPersonDefaultTagButton().IsEnabled(false);
           this->addPlaceButton().IsEnabled(false);
           this->addTimeButton().IsEnabled(false);
 
@@ -92,7 +111,7 @@ namespace winrt::MbrsUI::implementation
           winrt::Windows::UI::Xaml::Data::ItemIndexRange range (0, 0);
           this->imageGrid().SelectRange(range);
 
-          this->people().IsEnabled(false);
+          this->peopleDefaultTags().IsEnabled(false);
           this->places().IsEnabled(false);
           this->times().IsEnabled(false);
        }
@@ -147,34 +166,41 @@ namespace winrt::MbrsUI::implementation
        if (this->imageGrid().SelectedItems().Size() > 0)
           enable = true;
 
-       this->people().IsEnabled(enable);
+       this->peopleDefaultTags().IsEnabled(enable);
        this->places().IsEnabled(enable);
        this->times().IsEnabled(enable);
     }
 
-    void Page::onNewPersonChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onNewPersonDefaultTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
        bool enable = false;
 
-       if (this->addPersonText().Text().size() > 0)
+       if (this->newPersonDefaultTag().Text().size() > 0)
           enable = true;
 
-       this->addPersonButton().IsEnabled(enable);
+       this->addPersonDefaultTagButton().IsEnabled(enable);
     }
 
-    void Page::onRemovePersonTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onRemovePersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+
+       auto selected = peopleDefaultTags().SelectedItem();
     }
 
-    void Page::onAddPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onAddPersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+
+       HString keyword = (newPersonDefaultTag().Text().c_str());
+       m_peopleDefaultTags.addKeyword(keyword); // Save to storage
+       m_peopleTags.Append(newPersonDefaultTag().Text()); // Add new tag to the UI
+       newPersonDefaultTag().Text(H_TEXT("")); // Clear the field
     }
 
     void Page::onNewPlaceChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -215,8 +241,3 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
     }
 }
-
-
-
-
-

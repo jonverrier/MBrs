@@ -28,18 +28,19 @@ HString CoreCategoryKeywords::category() const
    return m_category;
 }
 
-std::list<HString> CoreCategoryKeywords::keywords() const
+std::vector<HString> CoreCategoryKeywords::keywords() const
 {
    return m_keywords;
 }
 
 bool CoreCategoryKeywords::addKeyword(const HString& add)
 {
-   list<HString>::iterator iter = find(m_keywords.begin(), m_keywords.end(), add);
+   vector<HString>::iterator iter = find(m_keywords.begin(), m_keywords.end(), add);
 
    if (iter == m_keywords.end())
    {
       m_keywords.push_back(add);
+      sort(m_keywords.begin(), m_keywords.end());
       writeKeywords(m_category, m_keywords);
       return true;
    }
@@ -48,7 +49,7 @@ bool CoreCategoryKeywords::addKeyword(const HString& add)
 
 bool CoreCategoryKeywords::removeKeyword(const HString& remove)
 {
-   list<HString>::iterator iter = find(m_keywords.begin(), m_keywords.end(), remove);
+   vector<HString>::iterator iter = find(m_keywords.begin(), m_keywords.end(), remove);
 
    if (iter != m_keywords.end())
    {
@@ -85,9 +86,9 @@ bool CoreCategoryKeywords::operator!=(const CoreCategoryKeywords& rhs) const
    return m_category != rhs.m_category || m_keywords != rhs.m_keywords;
 }
 
-list<HString> CoreCategoryKeywords::readKeywords(const HString& category)
+vector<HString> CoreCategoryKeywords::readKeywords(const HString& category)
 {
-   list<HString> list;
+   vector<HString> vector;
    std::vector<HString> stored;
 
    HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
@@ -95,14 +96,15 @@ list<HString> CoreCategoryKeywords::readKeywords(const HString& category)
    if (data.isDataStoredAt(category))
    {
       stored = data.readMultiString(category);
-      list.resize(stored.size());
-      list.assign(stored.begin(), stored.end());
+      vector.resize(stored.size());
+      vector.assign(stored.begin(), stored.end());
+      sort(vector.begin(), vector.end());
    }
 
-   return list;
+   return vector;
 }
 
-void CoreCategoryKeywords::writeKeywords(const HString& category, std::list<HString>& keywords)
+void CoreCategoryKeywords::writeKeywords(const HString& category, std::vector<HString>& keywords)
 {
    HostUserData data(CORE_PACKAGE_FRIENDLY_NAME);
 
@@ -113,10 +115,25 @@ void CoreCategoryKeywords::writeKeywords(const HString& category, std::list<HStr
    }
    else
    {
-      list<HString> list;
+      vector<HString> vector;
       std::vector<HString> stored;
       stored.resize(keywords.size());
       stored.assign(keywords.begin(), keywords.end());
       data.writeMultiString(category, stored);
    }
+}
+
+const HString CoreCategoryKeywords::peopleKey()
+{
+   return H_TEXT("People");
+}
+
+const HString CoreCategoryKeywords::placesKey()
+{
+   return H_TEXT("Places");
+}
+
+const HString CoreCategoryKeywords::timesKey()
+{
+   return H_TEXT("Times");
 }

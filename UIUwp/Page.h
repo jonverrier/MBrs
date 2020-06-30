@@ -9,9 +9,8 @@
 #include "StringWrapper.g.h"
 #include "Page.g.h"
 
-
 #include "CoreMbrsModelCommand.h"
-#include "UIDesktopCallback.h"
+#include "CoreKeywords.h"
 
 namespace winrt::MbrsUI::implementation
 {
@@ -26,9 +25,9 @@ namespace winrt::MbrsUI::implementation
 
         void onImageSelectionChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
-        void onNewPersonChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
-        void onAddPerson(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
-        void onRemovePersonTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void onNewPersonDefaultTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void onAddPersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void onRemovePersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
         void onNewPlaceChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onAddPlace(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
@@ -43,6 +42,8 @@ namespace winrt::MbrsUI::implementation
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_peopleTags;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_placeTags;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_timeTags;
+
+        CoreCategoryKeywords m_peopleDefaultTags;
     };
 }
 

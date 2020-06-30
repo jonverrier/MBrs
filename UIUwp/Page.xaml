@@ -62,10 +62,10 @@
                            </Grid.RowDefinitions>
 
                            <StackPanel Grid.Row="0" Padding="0" Margin="0" VerticalAlignment="Center">
-                              <ListView Margin="0" Padding="0,0,0,0" BorderThickness="0" x:Name="people" >
+                              <ListView Margin="0" Padding="0,0,0,0" BorderThickness="0" x:Name="peopleDefaultTags">
                                  <ListView.ContextFlyout>
-                                    <MenuFlyout>
-                                       <MenuFlyoutItem Text="Remove from this list" Name="removePeopleMenuItem" Click="onRemovePersonTag" />
+                                    <MenuFlyout x:Name="peopleDefaultTagsMenu">
+                                       <MenuFlyoutItem Text="Remove from this list" Name="removePersonDefaultTag" Click="onRemovePersonDefaultTag" />
                                     </MenuFlyout>
                                  </ListView.ContextFlyout>
                                  <ListView.ItemContainerStyle>
@@ -86,10 +86,10 @@
                                     <ColumnDefinition Width="30" />
                                  </Grid.ColumnDefinitions>
                                  <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                    <TextBox Header="Add a new Person tag:" PlaceholderText="Who was there?" Margin="0,0,10,0" Name="addPersonText" TextChanged="onNewPersonChanged" />
+                                    <TextBox Header="Add a new Person tag:" PlaceholderText="Who was there?" Margin="0,0,10,0" Name="newPersonDefaultTag" TextChanged="onNewPersonDefaultTagChanged" />
                                  </StackPanel>
                                  <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Padding="0" Margin="0">
-                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddPerson" Background="PaleGreen" Foreground="Black" Name="addPersonButton">
+                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddPersonDefaultTag" Background="PaleGreen" Foreground="Black" Name="addPersonDefaultTagButton">
                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE73E;"/>
                                        <Button.RenderTransform>
                                           <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>
@@ -122,7 +122,7 @@
                                     <TextBox Header="Add a new Place tag:" PlaceholderText="Where was it?" Margin="0,0,10,0" Name="addPlaceText" TextChanged="onNewPlaceChanged"/>
                                  </StackPanel>
                                  <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Padding="0" Margin="0">
-                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddPerson" Background="PaleGreen" Foreground="Black" Name="addPlaceButton">
+                                    <Button Margin="0,10,0,0" Padding="0" Click="onAddPlace" Background="PaleGreen" Foreground="Black" Name="addPlaceButton">
                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE73E;"/>
                                        <Button.RenderTransform>
                                           <ScaleTransform ScaleX="0.7" ScaleY="0.7"></ScaleTransform>

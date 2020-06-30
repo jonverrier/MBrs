@@ -26,7 +26,7 @@ public:
 
    // Attributes
    HString category() const;
-   std::list<HString> keywords() const;
+   std::vector<HString> keywords() const;
 
    // Operations
   bool addKeyword(const HString& add);
@@ -39,16 +39,20 @@ public:
    bool operator==(const CoreCategoryKeywords& rhs) const;
    bool operator!=(const CoreCategoryKeywords& rhs) const;
 
+   static const HString peopleKey ();
+   static const HString placesKey ();
+   static const HString timesKey ();
+
 protected:
 
 private:
    CoreCategoryKeywords() = delete; // Cannot create without a category 
 
-   std::list<HString> readKeywords(const HString& category);
-   void writeKeywords(const HString& category, std::list<HString>& keywords);
+   std::vector<HString> readKeywords(const HString& category);
+   void writeKeywords(const HString& category, std::vector<HString>& keywords);
 
    HString m_category;
-   std::list<HString> m_keywords;
+   std::vector<HString> m_keywords;
 };
 
 #endif // COREKEYWORDS_INCLUDED
