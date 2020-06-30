@@ -1,10 +1,12 @@
 namespace MbrsUI
 {
-    runtimeclass StringWrapper : Windows.UI.Xaml.Data.INotifyPropertyChanged
+    runtimeclass ImageView
     {
-       StringWrapper(String text);
+       ImageView(String path, String fileName);
 
-       String text{ get;};
+       String path { get;};
+
+       String fileName { get; };
     }
 
     [default_interface]

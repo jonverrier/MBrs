@@ -1,16 +1,9 @@
 ﻿#include "pch.h"
 
-#include "StringWrapper.h"
-#if __has_include("StringWrapper.g.cpp")
-#include "StringWrapper.g.cpp"
-#endif
-
 #include "Page.h"
 #if __has_include("Page.g.cpp")
 #include "Page.g.cpp"
 #endif
-
-#include "UIDesktopCallback.h"
 
 using namespace winrt;
 using namespace Windows::Foundation;
@@ -20,25 +13,20 @@ using namespace Windows::Storage::Pickers;
 
 namespace winrt::MbrsUI::implementation
 {
-    StringWrapper::StringWrapper(winrt::hstring const& text)
-       : m_text (text)
+    ImageView::ImageView(hstring path, hstring fileName) 
+       : m_path (path), m_fileName (fileName)
     {
     }
 
-    winrt::hstring StringWrapper::text()
+    hstring ImageView::path() const
     {
-       return m_text;
+       return m_path;
     }
 
-   winrt::event_token StringWrapper::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler)
-   {
-      return m_propertyChanged.add(handler);
-   }
-
-   void StringWrapper::PropertyChanged(winrt::event_token const& token)
-   {
-      m_propertyChanged.remove(token);
-   }
+    hstring ImageView::fileName() const
+    {
+       return m_fileName;
+    }
 
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
@@ -46,7 +34,7 @@ namespace winrt::MbrsUI::implementation
          m_storedPeopleTags(CoreCategoryKeywords::peopleKey()),
          m_storedPlacesTags(CoreCategoryKeywords::placesKey()),
          m_storedTimesTags(CoreCategoryKeywords::timesKey()),
-         m_personContext (), m_placeContext ()
+         m_personContext (), m_placeContext (), m_timeContext ()
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
@@ -66,7 +54,7 @@ namespace winrt::MbrsUI::implementation
        m_pDesktop = reinterpret_cast<DesktopCallback *>(p);
     }
 
-    void buildUITagDataImpl(winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags, const CoreCategoryKeywords& peopleDefaults)
+    void buildViewTagsImpl(const CoreCategoryKeywords& peopleDefaults, winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags)
     {
        peopleTags.Clear();
 
@@ -76,6 +64,76 @@ namespace winrt::MbrsUI::implementation
        }
     }
 
+    void setupImpl(const CoreCategoryKeywords& stored, 
+                   winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& view,
+                   winrt::Windows::UI::Xaml::Controls::ListView& list,
+                   Windows::UI::Xaml::Input::RightTappedEventHandler const& handler,
+                   winrt::Windows::UI::Xaml::Controls::Button& btn)
+    {
+       // add keywords to the View, then connect to the list on screen
+       buildViewTagsImpl(stored, view);
+       list.ItemsSource(view);
+
+       // Tag lists are disabled as there is initially no selection to apply tag changes to
+       list.IsEnabled(false);
+
+       list.RightTapped(handler);
+
+       // All the 'addXXX' buttons are initially disabled because there are no changes in the text box
+       btn.IsEnabled(false);
+    }
+
+    void onRightTapImpl(winrt::Windows::UI::Xaml::RoutedEventArgs const& e, HString& context)
+    {
+       auto ctx = e.OriginalSource().as<FrameworkElement>().DataContext();
+       if (ctx)
+       {
+          winrt::hstring uiValue = unbox_value_or<hstring>(ctx, L""); // Returns L"" if object is not a boxed string.
+          HString value = uiValue.c_str();
+          context = value;
+       }
+    }
+
+    void onRemoveTagImpl(HString& context, CoreCategoryKeywords& storedTags, winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> uiTags)
+    {
+
+       if (context.size() == 0)
+          return;
+
+       if (storedTags.hasKeyword(context))
+       {
+          storedTags.removeKeyword(context);
+       }
+       for (auto i = 0u; i < uiTags.Size(); i++)
+       {
+          if (uiTags.GetAt(i).c_str() == context)
+          {
+             uiTags.RemoveAt(i);
+             break;
+          }
+       }
+       context.clear();
+    }
+
+    void onAddTagImpl(winrt::Windows::UI::Xaml::Controls::TextBox& textBox,
+       CoreCategoryKeywords& storedTags,
+       winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& uiTags)
+    {
+       HString keyword(textBox.Text().c_str());
+       if (!storedTags.hasKeyword(keyword))
+       {
+          storedTags.addKeyword(keyword); // Save to storage
+          uiTags.Append(textBox.Text()); // Add new tag to the UI
+          textBox.Text(H_TEXT("")); // Clear the field
+       }
+    }
+
+    void Page::onPersonTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+
+       onRightTapImpl(e, m_personContext);
+    }
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
@@ -87,35 +145,22 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->pathAsUserString();
           this->directoryPath().Text(path);
 
-          const HString catName1 = H_TEXT("CategoryOp1");
-          const HString keyName1 = H_TEXT("Key1");
-          const HString keyName2 = H_TEXT("Key2");
+          // Do common setup across the threeTag views
+          winrt::Windows::UI::Xaml::Controls::ListView peopleList = peopleTags();
+          winrt::Windows::UI::Xaml::Controls::ListView placeList = placeTags();
+          winrt::Windows::UI::Xaml::Controls::ListView timeList = timeTags();
 
-          // add keywords
-          buildUITagDataImpl(m_uiPeopleTags, m_storedPeopleTags);
-          buildUITagDataImpl(m_uiPlacesTags, m_storedPlacesTags);
-          buildUITagDataImpl(m_uiTimesTags, m_storedTimesTags);
+          winrt::Windows::UI::Xaml::Controls::Button addPerson = addPersonTagButton();
+          winrt::Windows::UI::Xaml::Controls::Button addPlace = addPlaceTagButton();
+          winrt::Windows::UI::Xaml::Controls::Button addTime = addTimeTagButton();
 
-          this->peopleTags().ItemsSource(m_uiPeopleTags);
-          this->placeTags().ItemsSource(m_uiPlacesTags);
-          this->timeTags().ItemsSource(m_uiTimesTags);
+          setupImpl(m_storedPeopleTags, m_uiPeopleTags, peopleList, { this, &Page::onPersonTagRightTap }, addPerson);
+          setupImpl(m_storedPlacesTags, m_uiPlacesTags, placeList, { this, &Page::onPlaceTagRightTap }, addPlace);
+          setupImpl(m_storedTimesTags, m_uiTimesTags, timeList, { this, &Page::onTimeTagRightTap }, addTime);
 
-          // All the 'addXXX' buttons are initially disabled because there are no changes in the text box
-          this->addPersonTagButton().IsEnabled(false);
-          this->addPlaceTagButton().IsEnabled(false);
-          this->addTimeTagButton().IsEnabled(false);
-
-          // Select no images, and then the tag lists are disabled as there is no selection to apply tag changes to
+          // Select no images initially
           winrt::Windows::UI::Xaml::Data::ItemIndexRange range (0, 0);
           this->imageGrid().SelectRange(range);
-
-          this->peopleTags().IsEnabled(false);
-          this->placeTags().IsEnabled(false);
-          this->timeTags().IsEnabled(false);
-
-          this->peopleTags().RightTapped({ this, &Page::onPersonTagRightTap });
-          this->placeTags().RightTapped({ this, &Page::onPlaceTagRightTap });
-          this->timeTags().RightTapped({ this, &Page::onTimeTagRightTap });
        }
     }
 
@@ -184,58 +229,6 @@ namespace winrt::MbrsUI::implementation
           enable = true;
 
        this->addPersonTagButton().IsEnabled(enable);
-    }
-
-    void onRightTapImpl(winrt::Windows::UI::Xaml::RoutedEventArgs const& e, HString& context)
-    {
-       auto ctx = e.OriginalSource().as<FrameworkElement>().DataContext();
-       if (ctx)
-       {
-          winrt::hstring uiValue = unbox_value_or<hstring>(ctx, L""); // Returns L"" if object is not a boxed string.
-          HString value = uiValue.c_str();
-          context = value;
-       }
-    }
-
-    void onRemoveTagImpl (HString& context, CoreCategoryKeywords& storedTags, winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> uiTags)
-    {
-
-       if (context.size() == 0)
-          return;
-
-       if (storedTags.hasKeyword(context))
-       {
-          storedTags.removeKeyword(context);
-       }
-       for (auto i = 0u; i < uiTags.Size(); i++)
-       {
-          if (uiTags.GetAt(i).c_str() == context)
-          {
-             uiTags.RemoveAt(i);
-             break;
-          }
-       }
-       context.clear();
-    }
-
-    void onAddTagImpl (winrt::Windows::UI::Xaml::Controls::TextBox& textBox,
-                       CoreCategoryKeywords& storedTags, 
-                       winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& uiTags)
-    {
-       HString keyword(textBox.Text().c_str());
-       if (!storedTags.hasKeyword(keyword))
-       {
-          storedTags.addKeyword(keyword); // Save to storage
-          uiTags.Append(textBox.Text()); // Add new tag to the UI
-          textBox.Text(H_TEXT("")); // Clear the field
-       }
-    }
-
-    void Page::onPersonTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
-    {
-       UNREFERENCED_PARAMETER(sender);
-
-       onRightTapImpl(e, m_personContext);
     }
 
     void Page::onRemovePersonTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)

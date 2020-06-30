@@ -162,7 +162,7 @@
                                     <ColumnDefinition Width="30" />
                                  </Grid.ColumnDefinitions>
                                  <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                    <TextBox Header="Add a new Times tag:" PlaceholderText="Where was it?" Margin="0,0,10,0" Name="newTimeTag" TextChanged="onNewTimeTagChanged" />
+                                    <TextBox Header="Add a new Times tag:" PlaceholderText="What was happening?" Margin="0,0,10,0" Name="newTimeTag" TextChanged="onNewTimeTagChanged" />
                                  </StackPanel>
                                  <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Padding="0" Margin="0">
                                     <Button Margin="0,10,0,0" Padding="0" Click="onAddTimeTag" Background="PaleGreen" Foreground="Black" Name="addTimeTagButton">
