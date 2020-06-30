@@ -42,25 +42,23 @@ namespace winrt::MbrsUI::implementation
 
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
-         m_uiPeopleDefaultTags (nullptr), m_placeTags (nullptr), m_timeTags (nullptr),
-         m_storedPeopleDefaultTags(CoreCategoryKeywords::peopleKey()),
-         m_personContext ()
+         m_uiPeopleTags (nullptr), m_uiPlacesTags (nullptr), m_uiTimesTags (nullptr),
+         m_storedPeopleTags(CoreCategoryKeywords::peopleKey()),
+         m_storedPlacesTags(CoreCategoryKeywords::placesKey()),
+         m_storedTimesTags(CoreCategoryKeywords::timesKey()),
+         m_personContext (), m_placeContext ()
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
 
-       m_uiPeopleDefaultTags = winrt::single_threaded_observable_vector<winrt::hstring>();
-       m_placeTags = winrt::single_threaded_observable_vector<winrt::hstring>();
-       m_timeTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_uiPeopleTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_uiPlacesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_uiTimesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
 
-       m_placeTags.Append((H_TEXT("London")));
-       m_placeTags.Append((H_TEXT("New York")));
-       m_placeTags.Append((H_TEXT("Paris")));
-
-       m_timeTags.Append((H_TEXT("Skiing")));
-       m_timeTags.Append((H_TEXT("CrossFit")));
-       m_timeTags.Append((H_TEXT("Summer Holiday")));
+       m_uiTimesTags.Append((H_TEXT("Skiing")));
+       m_uiTimesTags.Append((H_TEXT("CrossFit")));
+       m_uiTimesTags.Append((H_TEXT("Summer Holiday")));
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -68,7 +66,7 @@ namespace winrt::MbrsUI::implementation
        m_pDesktop = reinterpret_cast<DesktopCallback *>(p);
     }
 
-    void buildTagViewData (winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags, const CoreCategoryKeywords& peopleDefaults)
+    void buildUITagDataImpl(winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags, const CoreCategoryKeywords& peopleDefaults)
     {
        peopleTags.Clear();
 
@@ -77,6 +75,7 @@ namespace winrt::MbrsUI::implementation
           peopleTags.Append(key);
        }
     }
+
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
@@ -93,26 +92,30 @@ namespace winrt::MbrsUI::implementation
           const HString keyName2 = H_TEXT("Key2");
 
           // add keywords
-          buildTagViewData(m_uiPeopleDefaultTags, m_storedPeopleDefaultTags);
+          buildUITagDataImpl(m_uiPeopleTags, m_storedPeopleTags);
+          buildUITagDataImpl(m_uiPlacesTags, m_storedPlacesTags);
+          buildUITagDataImpl(m_uiTimesTags, m_storedTimesTags);
 
-          this->peopleDefaultTags().ItemsSource(m_uiPeopleDefaultTags);
-          this->places().ItemsSource(m_placeTags);
-          this->times().ItemsSource(m_timeTags);
+          this->peopleTags().ItemsSource(m_uiPeopleTags);
+          this->placeTags().ItemsSource(m_uiPlacesTags);
+          this->timeTags().ItemsSource(m_uiTimesTags);
 
           // All the 'addXXX' buttons are initially disabled because there are no changes in the text box
-          this->addPersonDefaultTagButton().IsEnabled(false);
-          this->addPlaceButton().IsEnabled(false);
-          this->addTimeButton().IsEnabled(false);
+          this->addPersonTagButton().IsEnabled(false);
+          this->addPlaceTagButton().IsEnabled(false);
+          this->addTimeTagButton().IsEnabled(false);
 
           // Select no images, and then the tag lists are disabled as there is no selection to apply tag changes to
           winrt::Windows::UI::Xaml::Data::ItemIndexRange range (0, 0);
           this->imageGrid().SelectRange(range);
 
-          this->peopleDefaultTags().IsEnabled(false);
-          this->places().IsEnabled(false);
-          this->times().IsEnabled(false);
+          this->peopleTags().IsEnabled(false);
+          this->placeTags().IsEnabled(false);
+          this->timeTags().IsEnabled(false);
 
-          this->peopleDefaultTags().RightTapped({ this, &Page::onPersonDefaultTagRightTap });
+          this->peopleTags().RightTapped({ this, &Page::onPersonTagRightTap });
+          this->placeTags().RightTapped({ this, &Page::onPlaceTagRightTap });
+          this->timeTags().RightTapped({ this, &Page::onTimeTagRightTap });
        }
     }
 
@@ -165,116 +168,165 @@ namespace winrt::MbrsUI::implementation
        if (this->imageGrid().SelectedItems().Size() > 0)
           enable = true;
 
-       this->peopleDefaultTags().IsEnabled(enable);
-       this->places().IsEnabled(enable);
-       this->times().IsEnabled(enable);
+       this->peopleTags().IsEnabled(enable);
+       this->placeTags().IsEnabled(enable);
+       this->timeTags().IsEnabled(enable);
     }
 
-    void Page::onNewPersonDefaultTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onNewPersonTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
        bool enable = false;
 
-       if (this->newPersonDefaultTag().Text().size() > 0)
+       if (this->newPersonTag().Text().size() > 0)
           enable = true;
 
-       this->addPersonDefaultTagButton().IsEnabled(enable);
+       this->addPersonTagButton().IsEnabled(enable);
     }
 
-    void Page::onPersonDefaultTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void onRightTapImpl(winrt::Windows::UI::Xaml::RoutedEventArgs const& e, HString& context)
     {
-       auto os = e.OriginalSource();
-       if (os)
+       auto ctx = e.OriginalSource().as<FrameworkElement>().DataContext();
+       if (ctx)
        {
-          auto fe = os.as<FrameworkElement>();
-          if (fe)
-          {
-             auto ctx = fe.DataContext();
-             if (ctx)
-             {
-                winrt::hstring uiValue = unbox_value_or<hstring>(ctx, L""); // Returns L"" if object is not a boxed string.
-                HString value = uiValue.c_str();
-                m_personContext = value;                 
-             }
-          }
+          winrt::hstring uiValue = unbox_value_or<hstring>(ctx, L""); // Returns L"" if object is not a boxed string.
+          HString value = uiValue.c_str();
+          context = value;
        }
     }
 
-    void Page::onRemovePersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void onRemoveTagImpl (HString& context, CoreCategoryKeywords& storedTags, winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> uiTags)
     {
-       UNREFERENCED_PARAMETER(sender);
-       UNREFERENCED_PARAMETER(e);
 
-       if (m_personContext.size() == 0)
+       if (context.size() == 0)
           return;
 
-       if (m_storedPeopleDefaultTags.hasKeyword(m_personContext))
+       if (storedTags.hasKeyword(context))
        {
-          m_storedPeopleDefaultTags.removeKeyword(m_personContext);
+          storedTags.removeKeyword(context);
        }
-       for (auto i = 0u; i < m_uiPeopleDefaultTags.Size(); i++)
+       for (auto i = 0u; i < uiTags.Size(); i++)
        {
-          if (m_uiPeopleDefaultTags.GetAt(i).c_str() == m_personContext)
+          if (uiTags.GetAt(i).c_str() == context)
           {
-             m_uiPeopleDefaultTags.RemoveAt(i);
+             uiTags.RemoveAt(i);
              break;
           }
        }
-       m_personContext.clear();
+       context.clear();
     }
 
-    void Page::onAddPersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void onAddTagImpl (winrt::Windows::UI::Xaml::Controls::TextBox& textBox,
+                       CoreCategoryKeywords& storedTags, 
+                       winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& uiTags)
     {
-       UNREFERENCED_PARAMETER(sender);
-       UNREFERENCED_PARAMETER(e);
-
-       HString keyword = (newPersonDefaultTag().Text().c_str());
-       if (!m_storedPeopleDefaultTags.hasKeyword(keyword))
+       HString keyword(textBox.Text().c_str());
+       if (!storedTags.hasKeyword(keyword))
        {
-          m_storedPeopleDefaultTags.addKeyword(keyword); // Save to storage
-          m_uiPeopleDefaultTags.Append(newPersonDefaultTag().Text()); // Add new tag to the UI
-          newPersonDefaultTag().Text(H_TEXT("")); // Clear the field
+          storedTags.addKeyword(keyword); // Save to storage
+          uiTags.Append(textBox.Text()); // Add new tag to the UI
+          textBox.Text(H_TEXT("")); // Clear the field
        }
     }
 
-    void Page::onNewPlaceChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onPersonTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+
+       onRightTapImpl(e, m_personContext);
+    }
+
+    void Page::onRemovePersonTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       onRemoveTagImpl(m_personContext, m_storedPeopleTags, m_uiPeopleTags);
+    }
+
+    void Page::onAddPersonTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       winrt::Windows::UI::Xaml::Controls::TextBox tb = newPersonTag();
+       onAddTagImpl(tb, m_storedPeopleTags, m_uiPeopleTags);
+    }
+
+    void Page::onNewPlaceTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
        bool enable = false;
 
-       if (this->addPlaceText().Text().size() > 0)
+       if (this->newPlaceTag().Text().size() > 0)
           enable = true;
 
-       this->addPlaceButton().IsEnabled(enable);
+       this->addPlaceTagButton().IsEnabled(enable);
     }
 
-    void Page::onAddPlace(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onPlaceTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+
+       onRightTapImpl(e, m_placeContext);
+    }
+
+    void Page::onRemovePlaceTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+
+       onRemoveTagImpl(m_placeContext, m_storedPlacesTags, m_uiPlacesTags);
     }
 
-    void Page::onNewTimeChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onAddPlaceTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       winrt::Windows::UI::Xaml::Controls::TextBox tb = newPlaceTag();
+       onAddTagImpl(tb, m_storedPlacesTags, m_uiPlacesTags);
+    }
+
+    void Page::onNewTimeTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
        bool enable = false;
 
-       if (this->addTimeText().Text().size() > 0)
+       if (this->newTimeTag().Text().size() > 0)
           enable = true;
 
-       this->addTimeButton().IsEnabled(enable);
+       this->addTimeTagButton().IsEnabled(enable);
     }
 
-    void Page::onAddTime(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onAddTimeTag (winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
+
+       winrt::Windows::UI::Xaml::Controls::TextBox tb = newTimeTag();
+       onAddTagImpl (tb, m_storedTimesTags, m_uiTimesTags);
+    }
+
+    void Page::onTimeTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+
+       onRightTapImpl(e, m_timeContext);
+    }
+
+    void Page::onRemoveTimeTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       onRemoveTagImpl(m_timeContext, m_storedTimesTags, m_uiTimesTags);
     }
 }
 
