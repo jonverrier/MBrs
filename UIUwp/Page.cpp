@@ -37,6 +37,7 @@ namespace winrt::MbrsUI::implementation
          m_personContext (), m_placeContext (), m_timeContext ()
     {
        InitializeComponent();
+
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
 
@@ -44,9 +45,7 @@ namespace winrt::MbrsUI::implementation
        m_uiPlacesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
        m_uiTimesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
 
-       m_uiTimesTags.Append((H_TEXT("Skiing")));
-       m_uiTimesTags.Append((H_TEXT("CrossFit")));
-       m_uiTimesTags.Append((H_TEXT("Summer Holiday")));
+       m_uiImages = winrt::single_threaded_observable_vector<MbrsUI::ImageView>();
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -158,8 +157,19 @@ namespace winrt::MbrsUI::implementation
           setupImpl(m_storedPlacesTags, m_uiPlacesTags, placeList, { this, &Page::onPlaceTagRightTap }, addPlace);
           setupImpl(m_storedTimesTags, m_uiTimesTags, timeList, { this, &Page::onTimeTagRightTap }, addTime);
 
+          // TODO - load imageViews from model 
+          auto image = winrt::make<MbrsUI::implementation::ImageView>(L"test.JPG", L"Test");
+          m_uiImages.Append(image);
+          m_uiImages.Append(image);
+          m_uiImages.Append(image);
+          m_uiImages.Append(image);
+          m_uiImages.Append(image);
+
+          // Connect the UI grip to data
+          imageGrid().ItemsSource(m_uiImages);
+
           // Select no images initially
-          winrt::Windows::UI::Xaml::Data::ItemIndexRange range (0, 0);
+          winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, 0);
           this->imageGrid().SelectRange(range);
        }
     }

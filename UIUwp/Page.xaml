@@ -201,18 +201,18 @@
                         <GridView Padding="5" SelectionMode="Multiple" IsItemClickEnabled="False" Name="imageGrid" SelectionChanged="onImageSelectionChanged">
                            <GridView.ItemContainerStyle>
                               <Style TargetType="GridViewItem">
-                                 <Setter Property="Padding" Value="0,0,0,5"/>
+                                 <Setter Property="Padding" Value="1,1,1,5"/>
                               </Style>
                            </GridView.ItemContainerStyle>
                            <GridView.ItemTemplate>
-                              <DataTemplate x:DataType="x:String">
+                              <DataTemplate x:DataType="local:ImageView">
                                  <Grid>
                                     <Grid.RowDefinitions>
                                        <RowDefinition Height="Auto"/>
                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Image Grid.Row="0" Source="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Sunset_in_El_Porto%2C_California_%288074300769%29.jpg/1024px-Sunset_in_El_Porto%2C_California_%288074300769%29.jpg" Width="200" />
-                                    <TextBlock Text="{x:Bind}" Grid.Row="1" />
+                                    <Image Grid.Row="0" Source="{x:Bind path}" Width="200" />
+                                    <TextBlock Text="{x:Bind fileName}" Grid.Row="1" />
                                  </Grid>
                               </DataTemplate>
                            </GridView.ItemTemplate>
@@ -221,14 +221,6 @@
                                  <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Left"/>
                               </ItemsPanelTemplate>
                            </GridView.ItemsPanel>
-                           <x:String>IMG0001</x:String>
-                           <x:String>IMG0002</x:String>
-                           <x:String>IMG0003</x:String>
-                           <x:String>IMG0004</x:String>
-                           <x:String>IMG0005</x:String>
-                           <x:String>IMG0006</x:String>
-                           <x:String>IMG0007</x:String>
-                           <x:String>IMG0008</x:String>
                         </GridView>
                      </Grid>
                   </Grid>
