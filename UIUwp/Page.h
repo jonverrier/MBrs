@@ -26,6 +26,7 @@ namespace winrt::MbrsUI::implementation
         void onImageSelectionChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
         void onNewPersonDefaultTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void onPersonDefaultTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onAddPersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onRemovePersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
@@ -39,11 +40,13 @@ namespace winrt::MbrsUI::implementation
         std::shared_ptr<CoreCommandProcessor> m_pCommandProcessor;
         std::shared_ptr<CoreImageListModel> m_pModel;
 
-        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_peopleTags;
+        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_uiPeopleDefaultTags;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_placeTags;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_timeTags;
 
-        CoreCategoryKeywords m_peopleDefaultTags;
+        CoreCategoryKeywords m_storedPeopleDefaultTags;
+
+        HString m_personContext; 
     };
 }
 

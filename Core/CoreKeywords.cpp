@@ -47,6 +47,17 @@ bool CoreCategoryKeywords::addKeyword(const HString& add)
    return false;
 }
 
+bool CoreCategoryKeywords::hasKeyword(const HString& test) const
+{
+   vector<HString>::const_iterator iter = find(m_keywords.begin(), m_keywords.end(), test);
+
+   if (iter != m_keywords.end())
+   {
+      return true;
+   }
+   return false;
+}
+
 bool CoreCategoryKeywords::removeKeyword(const HString& remove)
 {
    vector<HString>::iterator iter = find(m_keywords.begin(), m_keywords.end(), remove);

@@ -42,20 +42,17 @@ namespace winrt::MbrsUI::implementation
 
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
-         m_peopleTags (nullptr), m_placeTags (nullptr), m_timeTags (nullptr),
-         m_peopleDefaultTags(CoreCategoryKeywords::peopleKey())
+         m_uiPeopleDefaultTags (nullptr), m_placeTags (nullptr), m_timeTags (nullptr),
+         m_storedPeopleDefaultTags(CoreCategoryKeywords::peopleKey()),
+         m_personContext ()
     {
        InitializeComponent();
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
 
-       m_peopleTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_uiPeopleDefaultTags = winrt::single_threaded_observable_vector<winrt::hstring>();
        m_placeTags = winrt::single_threaded_observable_vector<winrt::hstring>();
        m_timeTags = winrt::single_threaded_observable_vector<winrt::hstring>();
-
-       m_peopleTags.Append((H_TEXT("Jonathan")));
-       m_peopleTags.Append((H_TEXT("Clarissa")));
-       m_peopleTags.Append((H_TEXT("Harold")));
 
        m_placeTags.Append((H_TEXT("London")));
        m_placeTags.Append((H_TEXT("New York")));
@@ -96,9 +93,9 @@ namespace winrt::MbrsUI::implementation
           const HString keyName2 = H_TEXT("Key2");
 
           // add keywords
-          buildTagViewData(m_peopleTags, m_peopleDefaultTags);
+          buildTagViewData(m_uiPeopleDefaultTags, m_storedPeopleDefaultTags);
 
-          this->peopleDefaultTags().ItemsSource(m_peopleTags);
+          this->peopleDefaultTags().ItemsSource(m_uiPeopleDefaultTags);
           this->places().ItemsSource(m_placeTags);
           this->times().ItemsSource(m_timeTags);
 
@@ -114,6 +111,8 @@ namespace winrt::MbrsUI::implementation
           this->peopleDefaultTags().IsEnabled(false);
           this->places().IsEnabled(false);
           this->times().IsEnabled(false);
+
+          this->peopleDefaultTags().RightTapped({ this, &Page::onPersonDefaultTagRightTap });
        }
     }
 
@@ -184,12 +183,46 @@ namespace winrt::MbrsUI::implementation
        this->addPersonDefaultTagButton().IsEnabled(enable);
     }
 
+    void Page::onPersonDefaultTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       auto os = e.OriginalSource();
+       if (os)
+       {
+          auto fe = os.as<FrameworkElement>();
+          if (fe)
+          {
+             auto ctx = fe.DataContext();
+             if (ctx)
+             {
+                winrt::hstring uiValue = unbox_value_or<hstring>(ctx, L""); // Returns L"" if object is not a boxed string.
+                HString value = uiValue.c_str();
+                m_personContext = value;                 
+             }
+          }
+       }
+    }
+
     void Page::onRemovePersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
-       auto selected = peopleDefaultTags().SelectedItem();
+       if (m_personContext.size() == 0)
+          return;
+
+       if (m_storedPeopleDefaultTags.hasKeyword(m_personContext))
+       {
+          m_storedPeopleDefaultTags.removeKeyword(m_personContext);
+       }
+       for (auto i = 0u; i < m_uiPeopleDefaultTags.Size(); i++)
+       {
+          if (m_uiPeopleDefaultTags.GetAt(i).c_str() == m_personContext)
+          {
+             m_uiPeopleDefaultTags.RemoveAt(i);
+             break;
+          }
+       }
+       m_personContext.clear();
     }
 
     void Page::onAddPersonDefaultTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -198,9 +231,12 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
 
        HString keyword = (newPersonDefaultTag().Text().c_str());
-       m_peopleDefaultTags.addKeyword(keyword); // Save to storage
-       m_peopleTags.Append(newPersonDefaultTag().Text()); // Add new tag to the UI
-       newPersonDefaultTag().Text(H_TEXT("")); // Clear the field
+       if (!m_storedPeopleDefaultTags.hasKeyword(keyword))
+       {
+          m_storedPeopleDefaultTags.addKeyword(keyword); // Save to storage
+          m_uiPeopleDefaultTags.Append(newPersonDefaultTag().Text()); // Add new tag to the UI
+          newPersonDefaultTag().Text(H_TEXT("")); // Clear the field
+       }
     }
 
     void Page::onNewPlaceChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -241,3 +277,4 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
     }
 }
+

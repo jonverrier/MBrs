@@ -27,11 +27,12 @@ public:
    // Attributes
    HString category() const;
    std::vector<HString> keywords() const;
+   bool hasKeyword(const HString& test) const;
 
    // Operations
-  bool addKeyword(const HString& add);
-  bool removeKeyword(const HString& remove);
-  bool removeAllKeywords();
+   bool addKeyword(const HString& add);
+   bool removeKeyword(const HString& remove);
+   bool removeAllKeywords();
 
    CoreCategoryKeywords& operator=(const CoreCategoryKeywords& copyMe);
 
