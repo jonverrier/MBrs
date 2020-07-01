@@ -63,7 +63,7 @@ namespace winrt::MbrsUI::implementation
        }
     }
 
-    void setupImpl(const CoreCategoryKeywords& stored, 
+    void setupTagsImpl(const CoreCategoryKeywords& stored, 
                    winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& view,
                    winrt::Windows::UI::Xaml::Controls::ListView& list,
                    Windows::UI::Xaml::Input::RightTappedEventHandler const& handler,
@@ -134,6 +134,26 @@ namespace winrt::MbrsUI::implementation
        onRightTapImpl(e, m_personContext);
     }
 
+    void setupImagesImpl(std::shared_ptr<CoreImageListModel>& pModel,
+       winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::ImageView>& view,
+       winrt::Windows::UI::Xaml::Controls::GridView& grid)
+    {
+       view.Clear();
+
+       for (auto image : pModel->images())
+       {
+          auto imageView = winrt::make<MbrsUI::implementation::ImageView>(image.path().c_str(), image.filename().c_str());
+          view.Append(imageView);
+       }
+
+       // Connect the UI grid to data
+       grid.ItemsSource (view);
+
+       // Select no images initially
+       winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, 0);
+       grid.SelectRange(range);
+    }
+
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
@@ -153,24 +173,13 @@ namespace winrt::MbrsUI::implementation
           winrt::Windows::UI::Xaml::Controls::Button addPlace = addPlaceTagButton();
           winrt::Windows::UI::Xaml::Controls::Button addTime = addTimeTagButton();
 
-          setupImpl(m_storedPeopleTags, m_uiPeopleTags, peopleList, { this, &Page::onPersonTagRightTap }, addPerson);
-          setupImpl(m_storedPlacesTags, m_uiPlacesTags, placeList, { this, &Page::onPlaceTagRightTap }, addPlace);
-          setupImpl(m_storedTimesTags, m_uiTimesTags, timeList, { this, &Page::onTimeTagRightTap }, addTime);
+          setupTagsImpl(m_storedPeopleTags, m_uiPeopleTags, peopleList, { this, &Page::onPersonTagRightTap }, addPerson);
+          setupTagsImpl(m_storedPlacesTags, m_uiPlacesTags, placeList, { this, &Page::onPlaceTagRightTap }, addPlace);
+          setupTagsImpl(m_storedTimesTags, m_uiTimesTags, timeList, { this, &Page::onTimeTagRightTap }, addTime);
 
-          // TODO - load imageViews from model 
-          auto image = winrt::make<MbrsUI::implementation::ImageView>(L"test.JPG", L"Test");
-          m_uiImages.Append(image);
-          m_uiImages.Append(image);
-          m_uiImages.Append(image);
-          m_uiImages.Append(image);
-          m_uiImages.Append(image);
-
-          // Connect the UI grip to data
-          imageGrid().ItemsSource(m_uiImages);
-
-          // Select no images initially
-          winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, 0);
-          this->imageGrid().SelectRange(range);
+          // Connect the UI grid to data
+          winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+          setupImagesImpl(m_pModel, m_uiImages, grid);
        }
     }
 
@@ -209,6 +218,9 @@ namespace winrt::MbrsUI::implementation
 
              path = m_pModel->pathAsUserString();
              this->directoryPath().Text(path);
+
+             winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+             setupImagesImpl(m_pModel, m_uiImages, grid);
           }
        }
     }

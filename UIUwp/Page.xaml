@@ -20,15 +20,42 @@
       <StackPanel Grid.Row="0">
          <Grid Name="DirectoryList">
             <Grid.ColumnDefinitions>
-               <ColumnDefinition Width="*" />
-               <ColumnDefinition Width="250" />
+               <ColumnDefinition Width="Auto" />
+               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+               <Button Margin="5,10,5,10" Name="undo" ToolTipService.ToolTip="Undo">
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A7;"/>
+               </Button>
+               <Button Margin="5,10,5,10" Name="redo" ToolTipService.ToolTip="Redo">
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A6;"/>
+               </Button>
+               <CalendarDatePicker x:Name="filterDate"
+                    ToolTipService.ToolTip="Filter images by date" DateFormat="{}{day.integer} {month.full} {year.full}" Background="DimGray" />
+               <DropDownButton  Margin="5,10,5,10" Name="filterPeriod" ToolTipService.ToolTip="Date period" Background="DimGray" >
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE787;"/>
+                  <DropDownButton.Flyout>
+                     <MenuFlyout Placement="BottomEdgeAlignedLeft" >
+                        <MenuFlyoutItem Text="By month" Icon="CalendarWeek" Tag="left"
+                            />
+                        <MenuFlyoutItem Text="By year" Icon="Calendar" Tag="left"
+                            />
+                     </MenuFlyout>
+                  </DropDownButton.Flyout>
+               </DropDownButton>               
+               <Button Margin="5,10,5,10" Name="prevPeriod" ToolTipService.ToolTip="Previous date period">
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE760;"/>
+               </Button>
+               <Button Margin="5,10,5,10" Name="nextPeriod" ToolTipService.ToolTip="Next date period">
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE761;"/>                  
+               </Button>               
+               <Button Margin="5,10,5,10" Click="onChangeDirectory" Name="changeFolder" ToolTipService.ToolTip="Change folder">
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
+               </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
                <TextBlock Padding="5,10,5,10" TextWrapping="Wrap" x:Name="directoryPath" Text=""/>
-            </StackPanel>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-               <Button Margin="5,10,5,10" Click="onChangeDirectory">Change directory ...</Button>
-            </StackPanel>
+            </StackPanel>            
          </Grid>
       </StackPanel>
 
