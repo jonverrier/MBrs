@@ -213,11 +213,10 @@
                                     </Style>
                                  </ListView.ItemContainerStyle>
                                  <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                       <CheckBox Content="{x:Bind}"/>
+                                    <DataTemplate x:DataType="local:TagCheckbox">
+                                       <CheckBox Content="{x:Bind name}" IsChecked="{x:Bind isUsed}" IsThreeState="True" />
                                     </DataTemplate>
                                  </ListView.ItemTemplate>
-                                 <x:String>Temp</x:String>
                               </ListView>
                            </StackPanel>
                            <Border Grid.Row="4" BorderBrush="LightGray" BorderThickness="0,0,0,2" />

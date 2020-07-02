@@ -63,6 +63,8 @@ namespace winrt::MbrsUI::implementation
         HString m_timeContext;
 
         winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::ImageView> m_uiImages;
+
+        winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox> m_uiImageTags;
     };
 }
 

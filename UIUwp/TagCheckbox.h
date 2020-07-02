@@ -11,14 +11,14 @@ namespace winrt::MbrsUI::implementation
 {
     struct TagCheckbox :TagCheckboxT<TagCheckbox>
     {
-       TagCheckbox(hstring name, bool isUsed);
+        TagCheckbox(hstring name, Windows::Foundation::IReference<bool> isUsed);
 
         hstring name() const;
 
-        bool isUsed() const;
+        Windows::Foundation::IReference<bool> isUsed() const;
 
         hstring m_name;
-        bool m_isUsed;
+        Windows::Foundation::IReference<bool> m_isUsed;
     };
 }
 

@@ -28,7 +28,7 @@ namespace winrt::MbrsUI::implementation
        return m_fileName;
     }
 
-    TagCheckbox::TagCheckbox(hstring name, bool isUsed)
+    TagCheckbox::TagCheckbox(hstring name, Windows::Foundation::IReference<bool> isUsed)
        : m_name(name), m_isUsed(isUsed)
     {
     }
@@ -38,7 +38,7 @@ namespace winrt::MbrsUI::implementation
        return m_name;
     }
 
-    bool TagCheckbox::isUsed() const
+    Windows::Foundation::IReference<bool> TagCheckbox::isUsed() const
     {
        return m_isUsed;
     }
@@ -49,7 +49,8 @@ namespace winrt::MbrsUI::implementation
          m_storedPeopleTags(CoreCategoryKeywords::peopleKey()),
          m_storedPlacesTags(CoreCategoryKeywords::placesKey()),
          m_storedTimesTags(CoreCategoryKeywords::timesKey()),
-         m_personContext (), m_placeContext (), m_timeContext ()
+         m_personContext (), m_placeContext (), m_timeContext (),
+         m_uiImageTags (nullptr)
     {
        InitializeComponent();
 
@@ -61,6 +62,8 @@ namespace winrt::MbrsUI::implementation
        m_uiTimesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
 
        m_uiImages = winrt::single_threaded_observable_vector<MbrsUI::ImageView>();
+
+       m_uiImageTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -169,9 +172,21 @@ namespace winrt::MbrsUI::implementation
        grid.SelectRange(range);
     }
 
-    void setupImageTagsImpl(winrt::Windows::UI::Xaml::Controls::StackPanel& panel)
+    void setupImageTagsImpl(winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox>& view,
+                            winrt::Windows::UI::Xaml::Controls::StackPanel& panel,
+                            winrt::Windows::UI::Xaml::Controls::ListView& list)
     {
-       panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Collapsed);
+       //panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Collapsed);
+       auto tagCheckbox = winrt::make<MbrsUI::implementation::TagCheckbox>(L"Yes", Windows::Foundation::IReference<bool>(true));
+       view.Append(tagCheckbox);
+       tagCheckbox = winrt::make<MbrsUI::implementation::TagCheckbox>(L"No", Windows::Foundation::IReference<bool>(false));
+       view.Append(tagCheckbox);
+       tagCheckbox = winrt::make<MbrsUI::implementation::TagCheckbox>(L"mixed", nullptr);
+       view.Append(tagCheckbox);
+       panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Visible);
+
+       // Connect the UI grid to data
+       list.ItemsSource(view);
     }
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -203,7 +218,8 @@ namespace winrt::MbrsUI::implementation
 
           // Set up the 'other tags on the image' panel
           winrt::Windows::UI::Xaml::Controls::StackPanel imageTagsPanel = imageOtherTagsPanel();
-          setupImageTagsImpl(imageTagsPanel);
+          winrt::Windows::UI::Xaml::Controls::ListView imageTagsList = imageOtherTagsList();
+          setupImageTagsImpl(m_uiImageTags, imageTagsPanel, imageTagsList);
        }
     }
 

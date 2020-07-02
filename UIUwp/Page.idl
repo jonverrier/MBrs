@@ -11,11 +11,11 @@ namespace MbrsUI
 
     runtimeclass TagCheckbox
     {
-       TagCheckbox (String name, Boolean isUsed);
+       TagCheckbox (String name, Windows.Foundation.IReference<Boolean> isUsed);
 
        String name { get; };
 
-       Boolean isUsed { get; };
+       Windows.Foundation.IReference<Boolean> isUsed { get; };
     }
 
     [default_interface]
