@@ -9,6 +9,15 @@ namespace MbrsUI
        String fileName { get; };
     }
 
+    runtimeclass TagCheckbox
+    {
+       TagCheckbox (String name, Boolean isUsed);
+
+       String name { get; };
+
+       Boolean isUsed { get; };
+    }
+
     [default_interface]
     runtimeclass Page : Windows.UI.Xaml.Controls.UserControl
     {

@@ -28,6 +28,21 @@ namespace winrt::MbrsUI::implementation
        return m_fileName;
     }
 
+    TagCheckbox::TagCheckbox(hstring name, bool isUsed)
+       : m_name(name), m_isUsed(isUsed)
+    {
+    }
+
+    hstring TagCheckbox::name() const
+    {
+       return m_name;
+    }
+
+    bool TagCheckbox::isUsed() const
+    {
+       return m_isUsed;
+    }
+
     Page::Page()
        : m_pDesktop(nullptr), m_pModel (nullptr), m_pCommandProcessor (nullptr), 
          m_uiPeopleTags (nullptr), m_uiPlacesTags (nullptr), m_uiTimesTags (nullptr),
@@ -154,6 +169,11 @@ namespace winrt::MbrsUI::implementation
        grid.SelectRange(range);
     }
 
+    void setupImageTagsImpl(winrt::Windows::UI::Xaml::Controls::StackPanel& panel)
+    {
+       panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Collapsed);
+    }
+
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
@@ -164,7 +184,7 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->pathAsUserString();
           this->directoryPath().Text(path);
 
-          // Do common setup across the threeTag views
+          // Do common setup across the three Tag views
           winrt::Windows::UI::Xaml::Controls::ListView peopleList = peopleTags();
           winrt::Windows::UI::Xaml::Controls::ListView placeList = placeTags();
           winrt::Windows::UI::Xaml::Controls::ListView timeList = timeTags();
@@ -180,6 +200,10 @@ namespace winrt::MbrsUI::implementation
           // Connect the UI grid to data
           winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
           setupImagesImpl(m_pModel, m_uiImages, grid);
+
+          // Set up the 'other tags on the image' panel
+          winrt::Windows::UI::Xaml::Controls::StackPanel imageTagsPanel = imageOtherTagsPanel();
+          setupImageTagsImpl(imageTagsPanel);
        }
     }
 
@@ -235,9 +259,10 @@ namespace winrt::MbrsUI::implementation
        if (this->imageGrid().SelectedItems().Size() > 0)
           enable = true;
 
-       this->peopleTags().IsEnabled(enable);
-       this->placeTags().IsEnabled(enable);
-       this->timeTags().IsEnabled(enable);
+       peopleTags().IsEnabled(enable);
+       placeTags().IsEnabled(enable);
+       timeTags().IsEnabled(enable);
+       imageOtherTagsPanel().Visibility (enable ? winrt::Windows::UI::Xaml::Visibility::Visible : winrt::Windows::UI::Xaml::Visibility::Collapsed);
     }
 
     void Page::onNewPersonTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)

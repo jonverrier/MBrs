@@ -7,8 +7,10 @@
 
 #include "Page.g.h"
 #include "ImageView.g.h"
+#include "TagCheckbox.g.h"
 
 #include "ImageView.h"
+#include "TagCheckbox.h"
 
 #include "CoreMbrsModelCommand.h"
 #include "CoreKeywords.h"

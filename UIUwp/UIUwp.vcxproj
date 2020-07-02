@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.base.h" />
+    <ClInclude Include="ImageView.h" />
     <ClInclude Include="Page.h">
       <DependentUpon>Page.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -158,6 +159,7 @@
     <ClInclude Include="App.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="TagCheckbox.h" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

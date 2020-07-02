@@ -86,6 +86,7 @@
                               <RowDefinition Height="Auto"/>
                               <RowDefinition Height="Auto" />
                               <RowDefinition Height="Auto" />
+                              <RowDefinition Height="Auto" />                              
                            </Grid.RowDefinitions>
 
                            <StackPanel Grid.Row="0" Padding="0" Margin="0" VerticalAlignment="Center">
@@ -202,6 +203,24 @@
                               </Grid>
                            </StackPanel>
                            <Border Grid.Row="3" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
+                           <StackPanel Grid.Row="4" Padding="0" Margin="0" VerticalAlignment="Center" x:Name="imageOtherTagsPanel">
+                              <TextBlock Padding="5,0,0,0" Foreground="Black">Other tags on the selected images:</TextBlock>
+                              <ListView Margin="0" Padding="0,0,0,0" BorderThickness="0" x:Name="imageOtherTagsList">
+                                 <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                       <Setter Property="Padding" Value="5,0,0,5"/>
+                                       <Setter Property="Margin" Value="0,0,0,0"/>
+                                    </Style>
+                                 </ListView.ItemContainerStyle>
+                                 <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                       <CheckBox Content="{x:Bind}"/>
+                                    </DataTemplate>
+                                 </ListView.ItemTemplate>
+                                 <x:String>Temp</x:String>
+                              </ListView>
+                           </StackPanel>
+                           <Border Grid.Row="4" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
                         </Grid>
                      </StackPanel>
                   </Grid>
