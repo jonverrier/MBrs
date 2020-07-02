@@ -54,4 +54,36 @@ private:
    time_t             m_takenAt;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// CoreSubjectTagCounter
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreSubjectTagCounter 
+{
+public:
+
+   enum EUsed { kAll, kNone, kSome };
+
+   // Constructors
+   CoreSubjectTagCounter();
+   ~CoreSubjectTagCounter(void);
+
+   // Attributes
+   void addTags(const std::list<HString>& tags);
+
+   // Operations
+   EUsed countOf (const HString& tag);
+
+   CoreSubjectTagCounter& operator=(const CoreSubjectTagCounter& copyMe);
+
+   // Comparison Operators
+   bool operator==(const CoreSubjectTagCounter& rhs) const;
+   bool operator!=(const CoreSubjectTagCounter& rhs) const;
+
+protected:
+
+private:
+   HUint m_count;
+   std::map<HString, HUint> m_tags;
+};
 #endif // COREIMAGEFILE_INCLUDED

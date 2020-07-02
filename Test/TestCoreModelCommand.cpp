@@ -235,6 +235,22 @@ namespace TestCore
          Assert::IsTrue(pModel->imagesFor(2015, 6).size() == 0);
          Assert::IsTrue(pModel->imagesFor(2015, 7).size() == 2); // both taken in july 2015
       }
+
+      TEST_METHOD(Benchmark)
+      {
+         // Record start time
+         auto start = std::chrono::high_resolution_clock::now();
+
+         // Read lots of images
+         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel(H_TEXT("D:\\data\\pictures"))); // Many images stored in this directory
+
+         // Record end time
+         auto finish = std::chrono::high_resolution_clock::now();
+
+         std::chrono::duration<double> elapsed = finish - start;
+         auto count = elapsed.count();
+         std::cout << "Elapsed time: " << count << " s\n";
+      }
    };
 
    HString TestModelCommand::m_newPath;

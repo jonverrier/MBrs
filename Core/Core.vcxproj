@@ -203,6 +203,7 @@
     <ClCompile Include="CoreKeywords.cpp" />
     <ClCompile Include="CoreMbrsModelCommand.cpp" />
     <ClCompile Include="CoreModelCommand.cpp" />
+    <ClCompile Include="CoreTagCounter.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="CorePrecompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
