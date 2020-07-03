@@ -103,8 +103,8 @@
                                     </Style>
                                  </ListView.ItemContainerStyle>
                                  <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                       <CheckBox Content="{x:Bind}"/>
+                                    <DataTemplate x:DataType="local:TagCheckbox">
+                                       <CheckBox Content="{x:Bind name}" IsChecked="{x:Bind Path=isUsed, Mode=OneWay}" IsThreeState="True" />
                                     </DataTemplate>
                                  </ListView.ItemTemplate>
                               </ListView>
@@ -141,8 +141,8 @@
                                     </Style>
                                  </ListView.ItemContainerStyle>
                                  <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                       <CheckBox Content="{x:Bind}"/>
+                                    <DataTemplate x:DataType="local:TagCheckbox">
+                                       <CheckBox Content="{x:Bind name}" IsChecked="{x:Bind isUsed}" IsThreeState="True" />
                                     </DataTemplate>
                                  </ListView.ItemTemplate>
                               </ListView>
@@ -179,8 +179,8 @@
                                     </Style>
                                  </ListView.ItemContainerStyle>
                                  <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                       <CheckBox Content="{x:Bind}"/>
+                                    <DataTemplate x:DataType="local:TagCheckbox">
+                                       <CheckBox Content="{x:Bind name}" IsChecked="{x:Bind isUsed}" IsThreeState="True" />
                                     </DataTemplate>
                                  </ListView.ItemTemplate>
                               </ListView>

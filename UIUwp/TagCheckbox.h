@@ -17,8 +17,14 @@ namespace winrt::MbrsUI::implementation
 
         Windows::Foundation::IReference<bool> isUsed() const;
 
+        winrt::event_token PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler);
+        void PropertyChanged(winrt::event_token const& token) noexcept;
+
         hstring m_name;
         Windows::Foundation::IReference<bool> m_isUsed;
+
+    private:
+       winrt::event<Windows::UI::Xaml::Data::PropertyChangedEventHandler> m_propertyChanged;
     };
 }
 

@@ -50,9 +50,9 @@ namespace winrt::MbrsUI::implementation
         std::shared_ptr<CoreCommandProcessor> m_pCommandProcessor;
         std::shared_ptr<CoreImageListModel> m_pModel;
 
-        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_uiPeopleTags;
-        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_uiPlacesTags;
-        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_uiTimesTags;
+        winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> m_uiPeopleTags;
+        winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> m_uiPlacesTags;
+        winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> m_uiTimesTags;
 
         CoreCategoryKeywords m_storedPeopleTags;
         CoreCategoryKeywords m_storedPlacesTags;

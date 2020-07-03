@@ -32,6 +32,7 @@ namespace winrt::MbrsUI::implementation
     TagCheckbox::TagCheckbox(hstring name, Windows::Foundation::IReference<bool> isUsed)
        : m_name(name), m_isUsed(isUsed)
     {
+       m_propertyChanged(*this, Windows::UI::Xaml::Data::PropertyChangedEventArgs{ L"isUsed" });
     }
 
     hstring TagCheckbox::name() const
@@ -42,6 +43,16 @@ namespace winrt::MbrsUI::implementation
     Windows::Foundation::IReference<bool> TagCheckbox::isUsed() const
     {
        return m_isUsed;
+    }  
+
+    winrt::event_token TagCheckbox::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler)
+    {
+       return m_propertyChanged.add(handler);
+    }
+
+    void TagCheckbox::PropertyChanged(winrt::event_token const& token) noexcept
+    {
+       m_propertyChanged.remove(token);
     }
 
     Page::Page()
@@ -58,13 +69,12 @@ namespace winrt::MbrsUI::implementation
        m_pModel.reset (COMMON_NEW CoreImageListModel());
        m_pCommandProcessor.reset (COMMON_NEW CoreCommandProcessor (m_pModel));
 
-       m_uiPeopleTags = winrt::single_threaded_observable_vector<winrt::hstring>();
-       m_uiPlacesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
-       m_uiTimesTags = winrt::single_threaded_observable_vector<winrt::hstring>();
+       m_uiPeopleTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
+       m_uiPlacesTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
+       m_uiTimesTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
+       m_uiImageTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
 
        m_uiImages = winrt::single_threaded_observable_vector<MbrsUI::ImageView>();
-
-       m_uiImageTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -72,24 +82,53 @@ namespace winrt::MbrsUI::implementation
        m_pDesktop = reinterpret_cast<DesktopCallback *>(p);
     }
 
-    void buildViewTagsImpl(const CoreCategoryKeywords& peopleDefaults, winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags)
+    CoreSubjectTagCounter makeImageTagsFromSelection(const std::shared_ptr<CoreImageListModel>& pModel, const std::list<HString>& selectedPaths)
     {
-       peopleTags.Clear();
-
-       for (auto key : peopleDefaults.keywords())
+       CoreSubjectTagCounter counter;
+       for (auto path : selectedPaths)
        {
-          peopleTags.Append(key);
+          const std::list<CoreImageFile>& images = pModel->images();
+
+          for (auto image : images)
+          {
+             if (image.path() == path)
+                counter.addTags(image.subjectTags());
+          }
+       }
+
+       return counter;
+    }
+
+    void buildViewTagsImpl(const std::shared_ptr<CoreImageListModel>& pModel, const std::list<HString>& selectedPaths, 
+                           const CoreCategoryKeywords& defaults,
+                           winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& uiTags)
+    {
+       // find the selected images & build a dictionary of tags
+       CoreSubjectTagCounter counter = makeImageTagsFromSelection(pModel, selectedPaths);
+
+       uiTags.Clear();
+
+       for (auto key : defaults.keywords())
+       {
+          auto whereUsed = counter.countOf(key);
+
+          auto cb = winrt::make<MbrsUI::implementation::TagCheckbox>(key.c_str(),
+                                                                     whereUsed == CoreSubjectTagCounter::EUsed::kAll ? Windows::Foundation::IReference<bool>(true)
+                                                                    : whereUsed == CoreSubjectTagCounter::EUsed::kNone ? Windows::Foundation::IReference<bool>(false) :
+                                                                      nullptr);
+          uiTags.Append(cb);
        }
     }
 
-    void setupTagsImpl(const CoreCategoryKeywords& stored, 
-                   winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& view,
+    void setupTagsImpl(const std::shared_ptr<CoreImageListModel>& pModel, const std::list<HString>& selectedPaths, 
+                   const CoreCategoryKeywords& stored,
+                   winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& view,
                    winrt::Windows::UI::Xaml::Controls::ListView& list,
                    Windows::UI::Xaml::Input::RightTappedEventHandler const& handler,
                    winrt::Windows::UI::Xaml::Controls::Button& btn)
     {
        // add keywords to the View, then connect to the list on screen
-       buildViewTagsImpl(stored, view);
+       buildViewTagsImpl(pModel, selectedPaths, stored, view);
        list.ItemsSource(view);
 
        // Tag lists are disabled as there is initially no selection to apply tag changes to
@@ -112,7 +151,8 @@ namespace winrt::MbrsUI::implementation
        }
     }
 
-    void onRemoveTagImpl(HString& context, CoreCategoryKeywords& storedTags, winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> uiTags)
+    void onRemoveTagImpl(HString& context, CoreCategoryKeywords& storedTags, 
+       winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> uiTags)
     {
 
        if (context.size() == 0)
@@ -124,7 +164,7 @@ namespace winrt::MbrsUI::implementation
        }
        for (auto i = 0u; i < uiTags.Size(); i++)
        {
-          if (uiTags.GetAt(i).c_str() == context)
+          if (uiTags.GetAt(i).name().c_str() == context)
           {
              uiTags.RemoveAt(i);
              break;
@@ -135,13 +175,16 @@ namespace winrt::MbrsUI::implementation
 
     void onAddTagImpl(winrt::Windows::UI::Xaml::Controls::TextBox& textBox,
        CoreCategoryKeywords& storedTags,
-       winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& uiTags)
+       winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& uiTags)
     {
        HString keyword(textBox.Text().c_str());
        if (!storedTags.hasKeyword(keyword))
        {
           storedTags.addKeyword(keyword); // Save to storage
-          uiTags.Append(textBox.Text()); // Add new tag to the UI
+
+          // Add new tag to the UI - it is not used, as it is new
+          auto cb = winrt::make<MbrsUI::implementation::TagCheckbox>(keyword.c_str(), Windows::Foundation::IReference<bool>(false));
+          uiTags.Append(cb); 
           textBox.Text(H_TEXT("")); // Clear the field
        }
     }
@@ -186,47 +229,50 @@ namespace winrt::MbrsUI::implementation
        list.ItemsSource(view);
     }
 
-    void refreshTagsImpl(std::shared_ptr<CoreImageListModel>& pModel, std::list<HString>& selectedPaths,
-                         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags,
-                         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& placeTags,
-                         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& timeTags,
-                         winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox>& imageTags)
+    void refreshTagsImpl(const std::shared_ptr<CoreImageListModel>& pModel, const std::list<HString>& selectedPaths,
+                         winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& peopleTags,
+                         winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& placeTags,
+                         winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& timeTags,
+                         winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>& imageTags)
     {
        // find the selected images & build a dictionary of tags
-       CoreSubjectTagCounter counter;
-       for (auto path : selectedPaths)
-       {
-          const std::list<CoreImageFile>& images = pModel->images();
-
-          for (auto image : images)
-          {
-             if (image.path() == path)
-                counter.addTags(image.subjectTags());
-          }
-       }
+       CoreSubjectTagCounter counter = makeImageTagsFromSelection(pModel, selectedPaths);
 
        // Build the list of 'extra' tags 
        imageTags.Clear();
-       std::vector<winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>> uiTagLists(3);
+       std::vector<winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> > uiTagLists(3);
        uiTagLists[0] = peopleTags;
        uiTagLists[1] = placeTags;
        uiTagLists[2] = timeTags;
 
        for (auto tag : counter.tags())
        {
+          auto whereUsed = counter.countOf(tag.first);
+
           // Iterate through the tag lists, then the tags in each list
           HUint index;
           bool found = false;
-          CoreSubjectTagCounter::EUsed whereUsed = whereUsed = counter.countOf(tag.first);
 
           for (auto list : uiTagLists)
           {
-             for (index = 0; index < list.Size() && !found; index++)
+             for (index = 0; index < list.Size(); index++)
              {
-                hstring item = list.GetAt(index);
-                if (tag.first == item.c_str())
+                MbrsUI::TagCheckbox item = list.GetAt(index);
+                if (tag.first == item.name().c_str())
                 {
                    found = true;
+                   auto ref = (whereUsed == CoreSubjectTagCounter::EUsed::kAll ? Windows::Foundation::IReference<bool>(true)
+                              : nullptr);
+                   auto value = winrt::make<MbrsUI::implementation::TagCheckbox>(item.name(),
+                                                                                 ref);
+                   list.SetAt(index, value);
+                }
+                else
+                {
+                   auto ref = Windows::Foundation::IReference<bool>(false);
+                   auto value = winrt::make<MbrsUI::implementation::TagCheckbox>(item.name(),
+                                                                                 ref);
+                   list.SetAt(index, value);
                 }
              }
           }
@@ -262,9 +308,10 @@ namespace winrt::MbrsUI::implementation
           winrt::Windows::UI::Xaml::Controls::Button addPlace = addPlaceTagButton();
           winrt::Windows::UI::Xaml::Controls::Button addTime = addTimeTagButton();
 
-          setupTagsImpl(m_storedPeopleTags, m_uiPeopleTags, peopleList, { this, &Page::onPersonTagRightTap }, addPerson);
-          setupTagsImpl(m_storedPlacesTags, m_uiPlacesTags, placeList, { this, &Page::onPlaceTagRightTap }, addPlace);
-          setupTagsImpl(m_storedTimesTags, m_uiTimesTags, timeList, { this, &Page::onTimeTagRightTap }, addTime);
+          std::list<HString> emptySelection;
+          setupTagsImpl(m_pModel, emptySelection, m_storedPeopleTags, m_uiPeopleTags, peopleList, { this, &Page::onPersonTagRightTap }, addPerson);
+          setupTagsImpl(m_pModel, emptySelection, m_storedPlacesTags, m_uiPlacesTags, placeList, { this, &Page::onPlaceTagRightTap }, addPlace);
+          setupTagsImpl(m_pModel, emptySelection, m_storedTimesTags, m_uiTimesTags, timeList, { this, &Page::onTimeTagRightTap }, addTime);
 
           // Connect the UI grid to data
           winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();

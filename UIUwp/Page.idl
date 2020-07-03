@@ -9,13 +9,13 @@ namespace MbrsUI
        String fileName { get; };
     }
 
-    runtimeclass TagCheckbox
+    runtimeclass TagCheckbox : Windows.UI.Xaml.Data.INotifyPropertyChanged
     {
        TagCheckbox (String name, Windows.Foundation.IReference<Boolean> isUsed);
 
-       String name { get; };
+       String name{ get; };
 
-       Windows.Foundation.IReference<Boolean> isUsed { get; };
+       Windows.Foundation.IReference<Boolean> isUsed{ get;};
     }
 
     [default_interface]
