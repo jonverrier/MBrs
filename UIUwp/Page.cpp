@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "CoreImageFile.h"
 
 #include "Page.h"
 #if __has_include("Page.g.cpp")
@@ -174,19 +175,72 @@ namespace winrt::MbrsUI::implementation
 
     void setupImageTagsImpl(winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox>& view,
                             winrt::Windows::UI::Xaml::Controls::StackPanel& panel,
+                            winrt::Windows::UI::Xaml::Controls::Border& border,
                             winrt::Windows::UI::Xaml::Controls::ListView& list)
     {
-       //panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Collapsed);
-       auto tagCheckbox = winrt::make<MbrsUI::implementation::TagCheckbox>(L"Yes", Windows::Foundation::IReference<bool>(true));
-       view.Append(tagCheckbox);
-       tagCheckbox = winrt::make<MbrsUI::implementation::TagCheckbox>(L"No", Windows::Foundation::IReference<bool>(false));
-       view.Append(tagCheckbox);
-       tagCheckbox = winrt::make<MbrsUI::implementation::TagCheckbox>(L"mixed", nullptr);
-       view.Append(tagCheckbox);
-       panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Visible);
+       // 'Other' tags initially collapsed as there is no selection
+       panel.Visibility(winrt::Windows::UI::Xaml::Visibility::Collapsed);
+       border.Visibility(winrt::Windows::UI::Xaml::Visibility::Collapsed);
 
        // Connect the UI grid to data
        list.ItemsSource(view);
+    }
+
+    void refreshTagsImpl(std::shared_ptr<CoreImageListModel>& pModel, std::list<HString>& selectedPaths,
+                         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& peopleTags,
+                         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& placeTags,
+                         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>& timeTags,
+                         winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox>& imageTags)
+    {
+       // find the selected images & build a dictionary of tags
+       CoreSubjectTagCounter counter;
+       for (auto path : selectedPaths)
+       {
+          const std::list<CoreImageFile>& images = pModel->images();
+
+          for (auto image : images)
+          {
+             if (image.path() == path)
+                counter.addTags(image.subjectTags());
+          }
+       }
+
+       // Build the list of 'extra' tags 
+       imageTags.Clear();
+       std::vector<winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring>> uiTagLists(3);
+       uiTagLists[0] = peopleTags;
+       uiTagLists[1] = placeTags;
+       uiTagLists[2] = timeTags;
+
+       for (auto tag : counter.tags())
+       {
+          // Iterate through the tag lists, then the tags in each list
+          HUint index;
+          bool found = false;
+          CoreSubjectTagCounter::EUsed whereUsed = whereUsed = counter.countOf(tag.first);
+
+          for (auto list : uiTagLists)
+          {
+             for (index = 0; index < list.Size() && !found; index++)
+             {
+                hstring item = list.GetAt(index);
+                if (tag.first == item.c_str())
+                {
+                   found = true;
+                }
+             }
+          }
+
+          // Add an 'other' entry if not found. Can only be kAll (true) or KSome (null), not kNone (false)
+          if (!found)
+          {
+             auto cb = winrt::make<MbrsUI::implementation::TagCheckbox>(tag.first.c_str(), whereUsed == CoreSubjectTagCounter::EUsed::kAll ? 
+                                                                                           Windows::Foundation::IReference<bool>(true) :
+                                                                                           nullptr);
+             imageTags.Append(cb);
+          }
+       }
+
     }
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -219,7 +273,8 @@ namespace winrt::MbrsUI::implementation
           // Set up the 'other tags on the image' panel
           winrt::Windows::UI::Xaml::Controls::StackPanel imageTagsPanel = imageOtherTagsPanel();
           winrt::Windows::UI::Xaml::Controls::ListView imageTagsList = imageOtherTagsList();
-          setupImageTagsImpl(m_uiImageTags, imageTagsPanel, imageTagsList);
+          winrt::Windows::UI::Xaml::Controls::Border imageTagsBorder = imageOtherTagsBorder();
+          setupImageTagsImpl(m_uiImageTags, imageTagsPanel, imageTagsBorder, imageTagsList);
        }
     }
 
@@ -272,13 +327,24 @@ namespace winrt::MbrsUI::implementation
 
        bool enable = false;
 
-       if (this->imageGrid().SelectedItems().Size() > 0)
+       winrt::Windows::Foundation::Collections::IVector<IInspectable> selectedItems = imageGrid().SelectedItems();
+       if (selectedItems.Size() > 0)
           enable = true;
+
+       std::list<HString> selectedPaths;
+       for (auto image : selectedItems)
+       {
+          selectedPaths.push_back(image.as<IImageView>().path().c_str());
+       }
 
        peopleTags().IsEnabled(enable);
        placeTags().IsEnabled(enable);
        timeTags().IsEnabled(enable);
+
+       refreshTagsImpl (m_pModel, selectedPaths, m_uiPeopleTags, m_uiPlacesTags, m_uiTimesTags, m_uiImageTags);
+
        imageOtherTagsPanel().Visibility (enable ? winrt::Windows::UI::Xaml::Visibility::Visible : winrt::Windows::UI::Xaml::Visibility::Collapsed);
+       imageOtherTagsBorder().Visibility(enable ? winrt::Windows::UI::Xaml::Visibility::Visible : winrt::Windows::UI::Xaml::Visibility::Collapsed);
     }
 
     void Page::onNewPersonTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)

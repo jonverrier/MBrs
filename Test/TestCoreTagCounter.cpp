@@ -52,14 +52,14 @@ namespace TestCore
          counter1.addTags(list1);
          counter2.addTags(list2);
 
-         Assert::IsTrue(counter1.countOf(tag1) == CoreSubjectTagCounter::kAll);
-         Assert::IsTrue(counter1.countOf(tag1) == CoreSubjectTagCounter::kAll);
-         Assert::IsTrue(counter1.countOf(tag3) == CoreSubjectTagCounter::kNone);
+         Assert::IsTrue(counter1.countOf(tag1) == CoreSubjectTagCounter::EUsed::kAll);
+         Assert::IsTrue(counter1.countOf(tag1) == CoreSubjectTagCounter::EUsed::kAll);
+         Assert::IsTrue(counter1.countOf(tag3) == CoreSubjectTagCounter::EUsed::kNone);
 
          counter1.addTags(list2);
-         Assert::IsTrue(counter1.countOf(tag3) == CoreSubjectTagCounter::kSome);
-         Assert::IsTrue(counter1.countOf(tag2) == CoreSubjectTagCounter::kAll);
-         Assert::IsTrue(counter1.countOf(tag3) == CoreSubjectTagCounter::kSome);
+         Assert::IsTrue(counter1.countOf(tag3) == CoreSubjectTagCounter::EUsed::kSome);
+         Assert::IsTrue(counter1.countOf(tag2) == CoreSubjectTagCounter::EUsed::kAll);
+         Assert::IsTrue(counter1.countOf(tag3) == CoreSubjectTagCounter::EUsed::kSome);
       }
    };
 

@@ -37,20 +37,25 @@ void CoreSubjectTagCounter::addTags(const std::list<HString>& tags)
    }
 }
 
-CoreSubjectTagCounter::EUsed CoreSubjectTagCounter::countOf(const HString& tag)
+CoreSubjectTagCounter::EUsed CoreSubjectTagCounter::countOf(const HString& tag) const
 {
    auto iter = m_tags.find(tag);
    if (iter != m_tags.end())
    {
       if ((*iter).second == m_count)
-         return kAll;
+         return EUsed::kAll;
       else
-         return kSome;
+         return EUsed::kSome;
    }
    else
    {
-      return kNone;
+      return EUsed::kNone;
    }
+}
+
+const std::map<HString, HUint> CoreSubjectTagCounter::tags() const
+{
+   return m_tags;
 }
 
 CoreSubjectTagCounter& CoreSubjectTagCounter::operator=(const CoreSubjectTagCounter& copyMe)

@@ -62,17 +62,18 @@ class CORE_API CoreSubjectTagCounter
 {
 public:
 
-   enum EUsed { kAll, kNone, kSome };
+   enum class CORE_API EUsed { kAll, kNone, kSome };
 
    // Constructors
    CoreSubjectTagCounter();
    ~CoreSubjectTagCounter(void);
 
    // Attributes
-   void addTags(const std::list<HString>& tags);
+   const std::map<HString, HUint> tags() const;
 
    // Operations
-   EUsed countOf (const HString& tag);
+   void addTags(const std::list<HString>& tags);
+   EUsed countOf (const HString& tag) const;
 
    CoreSubjectTagCounter& operator=(const CoreSubjectTagCounter& copyMe);
 

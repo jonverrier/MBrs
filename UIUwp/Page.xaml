@@ -204,7 +204,7 @@
                            </StackPanel>
                            <Border Grid.Row="3" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
                            <StackPanel Grid.Row="4" Padding="0" Margin="0" VerticalAlignment="Center" x:Name="imageOtherTagsPanel">
-                              <TextBlock Padding="5,0,0,0" Foreground="Black">Other tags on the selected images:</TextBlock>
+                              <TextBlock Padding="5,0,0,5" Foreground="White">Other tags on the selected image(s):</TextBlock>
                               <ListView Margin="0" Padding="0,0,0,0" BorderThickness="0" x:Name="imageOtherTagsList">
                                  <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
@@ -219,7 +219,7 @@
                                  </ListView.ItemTemplate>
                               </ListView>
                            </StackPanel>
-                           <Border Grid.Row="4" BorderBrush="LightGray" BorderThickness="0,0,0,2" />
+                           <Border Grid.Row="4" BorderBrush="LightGray" BorderThickness="0,0,0,2" x:Name="imageOtherTagsBorder"/>
                         </Grid>
                      </StackPanel>
                   </Grid>
