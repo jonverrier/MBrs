@@ -12,6 +12,7 @@
 #include "ImageView.h"
 #include "TagCheckbox.h"
 
+#include "Common.h"
 #include "CoreMbrsModelCommand.h"
 #include "CoreKeywords.h"
 

@@ -111,11 +111,12 @@ namespace winrt::MbrsUI::implementation
        for (auto key : defaults.keywords())
        {
           auto whereUsed = counter.countOf(key);
+          auto ref = whereUsed == CoreSubjectTagCounter::EUsed::kAll ? Windows::Foundation::IReference<bool>(true)
+                   : whereUsed == CoreSubjectTagCounter::EUsed::kNone ? Windows::Foundation::IReference<bool>(false) 
+                   : nullptr;
 
           auto cb = winrt::make<MbrsUI::implementation::TagCheckbox>(key.c_str(),
-                                                                     whereUsed == CoreSubjectTagCounter::EUsed::kAll ? Windows::Foundation::IReference<bool>(true)
-                                                                    : whereUsed == CoreSubjectTagCounter::EUsed::kNone ? Windows::Foundation::IReference<bool>(false) :
-                                                                      nullptr);
+                                                                     ref);
           uiTags.Append(cb);
        }
     }
@@ -237,56 +238,74 @@ namespace winrt::MbrsUI::implementation
     {
        // find the selected images & build a dictionary of tags
        CoreSubjectTagCounter counter = makeImageTagsFromSelection(pModel, selectedPaths);
+       std::map<HString, HUint> tags (counter.tags());
+       std::map<HString, HUint>::const_iterator iter;
 
        // Build the list of 'extra' tags 
+       // Use an array of pointers to the lists to avoid 'copy' semantics
        imageTags.Clear();
-       std::vector<winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> > uiTagLists(3);
-       uiTagLists[0] = peopleTags;
-       uiTagLists[1] = placeTags;
-       uiTagLists[2] = timeTags;
+       std::vector<winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox> *> puiTagLists(3);
+       puiTagLists[0] = &peopleTags;
+       puiTagLists[1] = &placeTags;
+       puiTagLists[2] = &timeTags;
 
-       for (auto tag : counter.tags())
+       // Use this to accumulate matches against tages on the specific image
+       std::vector<bool> tagsFound(tags.size(), false);
+       bool found = false;
+
+       // Iterate through the tag lists, then the tags in each list
+       HUint listIndex, tagIndex;
+       for (auto plist : puiTagLists)
        {
-          auto whereUsed = counter.countOf(tag.first);
-
-          // Iterate through the tag lists, then the tags in each list
-          HUint index;
-          bool found = false;
-
-          for (auto list : uiTagLists)
+          for (listIndex = 0; listIndex < plist->Size(); listIndex++)
           {
-             for (index = 0; index < list.Size(); index++)
+             MbrsUI::TagCheckbox listItem = plist->GetAt(listIndex);
+             CoreSubjectTagCounter::EUsed whereUsed = CoreSubjectTagCounter::EUsed::kNone;
+
+             for (tagIndex = 0, iter = tags.begin(), found = false; tagIndex < tags.size() && ! found; tagIndex++, iter++)
              {
-                MbrsUI::TagCheckbox item = list.GetAt(index);
-                if (tag.first == item.name().c_str())
+                HString tag((*iter).first);
+                
+                if (tag == listItem.name().c_str())
                 {
+                   tagsFound[tagIndex] = true;
                    found = true;
-                   auto ref = (whereUsed == CoreSubjectTagCounter::EUsed::kAll ? Windows::Foundation::IReference<bool>(true)
-                              : nullptr);
-                   auto value = winrt::make<MbrsUI::implementation::TagCheckbox>(item.name(),
-                                                                                 ref);
-                   list.SetAt(index, value);
-                }
-                else
-                {
-                   auto ref = Windows::Foundation::IReference<bool>(false);
-                   auto value = winrt::make<MbrsUI::implementation::TagCheckbox>(item.name(),
-                                                                                 ref);
-                   list.SetAt(index, value);
+                   whereUsed = counter.countOf(tag);
                 }
              }
-          }
-
-          // Add an 'other' entry if not found. Can only be kAll (true) or KSome (null), not kNone (false)
-          if (!found)
-          {
-             auto cb = winrt::make<MbrsUI::implementation::TagCheckbox>(tag.first.c_str(), whereUsed == CoreSubjectTagCounter::EUsed::kAll ? 
-                                                                                           Windows::Foundation::IReference<bool>(true) :
-                                                                                           nullptr);
-             imageTags.Append(cb);
+             
+             Windows::Foundation::IReference<bool> ref;
+             if (found)
+             {
+                // Set check to 'all' or 'some ' if found
+                ref = (whereUsed == CoreSubjectTagCounter::EUsed::kAll ? Windows::Foundation::IReference<bool>(true)
+                   : nullptr);
+             }
+             else
+             {
+                // Set check to 'none' if not found
+                ref = Windows::Foundation::IReference<bool>(false);
+             }
+             auto value = winrt::make<MbrsUI::implementation::TagCheckbox>(listItem.name(),
+                ref);
+             plist->SetAt(listIndex, value);
           }
        }
 
+       // Add an 'other' entry if not found. Can only be kAll (true) or KSome (null), not kNone (false)
+       for (tagIndex = 0, iter = tags.begin(); tagIndex < tags.size(); tagIndex++, iter++)
+       {
+          if (!tagsFound[tagIndex])
+          {
+             HString tag((*iter).first);
+             auto whereUsed = counter.countOf(tag);
+             auto cb = winrt::make<MbrsUI::implementation::TagCheckbox>(tag.c_str(),
+                whereUsed == CoreSubjectTagCounter::EUsed::kAll ?
+                Windows::Foundation::IReference<bool>(true) :
+                nullptr);
+             imageTags.Append(cb);
+          }
+       }
     }
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
