@@ -30,10 +30,11 @@ public:
    // Attributes
    const HString path () const;
    const HString pathAsUserString () const;
-   const std::list<CoreImageFile> images() const;
-   const std::list<CoreImageFile> imagesFor (HInt year) const;
-   const std::list<CoreImageFile> imagesFor (HInt year, HInt month) const;
+   const std::vector<CoreFileSystemEntity> images() const;
+   const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year) const;
+   const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year, HInt month) const;
    bool doesImageHaveTag(const HString& path, const HString& tag) const;
+   const std::list<HString> tagsFor (const HString& path) const;
 
    // Operations
    CoreImageListModel& operator=(const CoreImageListModel& copyMe) = delete;
@@ -47,8 +48,12 @@ protected:
    void refreshImageList ();
 
 private:
+   CoreImageFile lookupEnrichedImage (const HString& path);
+   bool refreshEnrichedImage(const HString& path, const CoreImageFile& file);
+   
    HString m_path;
-   std::list<CoreImageFile> m_images;
+   std::vector<CoreFileSystemEntity> m_images;
+   std::map<HString, CoreImageFile>  m_enrichedImages;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

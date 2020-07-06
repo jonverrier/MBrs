@@ -87,13 +87,8 @@ namespace winrt::MbrsUI::implementation
        CoreSubjectTagCounter counter;
        for (auto path : selectedPaths)
        {
-          const std::list<CoreImageFile>& images = pModel->images();
-
-          for (auto image : images)
-          {
-             if (image.path() == path)
-                counter.addTags(image.subjectTags());
-          }
+          const std::list<HString> tags = pModel->tagsFor(path);
+          counter.addTags(tags);
        }
 
        return counter;

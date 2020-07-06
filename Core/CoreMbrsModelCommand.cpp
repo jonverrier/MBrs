@@ -12,6 +12,16 @@
 
 using namespace std;
 
+template <typename TP>
+
+std::time_t to_time_t(TP tp)
+{
+   using namespace std::chrono;
+   auto sctp = time_point_cast<system_clock::duration>(tp - TP::clock::now()
+      + system_clock::now());
+   return system_clock::to_time_t(sctp);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageListModel
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,19 +58,20 @@ const HString CoreImageListModel::pathAsUserString() const
    return formatter.formatPath(compound);
 }
 
-const list<CoreImageFile> CoreImageListModel::images() const
+const vector<CoreFileSystemEntity> CoreImageListModel::images() const
 {
    return m_images;
 }
 
-const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year) const
+const vector<CoreFileSystemEntity> CoreImageListModel::imagesWrittenIn(HInt year) const
 {
-   list<CoreImageFile> images;
+   vector<CoreFileSystemEntity> images;
 
    for (auto image : m_images)
    {
       struct tm tm;
-      time_t t = image.takenAt();
+      // time_t t = image.takenAt();
+      time_t t = to_time_t (image.lastWriteTime());
       localtime_s(&tm, &t);
       if (tm.tm_year + 1900 == year) // localtime return years since 1900 
          images.push_back(image);
@@ -68,14 +79,15 @@ const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year) const
    return images;
 }
 
-const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year, HInt month) const
+const vector<CoreFileSystemEntity> CoreImageListModel::imagesWrittenIn(HInt year, HInt month) const
 {
-   list<CoreImageFile> images;
+   vector<CoreFileSystemEntity> images;
 
    for (auto image : m_images)
    {
       struct tm tm;
-      time_t t = image.takenAt();
+      // time_t t = image.takenAt();
+      time_t t = to_time_t(image.lastWriteTime());
       localtime_s(&tm, &t);
       if (tm.tm_year + 1900 == year && tm.tm_mon + 1  == month) // localtime return years since 1900, months are zero based
          images.push_back(image);
@@ -85,20 +97,48 @@ const list<CoreImageFile> CoreImageListModel::imagesFor(HInt year, HInt month) c
 
 bool CoreImageListModel::doesImageHaveTag(const HString& path, const HString& tag) const
 {
-   for (auto image : m_images)
-   {
-      if (image.path() == path)
-      {
-         std::list<HString> tags = image.subjectTags();
+   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
+   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
 
-         if (find(tags.begin(), tags.end(), tag) != tags.end())
-            return true;
-         else
-            return false;
-      }
+   std::list<HString> tags = enrichedImage.subjectTags();
+
+   if (find(tags.begin(), tags.end(), tag) != tags.end())
+      return true;
+   else
+      return false;
+
+   return false;
+}
+
+CoreImageFile CoreImageListModel::lookupEnrichedImage(const HString& path) 
+{
+   map<HString, CoreImageFile>::iterator iter = m_enrichedImages.find(path);
+   if (iter != m_enrichedImages.end())
+      return (*iter).second;
+
+   CoreImageFile newEntry(path);
+   m_enrichedImages.insert(std::pair<HString, CoreImageFile>(path, newEntry));
+   return newEntry;
+}
+
+bool CoreImageListModel::refreshEnrichedImage(const HString& path, const CoreImageFile& file)
+{
+   map<HString, CoreImageFile>::iterator iter = m_enrichedImages.find(path);
+   if (iter != m_enrichedImages.end())
+   {
+      (*iter).second = file;
+      return true;
    }
 
    return false;
+}
+
+const std::list<HString> CoreImageListModel::tagsFor(const HString& path) const
+{
+   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
+   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+
+   return enrichedImage.subjectTags();
 }
 
 void CoreImageListModel::setPath(const HString& path)
@@ -110,45 +150,40 @@ void CoreImageListModel::setPath(const HString& path)
 
 void CoreImageListModel::addTag(const HString& path, const HString& tag)
 {
-   list<CoreImageFile>::iterator iter;
+   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
+   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+   list<HString> add = { tag };
+   enrichedImage.addSubjectTags(add);
+   enrichedImage.writeSubjectTags();
 
-   for (iter = m_images.begin(); iter != m_images.end(); iter++)
-   {
-      if ((*iter).path() == path)
-      {
-         list<HString> add = { tag };
-         (*iter).addSubjectTags(add);
-         (*iter).writeSubjectTags();
-         return;
-      }
-   }
+   // Save it back in the cache
+   _this->refreshEnrichedImage(path, enrichedImage);
 }
 
 void CoreImageListModel::removeTag(const HString& path, const HString& tag)
 {
-   list<CoreImageFile>::iterator iter;
+   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
+   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+   list<HString> remove = { tag };
+   enrichedImage.removeSubjectTags(remove);
+   enrichedImage.writeSubjectTags();
 
-   for (iter = m_images.begin(); iter != m_images.end(); iter++)
-   {
-      if ((*iter).path() == path)
-      {
-         list<HString> remove = { tag };
-         (*iter).removeSubjectTags(remove);
-         (*iter).writeSubjectTags();
-         return;
-      }
-   }
+   // Save it back in the cache
+   _this->refreshEnrichedImage(path, enrichedImage);
 }
 
 // order the list by date-time taken, newest first (highest takenAt() 
-bool compare (const CoreImageFile& i, const CoreImageFile& j) 
+bool compare (const CoreFileSystemEntity& i, const CoreFileSystemEntity& j)
 { 
-   return (j.takenAt() < i.takenAt()); 
+   time_t tj = to_time_t(j.lastWriteTime());
+   time_t ti = to_time_t(i.lastWriteTime());
+
+   return (tj < ti); 
 }
 
 void CoreImageListModel::refreshImageList()
 {
-   list<HString> imagePaths;
+   vector<HString> imagePaths;
    CoreDirectory dir(m_path);
    dir.listImages(imagePaths);
 
@@ -156,11 +191,11 @@ void CoreImageListModel::refreshImageList()
 
    for (auto path : imagePaths)
    {
-      CoreImageFile image(path);
+      CoreFileSystemEntity image(path);
       m_images.push_back (image);
    }
 
-   m_images.sort (compare);
+   sort (m_images.begin(), m_images.end(), compare);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

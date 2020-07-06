@@ -69,7 +69,7 @@ public:
 
    // Operations
    CoreDirectory& operator=(const CoreDirectory& copyMe);
-   void listImages (std::list<HString>& images) const;
+   void listImages (std::vector<HString>& images) const;
 
    // Comparison Operators
    bool operator==(const CoreDirectory& rhs) const;

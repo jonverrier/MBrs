@@ -120,7 +120,7 @@ namespace TestCore
          Assert::IsFalse(processor1.canUndo());
          Assert::IsTrue(processor1.canRedo());
          Assert::IsTrue(currentPath == m_oldPath);
-         list<CoreImageFile> files = pModel->images();
+         vector<CoreFileSystemEntity> files = pModel->images();
          Assert::IsTrue(files.size() > 0); // Always > 0 image files in original directory
 
          // redo to change again
@@ -148,25 +148,26 @@ namespace TestCore
          Assert::IsFalse(processor.canRedo());
 
          // Add a tag
+         CoreImageFile file1(path);
          processor.adoptAndDo(pCmd);
-         CoreImageFile file1(path); 
-         std::list<HString> tags = file1.subjectTags();
+         CoreImageFile file2(path); 
+         std::list<HString> tags = file2.subjectTags();
          Assert::IsTrue(find (tags.begin(), tags.end(), newTag) != tags.end());
          Assert::IsTrue(processor.canUndo());
          Assert::IsFalse(processor.canRedo());
 
          // Undo to remove it
          processor.undo();
-         CoreImageFile file2(path);
-         tags = file2.subjectTags();
+         CoreImageFile file3(path);
+         tags = file3.subjectTags();
          Assert::IsTrue(find(tags.begin(), tags.end(), newTag) == tags.end());
          Assert::IsFalse(processor.canUndo());
          Assert::IsTrue(processor.canRedo());
 
          // Redo to add it back again
          processor.redo();
-         CoreImageFile file3(path);
-         tags = file3.subjectTags();
+         CoreImageFile file4(path);
+         tags = file4.subjectTags();
          Assert::IsTrue(find(tags.begin(), tags.end(), newTag) != tags.end());
          Assert::IsTrue(processor.canUndo());
          Assert::IsFalse(processor.canRedo());
@@ -229,11 +230,11 @@ namespace TestCore
       {
          std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel(H_TEXT("."))); // 2 images stored in working directory for test
 
-         Assert::IsTrue(pModel->images().size() == 2);
-         Assert::IsTrue(pModel->imagesFor(2014).size() == 0);
-         Assert::IsTrue(pModel->imagesFor(2015).size() == 2); // both taken in 2015
-         Assert::IsTrue(pModel->imagesFor(2015, 6).size() == 0);
-         Assert::IsTrue(pModel->imagesFor(2015, 7).size() == 2); // both taken in july 2015
+         Assert::IsTrue(pModel->images().size() == 3);
+         Assert::IsTrue(pModel->imagesWrittenIn(2014).size() == 0);
+         Assert::IsTrue(pModel->imagesWrittenIn(2020).size() == 3); // all images will be saved in current year
+         Assert::IsTrue(pModel->imagesWrittenIn(2020, 1).size() == 0);
+         Assert::IsTrue(pModel->imagesWrittenIn(2020, 7).size() == 3); // all images will be saved in current month
       }
 
       TEST_METHOD(Benchmark)

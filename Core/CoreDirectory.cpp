@@ -50,7 +50,7 @@ bool CoreDirectory::operator!=(const CoreDirectory& rhs) const
    return (CoreFileSystemEntity::operator!=(rhs));
 }
 
-void CoreDirectory::listImages(std::list<HString>& images) const
+void CoreDirectory::listImages(std::vector<HString>& images) const
 {
    filesystem::directory_iterator iter(path());
    images.clear();
@@ -115,7 +115,7 @@ bool CoreDirectorySearch::operator!=(const CoreDirectorySearch& rhs) const
 void CoreDirectorySearch::listImages(CoreDirectorySearch::SearchQueue& queueImg)
 {
    CoreDirectory dir(m_rootDir);
-   list<HString> images;
+   vector<HString> images;
 
    dir.listImages (images);
 

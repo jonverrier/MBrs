@@ -91,7 +91,7 @@ namespace TestCore
          filesystem::create_directories(path1);
          CoreDirectory emptyDir(path1);
 
-         list<HString> contents;
+         vector<HString> contents;
          emptyDir.listImages(contents);
          Assert::IsTrue(contents.size() == 0);
       }
