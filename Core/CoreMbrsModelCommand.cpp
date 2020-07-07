@@ -141,6 +141,22 @@ const std::list<HString> CoreImageListModel::tagsFor(const HString& path) const
    return enrichedImage.subjectTags();
 }
 
+const std::list<HString> CoreImageListModel::actualAddTagsFor(const HString& path, std::list<HString>& add) const
+{
+   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
+   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+
+   return enrichedImage.actualAddSubjectTags(add);
+}
+
+const std::list<HString> CoreImageListModel::actualRemoveTagsFor(const HString& path, std::list<HString>& remove) const
+{
+   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
+   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+
+   return enrichedImage.actualRemoveSubjectTags(remove);
+}
+
 void CoreImageListModel::setPath(const HString& path)
 {
    m_path = path;
@@ -150,26 +166,35 @@ void CoreImageListModel::setPath(const HString& path)
 
 void CoreImageListModel::addTag(const HString& path, const HString& tag)
 {
-   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
-   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+   CoreImageFile enrichedImage = lookupEnrichedImage(path);
    list<HString> add = { tag };
    enrichedImage.addSubjectTags(add);
    enrichedImage.writeSubjectTags();
 
    // Save it back in the cache
-   _this->refreshEnrichedImage(path, enrichedImage);
+   refreshEnrichedImage(path, enrichedImage);
 }
 
 void CoreImageListModel::removeTag(const HString& path, const HString& tag)
 {
-   CoreImageListModel* _this = const_cast<CoreImageListModel*>(this);
-   CoreImageFile enrichedImage = _this->lookupEnrichedImage(path);
+   CoreImageFile enrichedImage = lookupEnrichedImage(path);
    list<HString> remove = { tag };
    enrichedImage.removeSubjectTags(remove);
    enrichedImage.writeSubjectTags();
 
    // Save it back in the cache
-   _this->refreshEnrichedImage(path, enrichedImage);
+   refreshEnrichedImage(path, enrichedImage);
+}
+
+void CoreImageListModel::addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove)
+{
+   CoreImageFile enrichedImage = lookupEnrichedImage(path);
+   enrichedImage.addSubjectTags(tagsToAdd);
+   enrichedImage.removeSubjectTags(tagsToRemove);
+   enrichedImage.writeSubjectTags();
+
+   // Save it back in the cache
+   refreshEnrichedImage(path, enrichedImage);
 }
 
 // order the list by date-time taken, newest first (highest takenAt() 
@@ -262,7 +287,7 @@ void CoreChangeDirectoryCommand::undo()
 // CoreImageListSelection
 ///////////////////////////////////////////////////////////////////////////////
 
-CoreImageListSelection::CoreImageListSelection(std::list<HString>& imagePaths)
+CoreImageListSelection::CoreImageListSelection(std::vector<HString>& imagePaths)
    : m_imagePaths (imagePaths)
 {
 }
@@ -271,7 +296,7 @@ CoreImageListSelection::~CoreImageListSelection(void)
 {
 }
 
-std::list<HString> CoreImageListSelection::imagePaths() const
+std::vector<HString> CoreImageListSelection::imagePaths() const
 {
    return m_imagePaths;
 }
@@ -300,7 +325,7 @@ bool CoreImageListSelection::operator!=(const CoreImageListSelection& rhs) const
 CoreAddImageTagCommand::CoreAddImageTagCommand (const HString& newTag, 
    std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreImageListSelection> pSelection)
    : CoreCommand(),
-   m_newTag(newTag), m_pModel(pModel), m_pSelection(pSelection)
+   m_changeTag(newTag), m_pModel(pModel), m_pSelection(pSelection)
 {
 }
 
@@ -310,22 +335,22 @@ CoreAddImageTagCommand::~CoreAddImageTagCommand(void)
 
 CoreAddImageTagCommand& CoreAddImageTagCommand::operator=(const CoreAddImageTagCommand& copyMe)
 {
-   m_newTag = copyMe.m_newTag;
+   m_changeTag = copyMe.m_changeTag;
    m_pModel = copyMe.m_pModel;
    m_pSelection = copyMe.m_pSelection;
-   m_listForUndo = copyMe.m_listForUndo;
+   m_paths = copyMe.m_paths;
 
    return *this;
 }
 
 bool CoreAddImageTagCommand::operator==(const CoreAddImageTagCommand& rhs) const
 {
-   return m_newTag == rhs.m_newTag && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_listForUndo == rhs.m_listForUndo;
+   return m_changeTag == rhs.m_changeTag && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_paths == rhs.m_paths;
 }
 
 bool CoreAddImageTagCommand::operator!=(const CoreAddImageTagCommand& rhs) const
 {
-   return m_newTag != rhs.m_newTag || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_listForUndo != rhs.m_listForUndo;
+   return m_changeTag != rhs.m_changeTag || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_paths != rhs.m_paths;
 }
 
 CoreModel& CoreAddImageTagCommand::model() const
@@ -340,39 +365,39 @@ CoreSelection& CoreAddImageTagCommand::selection() const
 
 bool CoreAddImageTagCommand::canUndo()
 {
-   return m_listForUndo.size() > 0;
+   return m_paths.size() > 0;
 }
 
 void CoreAddImageTagCommand::apply()
 {
-   std::list<HString> pathsWithoutTag;
+   std::vector<HString> pathsWithoutTag;
 
    for (auto path : m_pSelection->imagePaths())
    {
-      if (! m_pModel->doesImageHaveTag (path, m_newTag))
+      if (! m_pModel->doesImageHaveTag (path, m_changeTag))
          pathsWithoutTag.push_back (path);
    }
 
-   m_listForUndo = pathsWithoutTag;
+   m_paths = pathsWithoutTag;
 
    applyTo(pathsWithoutTag);
 }
 
 void CoreAddImageTagCommand::undo()
 {
-   unApplyTo(m_listForUndo);
+   unApplyTo(m_paths);
 }
 
-void CoreAddImageTagCommand::applyTo(const std::list< HString >& paths)
+void CoreAddImageTagCommand::applyTo(const std::vector< HString >& paths)
 {
    for (auto path : paths)
-      m_pModel->addTag(path, m_newTag);
+      m_pModel->addTag(path, m_changeTag);
 }
 
-void CoreAddImageTagCommand::unApplyTo(const std::list< HString >& paths)
+void CoreAddImageTagCommand::unApplyTo(const std::vector< HString >& paths)
 {
    for (auto path : paths)
-      m_pModel->removeTag(path, m_newTag);
+      m_pModel->removeTag(path, m_changeTag);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -382,7 +407,7 @@ void CoreAddImageTagCommand::unApplyTo(const std::list< HString >& paths)
 CoreRemoveImageTagCommand::CoreRemoveImageTagCommand(const HString& oldTag,
    std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreImageListSelection> pSelection)
    : CoreCommand(),
-   m_oldTag(oldTag), m_pModel(pModel), m_pSelection(pSelection)
+   m_changeTag(oldTag), m_pModel(pModel), m_pSelection(pSelection)
 {
 }
 
@@ -392,22 +417,22 @@ CoreRemoveImageTagCommand::~CoreRemoveImageTagCommand(void)
 
 CoreRemoveImageTagCommand& CoreRemoveImageTagCommand::operator=(const CoreRemoveImageTagCommand& copyMe)
 {
-   m_oldTag = copyMe.m_oldTag;
+   m_changeTag = copyMe.m_changeTag;
    m_pModel = copyMe.m_pModel;
    m_pSelection = copyMe.m_pSelection;
-   m_listForUndo = copyMe.m_listForUndo;
+   m_paths = copyMe.m_paths;
 
    return *this;
 }
 
 bool CoreRemoveImageTagCommand::operator==(const CoreRemoveImageTagCommand& rhs) const
 {
-   return m_oldTag == rhs.m_oldTag && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_listForUndo == rhs.m_listForUndo;
+   return m_changeTag == rhs.m_changeTag && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_paths == rhs.m_paths;
 }
 
 bool CoreRemoveImageTagCommand::operator!=(const CoreRemoveImageTagCommand& rhs) const
 {
-   return m_oldTag != rhs.m_oldTag || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_listForUndo != rhs.m_listForUndo;
+   return m_changeTag != rhs.m_changeTag || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_paths != rhs.m_paths;
 }
 
 CoreModel& CoreRemoveImageTagCommand::model() const
@@ -422,37 +447,132 @@ CoreSelection& CoreRemoveImageTagCommand::selection() const
 
 bool CoreRemoveImageTagCommand::canUndo()
 {
-   return m_listForUndo.size() > 0;
+   return m_paths.size() > 0;
 }
 
 void CoreRemoveImageTagCommand::apply()
 {
-   std::list<HString> pathsWithTag;
+   std::vector<HString> pathsWithTag;
 
    for (auto path : m_pSelection->imagePaths())
    {
-      if (m_pModel->doesImageHaveTag(path, m_oldTag))
+      if (m_pModel->doesImageHaveTag(path, m_changeTag))
          pathsWithTag.push_back(path);
    }
 
-   m_listForUndo = pathsWithTag;
+   m_paths = pathsWithTag;
 
    applyTo(pathsWithTag);
 }
 
 void CoreRemoveImageTagCommand::undo()
 {
-   unApplyTo(m_listForUndo);
+   unApplyTo(m_paths);
 }
 
-void CoreRemoveImageTagCommand::applyTo(const std::list< HString >& paths)
+void CoreRemoveImageTagCommand::applyTo(const std::vector< HString >& paths)
 {
    for (auto path : paths)
-      m_pModel->removeTag(path, m_oldTag);
+      m_pModel->removeTag(path, m_changeTag);
 }
 
-void CoreRemoveImageTagCommand::unApplyTo(const std::list< HString >& paths)
+void CoreRemoveImageTagCommand::unApplyTo(const std::vector< HString >& paths)
 {
    for (auto path : paths)
-      m_pModel->addTag(path, m_oldTag);
+      m_pModel->addTag(path, m_changeTag);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreCompoundImageTagChangeCommand
+///////////////////////////////////////////////////////////////////////////////
+
+CoreCompoundImageTagChangeCommand::CoreCompoundImageTagChangeCommand(const list<HString>& add,
+                                                                     const list<HString>& remove,
+                                                                     std::shared_ptr< CoreImageListModel> pModel,
+                                                                     std::shared_ptr< CoreImageListSelection> pSelection)
+   : CoreCommand(),
+   m_addTags(add), m_removeTags (remove), m_pModel(pModel), m_pSelection(pSelection)
+{
+}
+
+CoreCompoundImageTagChangeCommand::~CoreCompoundImageTagChangeCommand(void)
+{
+}
+
+CoreCompoundImageTagChangeCommand& CoreCompoundImageTagChangeCommand::operator=(const CoreCompoundImageTagChangeCommand& copyMe)
+{
+   m_addTags = copyMe.m_addTags;
+   m_removeTags = copyMe.m_removeTags;
+   m_pModel = copyMe.m_pModel;
+   m_pSelection = copyMe.m_pSelection;
+   m_paths = copyMe.m_paths;
+
+   return *this;
+}
+
+bool CoreCompoundImageTagChangeCommand::operator==(const CoreCompoundImageTagChangeCommand& rhs) const
+{
+   return m_addTags == rhs.m_addTags && rhs.m_removeTags == rhs.m_removeTags 
+      && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_paths == rhs.m_paths;
+}
+
+bool CoreCompoundImageTagChangeCommand::operator!=(const CoreCompoundImageTagChangeCommand& rhs) const
+{
+   return m_addTags != rhs.m_addTags || m_removeTags != rhs.m_removeTags ||
+      m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection || m_paths != rhs.m_paths;
+}
+
+CoreModel& CoreCompoundImageTagChangeCommand::model() const
+{
+   return *m_pModel;
+}
+
+CoreSelection& CoreCompoundImageTagChangeCommand::selection() const
+{
+   return *m_pSelection;
+}
+
+bool CoreCompoundImageTagChangeCommand::canUndo()
+{
+   return m_paths.size() > 0;
+}
+
+void CoreCompoundImageTagChangeCommand::apply()
+{
+   // when the command is applied, we calculate the actual changes to make to each image & save for the undo list
+   m_paths = m_pSelection->imagePaths();
+   m_actualAddTagLists.resize(m_paths.size());
+   m_actualRemoveTagLists.resize(m_paths.size());
+
+   for (auto i = 0; i < m_paths.size(); i++)
+   {
+      auto path = m_paths[i];
+      m_actualAddTagLists[i] = m_pModel->actualAddTagsFor (path, m_addTags);
+      m_actualRemoveTagLists[i] = m_pModel->actualRemoveTagsFor (path, m_removeTags);
+   }
+   applyTo(m_paths);
+}
+
+void CoreCompoundImageTagChangeCommand::undo()
+{
+   unApplyTo(m_paths);
+}
+
+void CoreCompoundImageTagChangeCommand::applyTo(const std::vector< HString >& paths)
+{
+   for (auto i = 0; i < m_paths.size(); i++)
+   {
+      auto path = m_paths[i];
+      m_pModel->addRemoveTags(path, m_actualAddTagLists[i], m_actualRemoveTagLists[i]);
+   }
+}
+
+void CoreCompoundImageTagChangeCommand::unApplyTo(const std::vector< HString >& paths)
+{
+   // Undo the command by adding the remove list, and vice-versa
+   for (auto i = 0; i < m_paths.size(); i++)
+   {
+      auto path = m_paths[i];
+      m_pModel->addRemoveTags(path, m_actualRemoveTagLists[i], m_actualAddTagLists[i]);
+   }
 }

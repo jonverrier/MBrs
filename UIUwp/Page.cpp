@@ -75,6 +75,10 @@ namespace winrt::MbrsUI::implementation
        m_uiImageTags = winrt::single_threaded_observable_vector<MbrsUI::TagCheckbox>();
 
        m_uiImages = winrt::single_threaded_observable_vector<MbrsUI::ImageView>();
+       
+       // Set the time for 2 seconds interval
+       m_timer.Interval(std::chrono::milliseconds{ 2000 });
+       auto registrationtoken = m_timer.Tick({ this, &Page::OnTick });
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -511,5 +515,32 @@ namespace winrt::MbrsUI::implementation
 
        onRemoveTagImpl(m_timeContext, m_storedTimesTags, m_uiTimesTags);
     }
+
+    void winrt::MbrsUI::implementation::Page::onImageTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       resetTimer();
+    }
+
+    void Page::OnTick(winrt::Windows::Foundation::IInspectable const& sender, Windows::Foundation::IInspectable const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       
+       m_timer.Stop();
+       Beep(750, 300);
+    }
+
+    void Page::resetTimer()
+    {
+       // Stop time if it is running
+       if (m_timer.IsEnabled())
+       {
+          m_timer.Stop();
+       }
+       m_timer.Start();          
+    }
+
 }
 

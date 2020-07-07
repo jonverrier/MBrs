@@ -51,7 +51,7 @@ namespace TestCore
       TEST_METHOD(ConstructAndCopyAddCommand)
       {
          HString path = H_TEXT("test.jpg");
-         std::list<HString> sel;
+         std::vector<HString> sel;
          sel.push_back ( path );
 
          HString newTag1(H_TEXT("NewTag1"));
@@ -69,7 +69,7 @@ namespace TestCore
       TEST_METHOD(ConstructAndCopyRemoveCommand)
       {
          HString path = H_TEXT("test.jpg");
-         std::list<HString> sel;
+         std::vector<HString> sel;
          sel.push_back(path);
 
          HString newTag1(H_TEXT("OldTag1"));
@@ -86,8 +86,8 @@ namespace TestCore
 
       TEST_METHOD(ConstructAndCopyImageSelection)
       {
-         std::list<HString> imagePaths1 = { H_TEXT("Test1.jpg") };
-         std::list<HString> imagePaths2 = { H_TEXT("Test2.jpg") };
+         std::vector<HString> imagePaths1 = { H_TEXT("Test1.jpg") };
+         std::vector<HString> imagePaths2 = { H_TEXT("Test2.jpg") };
 
          CoreImageListSelection sel1 (imagePaths1);
          CoreImageListSelection sel2 (imagePaths2);
@@ -134,7 +134,7 @@ namespace TestCore
       TEST_METHOD(DoUndoAddTag)
       {
          HString path = std::filesystem::absolute (H_TEXT("test.JPG"));
-         std::list<HString> sel;
+         std::vector<HString> sel;
          sel.push_back(path);
 
          HString newTag(H_TEXT("NewTag"));
@@ -179,7 +179,7 @@ namespace TestCore
       TEST_METHOD(DoUndoRemoveTag)
       {
          HString path = std::filesystem::absolute(H_TEXT("test.JPG"));
-         std::list<HString> sel;
+         std::vector<HString> sel;
          sel.push_back(path);
 
          HString newTag(H_TEXT("NewTag"));
@@ -224,6 +224,42 @@ namespace TestCore
          Assert::IsTrue(find(tags.begin(), tags.end(), newTag) == tags.end());
          Assert::IsTrue(processor.canUndo());
          Assert::IsFalse(processor.canRedo());
+      }
+
+      TEST_METHOD(DoUndoCompoundTag)
+      {
+         HString path = std::filesystem::absolute(H_TEXT("test.JPG"));
+         std::vector<HString> sel;
+         sel.push_back(path);
+
+         CoreImageFile file1(path);
+         std::list<HString> tags = file1.subjectTags();
+         list<HString> addTags = { H_TEXT("NewTag1"), H_TEXT("NewTag2")};
+         list<HString> removeTags = { H_TEXT("NewTag3"), H_TEXT("NewTag4") };
+
+         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel(H_TEXT(".")));
+         std::shared_ptr< CoreImageListSelection> pSelection(COMMON_NEW CoreImageListSelection(sel));
+         shared_ptr<CoreCommand> pCompoundCmd(COMMON_NEW CoreCompoundImageTagChangeCommand(addTags, removeTags, pModel, pSelection));
+
+         CoreCommandProcessor processor(pModel);
+         Assert::IsFalse(processor.canUndo());
+         Assert::IsFalse(processor.canRedo());
+
+         // Add a tag
+         processor.adoptAndDo(pCompoundCmd);
+         CoreImageFile file2(path);
+         tags = file2.subjectTags();
+         Assert::IsTrue(find(tags.begin(), tags.end(), *(addTags.begin())) != tags.end());
+         Assert::IsTrue(processor.canUndo());
+         Assert::IsFalse(processor.canRedo());
+
+         // Undo to remove it
+         processor.undo();
+         CoreImageFile file3(path);
+         tags = file3.subjectTags();
+         Assert::IsTrue(find(tags.begin(), tags.end(), *(addTags.begin())) == tags.end());
+         Assert::IsFalse(processor.canUndo());
+         Assert::IsTrue(processor.canRedo());
       }
 
       TEST_METHOD(Filtering)

@@ -28,12 +28,15 @@ public:
 
    // Attributes
    std::list<HString> subjectTags() const;
+   bool hasSubjectTag (const HString& tagToTest) const;
    time_t takenAt() const;
 
    // Operations
    std::list<HString> addSubjectTags(const std::list<HString>& add);
    std::list<HString> removeSubjectTags(const std::list<HString>& add);
    bool writeSubjectTags();
+   std::list<HString> actualAddSubjectTags(const std::list<HString>& add);
+   std::list<HString> actualRemoveSubjectTags(const std::list<HString>& remove);
 
    CoreImageFile& operator=(const CoreImageFile& copyMe);
 

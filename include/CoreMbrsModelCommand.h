@@ -35,6 +35,8 @@ public:
    const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year, HInt month) const;
    bool doesImageHaveTag(const HString& path, const HString& tag) const;
    const std::list<HString> tagsFor (const HString& path) const;
+   const std::list<HString> actualAddTagsFor(const HString& path, std::list<HString>& add) const;
+   const std::list<HString> actualRemoveTagsFor(const HString& path, std::list<HString>& remove) const;
 
    // Operations
    CoreImageListModel& operator=(const CoreImageListModel& copyMe) = delete;
@@ -43,6 +45,7 @@ public:
    void setPath(const HString& path);
    void addTag(const HString& path, const HString& tag);
    void removeTag(const HString& path, const HString& tag);
+   void addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove);
 
 protected:
    void refreshImageList ();
@@ -99,11 +102,11 @@ class CORE_API CoreImageListSelection : public CoreSelection
 {
 public:
    // Constructors
-   CoreImageListSelection(std::list<HString>& imagePaths);
+   CoreImageListSelection(std::vector<HString>& imagePaths);
    virtual ~CoreImageListSelection(void);
 
    // Attributes
-   std::list<HString> imagePaths() const;
+   std::vector<HString> imagePaths() const;
 
    // Operations
    CoreImageListSelection& operator=(const CoreImageListSelection& copyMe);
@@ -113,7 +116,7 @@ public:
 protected:
 
 private:
-   std::list<HString> m_imagePaths;
+   std::vector<HString> m_imagePaths;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,13 +148,13 @@ public:
 protected:
 
 private:
-   void applyTo (const std::list< HString >& paths);
-   void unApplyTo (const std::list< HString >& paths);
+   void applyTo (const std::vector< HString >& paths);
+   void unApplyTo (const std::vector< HString >& paths);
 
    std::shared_ptr<CoreImageListModel> m_pModel;
    std::shared_ptr<CoreImageListSelection> m_pSelection;
-   std::list< HString > m_listForUndo;
-   HString m_newTag;
+   std::vector< HString > m_paths;
+   HString m_changeTag;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -183,13 +186,53 @@ public:
 protected:
 
 private:
-   void applyTo(const std::list< HString >& paths);
-   void unApplyTo(const std::list< HString >& paths);
+   void applyTo(const std::vector< HString >& paths);
+   void unApplyTo(const std::vector< HString >& paths);
 
    std::shared_ptr<CoreImageListModel> m_pModel;
    std::shared_ptr<CoreImageListSelection> m_pSelection;
-   std::list< HString > m_listForUndo;
-   HString m_oldTag;
+   std::vector< HString > m_paths;
+   HString m_changeTag;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// CoreCompoundImageTagChangeCommand
+///////////////////////////////////////////////////////////////////////////////
+
+class CORE_API CoreCompoundImageTagChangeCommand : public CoreCommand
+{
+public:
+   // Constructors
+   CoreCompoundImageTagChangeCommand(const std::list<HString>& add,
+                                     const std::list<HString>& remove,
+                                     std::shared_ptr< CoreImageListModel> pModel,
+                                     std::shared_ptr< CoreImageListSelection> pSelection);
+   virtual ~CoreCompoundImageTagChangeCommand();
+
+   // Attributes
+   virtual bool canUndo();
+   virtual CoreModel& model() const;
+   virtual CoreSelection& selection() const;
+
+   // Operations
+
+   CoreCompoundImageTagChangeCommand& operator=(const CoreCompoundImageTagChangeCommand& copyMe);
+   bool operator==(const CoreCompoundImageTagChangeCommand& rhs) const;
+   bool operator!=(const CoreCompoundImageTagChangeCommand& rhs) const;
+   virtual void apply();
+   virtual void undo();
+
+protected:
+
+private:
+   void applyTo(const std::vector< HString >& paths);
+   void unApplyTo(const std::vector< HString >& paths);
+
+   std::shared_ptr<CoreImageListModel> m_pModel;
+   std::shared_ptr<CoreImageListSelection> m_pSelection;
+   std::list< HString > m_addTags, m_removeTags;
+   std::vector<HString> m_paths;
+   std::vector< std::list<HString> > m_actualAddTagLists, m_actualRemoveTagLists;
 };
 
 #endif // COREMBRSMODELCOMMAND_INCLUDED

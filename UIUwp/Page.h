@@ -46,6 +46,10 @@ namespace winrt::MbrsUI::implementation
         void onTimeTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onAddTimeTag (winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onRemoveTimeTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        
+        void onImageTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void OnTick(winrt::Windows::Foundation::IInspectable const& sender, Windows::Foundation::IInspectable const& e);
+        void resetTimer(); 
 
         DesktopCallback    *m_pDesktop;   
         std::shared_ptr<CoreCommandProcessor> m_pCommandProcessor;
@@ -66,6 +70,8 @@ namespace winrt::MbrsUI::implementation
         winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::ImageView> m_uiImages;
 
         winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox> m_uiImageTags;
+
+        Windows::UI::Xaml::DispatcherTimer m_timer;
     };
 }
 

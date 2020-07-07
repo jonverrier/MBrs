@@ -100,6 +100,17 @@ list<HString> CoreImageFile::subjectTags() const
    return m_tagCache;
 }
 
+bool CoreImageFile::hasSubjectTag(const HString& tagToTest) const
+{
+   for (auto tag : m_tagCache)
+   {
+      if (tag == tagToTest)
+         return true;
+   }
+
+   return false;
+}
+
 void CoreImageFile::readMetaData()
 {
    HUint fileError = 0;
@@ -136,7 +147,6 @@ list<HString> CoreImageFile::removeSubjectTags(const list<HString>& remove)
    return m_tagCache;
 }
 
-
 bool CoreImageFile::writeSubjectTags()
 {
    HUint fileError = 0;
@@ -160,6 +170,30 @@ bool CoreImageFile::writeSubjectTags()
    }
 
    return false;
+}
+
+std::list<HString> CoreImageFile::actualAddSubjectTags(const std::list<HString>& add)
+{
+   std::list<HString> diff;
+
+   for (auto tag : add)
+   {
+      if (!hasSubjectTag(tag))
+         diff.push_back(tag);
+   }
+   return diff;
+}
+
+std::list<HString> CoreImageFile::actualRemoveSubjectTags(const std::list<HString>& remove)
+{
+   std::list<HString> diff;
+
+   for (auto tag : remove)
+   {
+      if (hasSubjectTag(tag))
+         diff.push_back(tag);
+   }
+   return diff;
 }
 
 Exiv2::Image::AutoPtr openImage(const HString& path, HUint& fileError) 
