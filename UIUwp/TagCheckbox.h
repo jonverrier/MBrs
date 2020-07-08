@@ -16,6 +16,7 @@ namespace winrt::MbrsUI::implementation
         hstring name() const;
 
         Windows::Foundation::IReference<bool> isUsed() const;
+        void isUsed(Windows::Foundation::IReference<bool> used);
 
         winrt::event_token PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler);
         void PropertyChanged(winrt::event_token const& token) noexcept;

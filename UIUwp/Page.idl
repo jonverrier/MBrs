@@ -15,7 +15,7 @@ namespace MbrsUI
 
        String name{ get; };
 
-       Windows.Foundation.IReference<Boolean> isUsed{ get;};
+       Windows.Foundation.IReference<Boolean> isUsed{ get; set; };
     }
 
     [default_interface]

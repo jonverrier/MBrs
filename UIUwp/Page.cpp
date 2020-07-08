@@ -45,6 +45,11 @@ namespace winrt::MbrsUI::implementation
        return m_isUsed;
     }  
 
+    void TagCheckbox::isUsed(Windows::Foundation::IReference<bool> used)
+    {
+       m_isUsed = used;
+    }
+
     winrt::event_token TagCheckbox::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler)
     {
        return m_propertyChanged.add(handler);
@@ -76,9 +81,10 @@ namespace winrt::MbrsUI::implementation
 
        m_uiImages = winrt::single_threaded_observable_vector<MbrsUI::ImageView>();
        
-       // Set the time for 2 seconds interval
-       m_timer.Interval(std::chrono::milliseconds{ 2000 });
-       auto registrationtoken = m_timer.Tick({ this, &Page::OnTick });
+       // Set the time for 2 seconds interval. every two seconds after a tag checkbox change we batch up all changes & save.
+       // Or we save when different images are selected
+       m_changeTimer.Interval(std::chrono::milliseconds{ 2000 });
+       auto registrationtoken = m_changeTimer.Tick({ this, &Page::OnTick });
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -390,6 +396,10 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
+       // Save any pending changes
+       if (isChangeTimerRunning())
+          saveChanges();
+
        bool enable = false;
 
        winrt::Windows::Foundation::Collections::IVector<IInspectable> selectedItems = imageGrid().SelectedItems();
@@ -459,7 +469,7 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
 
-       onRightTapImpl(e, m_placeContext);
+onRightTapImpl(e, m_placeContext);
     }
 
     void Page::onRemovePlaceTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -492,13 +502,13 @@ namespace winrt::MbrsUI::implementation
        this->addTimeTagButton().IsEnabled(enable);
     }
 
-    void Page::onAddTimeTag (winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    void Page::onAddTimeTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
 
        winrt::Windows::UI::Xaml::Controls::TextBox tb = newTimeTag();
-       onAddTagImpl (tb, m_storedTimesTags, m_uiTimesTags);
+       onAddTagImpl(tb, m_storedTimesTags, m_uiTimesTags);
     }
 
     void Page::onTimeTagRightTap(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -520,27 +530,75 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
-       resetTimer();
+       resetChangeTimer();
     }
 
     void Page::OnTick(winrt::Windows::Foundation::IInspectable const& sender, Windows::Foundation::IInspectable const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
-       
-       m_timer.Stop();
-       Beep(750, 300);
+
+       if (isChangeTimerRunning())
+          saveChanges();
     }
 
-    void Page::resetTimer()
+    void Page::resetChangeTimer()
     {
        // Stop time if it is running
-       if (m_timer.IsEnabled())
+       if (m_changeTimer.IsEnabled())
        {
-          m_timer.Stop();
+          m_changeTimer.Stop();
        }
-       m_timer.Start();          
+       m_changeTimer.Start();
     }
 
+    bool Page::isChangeTimerRunning()
+    {
+       return m_changeTimer.IsEnabled();
+    }
+
+    void Page::saveChanges()
+    {
+       // Stop time if it is running
+       if (m_changeTimer.IsEnabled())
+       {
+          m_changeTimer.Stop();
+       }
+
+       std::list<HString> add, remove;
+       std::vector<HString> selected;
+
+       // Gather selected image paths in 'selected'
+       winrt::Windows::Foundation::Collections::IVector<IInspectable> selectedItems = imageGrid().SelectedItems();
+       for (auto image : selectedItems)
+       {
+          selected.push_back(image.as<IImageView>().path().c_str());
+       }
+
+       if (selected.size() > 0)
+       {
+          std::vector <winrt::Windows::Foundation::Collections::IObservableVector<MbrsUI::TagCheckbox>> tagLists (4);
+          tagLists[0] = m_uiPeopleTags;
+          tagLists[1] = m_uiPlacesTags;
+          tagLists[2] = m_uiTimesTags;
+          tagLists[3] = m_uiImageTags;
+
+          for (auto list : tagLists)
+          {
+             for (auto cb : list)
+             {
+                if (cb.isUsed() && cb.isUsed().GetBoolean())
+                   add.push_back(cb.name().c_str());
+                else 
+                if (cb.isUsed() && cb.isUsed().GetBoolean() == false)
+                   remove.push_back(cb.name().c_str());
+             }
+          }
+
+          std::shared_ptr< CoreImageListSelection> pSelection(COMMON_NEW CoreImageListSelection(selected));
+          std::shared_ptr<CoreCommand> pCompoundCmd(COMMON_NEW CoreCompoundImageTagChangeCommand(add, remove, m_pModel, pSelection));
+          m_pCommandProcessor->adoptAndDo(pCompoundCmd);
+       }
+    }
 }
 
