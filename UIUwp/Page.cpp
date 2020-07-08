@@ -11,6 +11,7 @@ using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
 using namespace Windows::Storage;
 using namespace Windows::Storage::Pickers;
+using namespace Windows::UI::Core;
 
 namespace winrt::MbrsUI::implementation
 {
@@ -218,8 +219,8 @@ namespace winrt::MbrsUI::implementation
        grid.ItemsSource (view);
 
        // Select no images initially
-       winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, 0);
-       grid.SelectRange(range);
+       winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, view.Size());
+       grid.DeselectRange(range);
     }
 
     void setupImageTagsImpl(winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::TagCheckbox>& view,
@@ -422,6 +423,16 @@ namespace winrt::MbrsUI::implementation
        imageOtherTagsBorder().Visibility(enable ? winrt::Windows::UI::Xaml::Visibility::Visible : winrt::Windows::UI::Xaml::Visibility::Collapsed);
     }
 
+    void Page::onClearSelection(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       // Select no images 
+       winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, m_uiImages.Size());
+       imageGrid().DeselectRange(range);
+    }
+
     void Page::onNewPersonTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
@@ -469,7 +480,7 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
 
-onRightTapImpl(e, m_placeContext);
+       onRightTapImpl(e, m_placeContext);
     }
 
     void Page::onRemovePlaceTag(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -544,6 +555,8 @@ onRightTapImpl(e, m_placeContext);
 
     void Page::resetChangeTimer()
     {
+       m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kPending);
+
        // Stop time if it is running
        if (m_changeTimer.IsEnabled())
        {
@@ -597,7 +610,19 @@ onRightTapImpl(e, m_placeContext);
 
           std::shared_ptr< CoreImageListSelection> pSelection(COMMON_NEW CoreImageListSelection(selected));
           std::shared_ptr<CoreCommand> pCompoundCmd(COMMON_NEW CoreCompoundImageTagChangeCommand(add, remove, m_pModel, pSelection));
+
+          m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaving);
+         
+          winrt::Windows::UI::Core::CoreCursor wait (winrt::Windows::UI::Core::CoreCursorType::Wait, 0); 
+          winrt::Windows::UI::Core::CoreCursor arrow (winrt::Windows::UI::Core::CoreCursorType::Arrow, 0);
+
+          winrt::Windows::UI::Core::CoreWindow window( winrt::Windows::UI::Core::CoreWindow::GetForCurrentThread() );
+          window.PointerCursor(wait);
+
           m_pCommandProcessor->adoptAndDo(pCompoundCmd);
+          m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaved);
+
+          window.PointerCursor(arrow);
        }
     }
 }

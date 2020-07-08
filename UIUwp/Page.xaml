@@ -48,7 +48,10 @@
                </Button>
                <Button Margin="5,10,5,10" Name="nextPeriod" ToolTipService.ToolTip="Next date period">
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE761;"/>                  
-               </Button>               
+               </Button>
+               <Button Margin="5,10,5,10"  Click="onClearSelection" Name="clearSelection" ToolTipService.ToolTip="Clear selection">
+                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8E6;"/>
+               </Button>
                <Button Margin="5,10,5,10" Click="onChangeDirectory" Name="changeFolder" ToolTipService.ToolTip="Change folder">
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
                </Button>

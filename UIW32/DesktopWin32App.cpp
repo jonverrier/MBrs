@@ -22,6 +22,8 @@ public:
 
    virtual bool chooseFolder(HString& newPath);
 
+   virtual void setSaveFlag(ESaveMode mode);
+
 private:
    HWND m_hwnd;
 };
@@ -106,6 +108,28 @@ bool DesktopCallbackImpl::chooseFolder(HString& newPath)
    }
 
    return succeeded;
+}
+
+void DesktopCallbackImpl::setSaveFlag(ESaveMode mode)
+{
+   HString caption; 
+
+   switch (mode)
+   {
+   case ESaveMode::kNone:
+      caption = HString(szTitle);
+      break;
+   case ESaveMode::kPending:
+      caption = HString(szTitle) + H_TEXT(" (") + H_TEXT("Pending") + H_TEXT(")");
+      break;
+   case ESaveMode::kSaving:
+      caption = HString(szTitle) + H_TEXT(" (") + H_TEXT("Saving") + H_TEXT(")");
+      break;
+   case ESaveMode::kSaved:
+      caption = HString(szTitle) + H_TEXT(" (") + H_TEXT("Saved") + H_TEXT(")");
+      break;
+   }
+   ::SetWindowText(m_hwnd, caption.c_str());
 }
 
 // Forward declarations of functions included in this code module:
