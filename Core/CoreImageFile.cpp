@@ -29,17 +29,17 @@ std::list<HString> readXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& file
 
 void writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const std::list<HString>& tags, HUint& fileError);
 
-std::list<HString> deduplicateTags(std::list<HString>& consolidatedList, const std::list<HString>& newList);
+static std::list<HString> deduplicateTags(std::list<HString>& consolidatedList, const std::list<HString>& newList);
 
-std::list<HString> parseDelimiters(const HString& input, const HString& delimiter);
+static std::list<HString> parseDelimiters(const HString& input, const HString& delimiter);
 
-std::list<HString> storeSubjectTag(std::list<HString>& tags, const HString& input);
+static std::list<HString> storeSubjectTag(std::list<HString>& tags, const HString& input);
 
-HString makeDelimited(const  std::list<HString>& input, const HString& delimiter);
+static HString makeDelimited(const  std::list<HString>& input, const HString& delimiter);
 
-HString convertToWide(const std::string& orig);
+static HString convertToWide(const std::string& orig);
 
-std::string convertToNarrow(const HString& orig);
+static std::string convertToNarrow(const HString& orig);
 
 ////////////////////////////////////////////////////////////////////////////
 // CoreImageFile
@@ -478,7 +478,7 @@ void writeXmpSubjectTags(Exiv2::Image::AutoPtr& pImage, const list<HString>& tag
       xmpData["Xmp.dc.subject"] = convertToNarrow(item);
 }
 
-HString convertToWide(const string& orig) 
+static HString convertToWide(const string& orig) 
 {
    size_t newsize = orig.size() + 1;
 
@@ -493,7 +493,7 @@ HString convertToWide(const string& orig)
    return returnString;
 }
 
-string convertToNarrow(const HString& orig) 
+static string convertToNarrow(const HString& orig) 
 {
    size_t newsize = orig.size() + 1;
 
@@ -508,7 +508,7 @@ string convertToNarrow(const HString& orig)
    return returnString;
 }
 
-list<HString> parseDelimiters (const HString& input, const HString& delimiter) 
+static list<HString> parseDelimiters (const HString& input, const HString& delimiter) 
 {
    list<HString> tags;
    HString temp = input;
@@ -529,7 +529,7 @@ list<HString> parseDelimiters (const HString& input, const HString& delimiter)
    return tags;
 }
 
-list<HString> storeSubjectTag(list<HString>& tags, const HString& input) 
+static list<HString> storeSubjectTag(list<HString>& tags, const HString& input) 
 {
    HString temp = input;
 
@@ -544,7 +544,7 @@ list<HString> storeSubjectTag(list<HString>& tags, const HString& input)
    return tags;
 }
 
-HString makeDelimited(const list<HString>& input, const HString& delimiter) 
+static HString makeDelimited(const list<HString>& input, const HString& delimiter) 
 {
    HString delimited;
 
@@ -560,7 +560,7 @@ HString makeDelimited(const list<HString>& input, const HString& delimiter)
    return delimited; 
 }
 
-list<HString> deduplicateTags(list<HString>& consolidatedList, const list<HString>& newList)
+static list<HString> deduplicateTags(list<HString>& consolidatedList, const list<HString>& newList)
 {
    for (auto item : newList)
    {

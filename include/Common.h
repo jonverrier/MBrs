@@ -61,6 +61,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <chrono>
 
 #if (defined WINXX || defined LINUX)
 #include <wchar.h>

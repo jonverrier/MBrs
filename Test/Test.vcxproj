@@ -192,6 +192,7 @@
     <ClCompile Include="TestCoreImageFile.cpp" />
     <ClCompile Include="TestCoreKeywords.cpp" />
     <ClCompile Include="TestCoreModelCommand.cpp" />
+    <ClCompile Include="TestCoreModelDateFilter.cpp" />
     <ClCompile Include="TestCorePath.cpp" />
     <ClCompile Include="TestCoreTagCounter.cpp" />
     <ClCompile Include="TestHostException.cpp" />

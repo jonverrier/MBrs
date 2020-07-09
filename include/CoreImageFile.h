@@ -90,4 +90,5 @@ private:
    HUint m_count;
    std::map<HString, HUint> m_tags;
 };
+
 #endif // COREIMAGEFILE_INCLUDED
