@@ -534,6 +534,7 @@ namespace winrt::MbrsUI::implementation
        peopleTags().IsEnabled(enable);
        placeTags().IsEnabled(enable);
        timeTags().IsEnabled(enable);
+       clearSelection().IsEnabled(enable);
 
        refreshTagsImpl (m_pModel, selectedPaths, m_uiPeopleTags, m_uiPlacesTags, m_uiTimesTags, m_uiImageTags);
 
@@ -549,6 +550,7 @@ namespace winrt::MbrsUI::implementation
        // Select no images 
        winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, m_uiImages.Size());
        imageGrid().DeselectRange(range);
+       clearSelection().IsEnabled(false);
     }
 
     void Page::onNewPersonTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -737,7 +739,12 @@ namespace winrt::MbrsUI::implementation
           winrt::Windows::UI::Core::CoreWindow window( winrt::Windows::UI::Core::CoreWindow::GetForCurrentThread() );
           window.PointerCursor(wait);
 
-          m_pCommandProcessor->adoptAndDo(pCompoundCmd);
+          if (!m_pCommandProcessor->adoptAndDo(pCompoundCmd))
+          {
+             // Something went wrong - refresh Images grid
+             winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+             setupImagesImpl(false, m_pModel, m_uiImages, grid);
+          }
           m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaved);
 
           window.PointerCursor(arrow);

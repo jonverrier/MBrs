@@ -155,6 +155,10 @@ bool CoreImageFile::writeSubjectTags()
    if (!existsOnFileSystem() || (filesystem::file_size(path()) <= minFileSize))
       return false;
 
+   // keep the timestamp on the filesystem constant
+   filesystem::file_time_type last = filesystem::last_write_time(path());
+   error_code ec;
+
    Exiv2::Image::AutoPtr pImage = openImage(path(), fileError);
    if (fileError == 0)
    {
@@ -166,6 +170,8 @@ bool CoreImageFile::writeSubjectTags()
 
       pImage->writeMetadata();
       pImage.release();
+
+      filesystem::last_write_time(path(), last, ec);
 
       return true;
    }

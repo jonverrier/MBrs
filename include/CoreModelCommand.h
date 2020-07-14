@@ -72,8 +72,8 @@ public:
    virtual CoreSelection& selection() const = 0;
 
    // Operations
-   virtual void apply() = 0;
-   virtual void undo() = 0;
+   virtual bool apply() = 0;
+   virtual bool undo() = 0;
 
 protected:
 
@@ -99,7 +99,7 @@ public:
 
    bool operator==(const CoreCommandProcessor& rhs) const;
    bool operator!=(const CoreCommandProcessor& rhs) const;
-   void adoptAndDo(std::shared_ptr<CoreCommand> pCommand);
+   bool adoptAndDo(std::shared_ptr<CoreCommand> pCommand);
    bool canUndo();
    void undo();
    bool canRedo();

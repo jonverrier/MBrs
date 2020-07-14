@@ -252,7 +252,7 @@
                                        <RowDefinition Height="Auto"/>
                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Image Grid.Row="0" Source="{x:Bind path}" Width="300" Height="200" ToolTipService.ToolTip="{x:Bind fileName}" ToolTipService.Placement="Bottom"/>
+                                    <Image Grid.Row="0" Source="{x:Bind path}" Width="270" Height="180" ToolTipService.ToolTip="{x:Bind fileName}" ToolTipService.Placement="Bottom"/>
                                     <TextBlock Text="{x:Bind fileName}" Grid.Row="1" />
                                  </Grid>
                               </DataTemplate>

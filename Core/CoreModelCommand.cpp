@@ -80,12 +80,25 @@ std::shared_ptr<CoreModel> CoreCommandProcessor::model() const
    return m_pModel;
 }
 
-void CoreCommandProcessor::adoptAndDo(std::shared_ptr<CoreCommand> pCommand)
+bool CoreCommandProcessor::adoptAndDo(std::shared_ptr<CoreCommand> pCommand)
 {
-   pCommand->apply();
+   bool ok = false;
 
-   m_commands.push_front (pCommand);
-   m_lastDone = m_commands.begin();
+   ok = pCommand->apply();
+
+   if (ok)
+   {
+      m_commands.push_front(pCommand);
+      m_lastDone = m_commands.begin();
+   }
+   else
+   {
+      // There was a non-fatal error -> clear the command stack
+      m_commands.erase(m_commands.begin(), m_commands.end());
+      m_lastDone = m_commands.end();
+   }
+
+   return ok;
 }
 
 bool CoreCommandProcessor::canUndo()

@@ -48,9 +48,9 @@ public:
    void setPath(const HString& path);
    void setFilterPeriod (CoreDateFilter::EPeriod period);
    void setFilterDate (const std::chrono::system_clock::time_point& date);
-   void addTag(const HString& path, const HString& tag);
-   void removeTag(const HString& path, const HString& tag);
-   void addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove);
+   bool addTag(const HString& path, const HString& tag);
+   bool removeTag(const HString& path, const HString& tag);
+   bool addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove);
 
 protected:
    void refreshImageList ();
@@ -58,6 +58,7 @@ protected:
 private:
    CoreImageFile lookupEnrichedImage (const HString& path);
    bool refreshEnrichedImage(const HString& path, const CoreImageFile& file);
+   void removeImage(const HString& path);
    
    HString m_path;
    CoreDateFilter         m_filter;
@@ -92,82 +93,6 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// CoreAddImageTagCommand
-///////////////////////////////////////////////////////////////////////////////
-
-class CORE_API CoreAddImageTagCommand : public CoreCommand
-{
-public:
-   // Constructors
-   CoreAddImageTagCommand(const HString& newTag, 
-                          std::shared_ptr< CoreImageListModel> pModel, 
-                          std::shared_ptr< CoreImageListSelection> pSelection);
-   virtual ~CoreAddImageTagCommand();
-
-   // Attributes
-   virtual bool canUndo();
-   virtual CoreModel& model() const;
-   virtual CoreSelection& selection() const;
-
-   // Operations
-
-   CoreAddImageTagCommand& operator=(const CoreAddImageTagCommand& copyMe);
-   bool operator==(const CoreAddImageTagCommand& rhs) const;
-   bool operator!=(const CoreAddImageTagCommand& rhs) const;
-   virtual void apply();
-   virtual void undo();
-
-protected:
-
-private:
-   void applyTo (const std::vector< HString >& paths);
-   void unApplyTo (const std::vector< HString >& paths);
-
-   std::shared_ptr<CoreImageListModel> m_pModel;
-   std::shared_ptr<CoreImageListSelection> m_pSelection;
-   std::vector< HString > m_paths;
-   HString m_changeTag;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// CoreRemoveImageTagCommand
-///////////////////////////////////////////////////////////////////////////////
-
-class CORE_API CoreRemoveImageTagCommand : public CoreCommand
-{
-public:
-   // Constructors
-   CoreRemoveImageTagCommand(const HString& oldTag,
-      std::shared_ptr< CoreImageListModel> pModel,
-      std::shared_ptr< CoreImageListSelection> pSelection);
-   virtual ~CoreRemoveImageTagCommand();
-
-   // Attributes
-   virtual bool canUndo();
-   virtual CoreModel& model() const;
-   virtual CoreSelection& selection() const;
-
-   // Operations
-
-   CoreRemoveImageTagCommand& operator=(const CoreRemoveImageTagCommand& copyMe);
-   bool operator==(const CoreRemoveImageTagCommand& rhs) const;
-   bool operator!=(const CoreRemoveImageTagCommand& rhs) const;
-   virtual void apply();
-   virtual void undo();
-
-protected:
-
-private:
-   void applyTo(const std::vector< HString >& paths);
-   void unApplyTo(const std::vector< HString >& paths);
-
-   std::shared_ptr<CoreImageListModel> m_pModel;
-   std::shared_ptr<CoreImageListSelection> m_pSelection;
-   std::vector< HString > m_paths;
-   HString m_changeTag;
-};
-
-///////////////////////////////////////////////////////////////////////////////
 // CoreCompoundImageTagChangeCommand
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -191,14 +116,14 @@ public:
    CoreCompoundImageTagChangeCommand& operator=(const CoreCompoundImageTagChangeCommand& copyMe);
    bool operator==(const CoreCompoundImageTagChangeCommand& rhs) const;
    bool operator!=(const CoreCompoundImageTagChangeCommand& rhs) const;
-   virtual void apply();
-   virtual void undo();
+   virtual bool apply();
+   virtual bool undo();
 
 protected:
 
 private:
-   void applyTo(const std::vector< HString >& paths);
-   void unApplyTo(const std::vector< HString >& paths);
+   bool applyTo(const std::vector< HString >& paths);
+   bool unApplyTo(const std::vector< HString >& paths);
 
    std::shared_ptr<CoreImageListModel> m_pModel;
    std::shared_ptr<CoreImageListSelection> m_pSelection;
