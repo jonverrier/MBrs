@@ -85,7 +85,7 @@ namespace winrt::MbrsUI::implementation
        // Set the time for 2 seconds interval. every two seconds after a tag checkbox change we batch up all changes & save.
        // Or we save when different images are selected
        m_changeTimer.Interval(std::chrono::milliseconds{ 2000 });
-       auto registrationtoken = m_changeTimer.Tick({ this, &Page::OnTick });
+       auto registrationtoken = m_changeTimer.Tick({ this, &Page::onTick });
     }
 
     void Page::setDesktopCallback(uint64_t p)
@@ -203,20 +203,23 @@ namespace winrt::MbrsUI::implementation
        onRightTapImpl(e, m_personContext);
     }
 
-    void setupImagesImpl(std::shared_ptr<CoreImageListModel>& pModel,
+    void setupImagesImpl(bool first, std::shared_ptr<CoreImageListModel>& pModel,
        winrt::Windows::Foundation::Collections::IObservableVector <MbrsUI::ImageView>& view,
        winrt::Windows::UI::Xaml::Controls::GridView& grid)
     {
        view.Clear();
 
-       for (auto image : pModel->images())
+       for (auto image : pModel->filteredImages())
        {
           auto imageView = winrt::make<MbrsUI::implementation::ImageView>(image.path().c_str(), image.filename().c_str());
           view.Append(imageView);
        }
 
-       // Connect the UI grid to data
-       grid.ItemsSource (view);
+       if (first)
+       {
+          // Connect the UI grid to data
+          grid.ItemsSource(view);
+       }
 
        // Select no images initially
        winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, view.Size());
@@ -314,6 +317,18 @@ namespace winrt::MbrsUI::implementation
        }
     }
 
+    void setFilterPeriodImpl(const CoreDateFilter& filter,
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& dayToggle,
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& monthToggle,
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& yearToggle,
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& noToggle)
+    {
+       dayToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kDay);
+       monthToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kMonth);
+       yearToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kYear);
+       noToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kNone);
+    }
+
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
     {
        UNREFERENCED_PARAMETER(sender);
@@ -321,8 +336,22 @@ namespace winrt::MbrsUI::implementation
 
        if (m_pModel)
        {
-          HString path = m_pModel->pathAsUserString();
-          this->directoryPath().Text(path);
+          // Setup the menu bar 
+          HString path = m_pModel->imageSpecAsUIString();
+          directoryPath().Text(path);
+          CoreDateFilter filter = m_pModel->filter();
+          winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
+          winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
+          winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
+          winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
+          setFilterPeriodImpl (filter, dayToggle, monthToggle, yearToggle, noToggle);
+
+          // set date filter in menu bar
+          winrt::Windows::UI::Xaml::Controls::CalendarDatePicker date = filterDate();
+          time_t ft = std::chrono::system_clock::to_time_t(filter.date());
+          winrt::Windows::Foundation::DateTime dt = winrt::clock::from_time_t (ft);
+          date.Date(IReference<DateTime>(dt));
+          date.DateChanged({ this, &Page::onFilterDateChanged });
 
           // Do common setup across the three Tag views
           winrt::Windows::UI::Xaml::Controls::ListView peopleList = peopleTags();
@@ -340,7 +369,7 @@ namespace winrt::MbrsUI::implementation
 
           // Connect the UI grid to data
           winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
-          setupImagesImpl(m_pModel, m_uiImages, grid);
+          setupImagesImpl(true, m_pModel, m_uiImages, grid);
 
           // Set up the 'other tags on the image' panel
           winrt::Windows::UI::Xaml::Controls::StackPanel imageTagsPanel = imageOtherTagsPanel();
@@ -365,7 +394,7 @@ namespace winrt::MbrsUI::implementation
 
            // set up a file picker to pick a directory wit no name restrictions
            auto picker = winrt::Windows::Storage::Pickers::FolderPicker();
-           //picker.as<IInitializeWithWindow>()->Initialize(hwnd);
+           picker.as<IInitializeWithWindow>()->Initialize(hwnd);
 
            picker.SuggestedStartLocation(PickerLocationId::PicturesLibrary);
            picker.FileTypeFilter().Append(H_TEXT("*"));
@@ -383,12 +412,120 @@ namespace winrt::MbrsUI::implementation
 
              m_pCommandProcessor->adoptAndDo(pCmd);
 
-             path = m_pModel->pathAsUserString();
+             path = m_pModel->imageSpecAsUIString();
              this->directoryPath().Text(path);
 
              winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
-             setupImagesImpl(m_pModel, m_uiImages, grid);
+             setupImagesImpl(false, m_pModel, m_uiImages, grid);
           }
+       }
+    }
+
+    void winrt::MbrsUI::implementation::Page::onDayFilter(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kDay);
+       CoreDateFilter filter = m_pModel->filter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
+       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+
+       // Refresh Images grid
+       winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+       setupImagesImpl(false, m_pModel, m_uiImages, grid);
+
+       // Set the caption so the user sees a representation of the filter 
+       HString path = m_pModel->imageSpecAsUIString();
+       directoryPath().Text(path);
+    }
+
+    void winrt::MbrsUI::implementation::Page::onMonthFilter(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kMonth);
+       CoreDateFilter filter = m_pModel->filter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
+       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+
+       // Refresh Images grid
+       winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+       setupImagesImpl(false, m_pModel, m_uiImages, grid);
+
+       // Set the caption so the user sees a representation of the filter 
+       HString path = m_pModel->imageSpecAsUIString();
+       directoryPath().Text(path);
+    }
+
+    void winrt::MbrsUI::implementation::Page::onYearFilter(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kYear);
+       CoreDateFilter filter = m_pModel->filter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
+       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+
+       // Refresh Images grid
+       winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+       setupImagesImpl(false, m_pModel, m_uiImages, grid);
+
+       // Set the caption so the user sees a representation of the filter 
+       HString path = m_pModel->imageSpecAsUIString();
+       directoryPath().Text(path);
+    }
+
+    void winrt::MbrsUI::implementation::Page::onNoFilter(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kNone);
+       CoreDateFilter filter = m_pModel->filter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
+       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+
+       // Refresh Images grid
+       winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+       setupImagesImpl(false, m_pModel, m_uiImages, grid);
+
+       // Set the caption so the user sees a representation of the filter 
+       HString path = m_pModel->imageSpecAsUIString();
+       directoryPath().Text(path);
+    }
+
+    void Page::onFilterDateChanged(winrt::Windows::UI::Xaml::Controls::CalendarDatePicker const& sender, 
+                             winrt::Windows::UI::Xaml::Controls::CalendarDatePickerDateChangedEventArgs const& args)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(args);
+
+       IReference<DateTime> rdt = args.NewDate();
+       if (rdt)
+       {
+          DateTime dt = rdt.Value();
+          time_t ft = winrt::clock::to_time_t(dt);
+
+          m_pModel->setFilterDate(std::chrono::system_clock::from_time_t(ft));
+
+          // Refresh Images grid
+          winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+          setupImagesImpl(false, m_pModel, m_uiImages, grid);
+
+          // Set the caption so the user sees a representation of the filter 
+          HString path = m_pModel->imageSpecAsUIString();
+          directoryPath().Text(path);
        }
     }
 
@@ -544,7 +681,7 @@ namespace winrt::MbrsUI::implementation
        resetChangeTimer();
     }
 
-    void Page::OnTick(winrt::Windows::Foundation::IInspectable const& sender, Windows::Foundation::IInspectable const& e)
+    void Page::onTick(winrt::Windows::Foundation::IInspectable const& sender, Windows::Foundation::IInspectable const& e)
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
@@ -626,4 +763,3 @@ namespace winrt::MbrsUI::implementation
        }
     }
 }
-

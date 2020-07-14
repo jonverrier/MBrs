@@ -78,8 +78,6 @@ public:
 protected:
 
 private:
-   HUint m_maxSearchSize = 250;
-
    CoreDirectory(); // Cannot create without a path 
 };
 

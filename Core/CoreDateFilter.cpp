@@ -1,11 +1,12 @@
 /////////////////////////////////////////
-// CoreMbrsDateFilter.cpp
+// CoreDateFilter.cpp
 // Copyright (c) 2020 TXPCo Ltd
 /////////////////////////////////////////
 
 #include "Common.h"
-#include "CoreMbrsDateFilter.h"
+#include "CoreDateFilter.h"
 #include "HostUserData.h"
+#include "CoreTimeUtil.h"
 
 using namespace std;
 
@@ -46,31 +47,55 @@ static HString convertToWide(const string& orig)
 // CoreMbrsDateFilter
 ////////////////////////////////////////////////////////////////////////////
 
-CoreMbrsDateFilterOptions::CoreMbrsDateFilterOptions()
+CoreDateFilter::CoreDateFilter()
    : m_period(EPeriod::kNone)
 {
 }
 
-CoreMbrsDateFilterOptions::CoreMbrsDateFilterOptions(const std::chrono::system_clock::time_point& date, const EPeriod& period)
+CoreDateFilter::CoreDateFilter(const std::chrono::system_clock::time_point& date, const EPeriod& period)
    : m_date (parse(format(date))), m_period (period)
 {
 }
 
-CoreMbrsDateFilterOptions::~CoreMbrsDateFilterOptions(void)
+CoreDateFilter::~CoreDateFilter(void)
 {
 }
 
-std::chrono::system_clock::time_point CoreMbrsDateFilterOptions::date() const
+std::chrono::system_clock::time_point CoreDateFilter::date() const
 {
    return m_date;
 }
 
-CoreMbrsDateFilterOptions::EPeriod CoreMbrsDateFilterOptions::period() const
+CoreDateFilter::EPeriod CoreDateFilter::period() const
 {
    return m_period;
 }
 
-CoreMbrsDateFilterOptions& CoreMbrsDateFilterOptions::operator=(const CoreMbrsDateFilterOptions& copyMe)
+HString CoreDateFilter::asUIString() const
+{
+   char dateString[COMMON_STRING_BUFFER_SIZE];
+   struct tm tm;
+   time_t t = to_time_t(date());
+   gmtime_s(&tm, &t);
+
+   switch (m_period)
+   {
+   case kYear:
+      strftime(dateString, COMMON_STRING_BUFFER_SIZE, ("%Y"), &tm);
+      return convertToWide(dateString);
+
+   case kMonth:
+      strftime(dateString, COMMON_STRING_BUFFER_SIZE, ("%B, %Y"), &tm);
+      return convertToWide(dateString);
+
+   case kDay:
+   case kNone:
+   default:
+      return HString(H_TEXT("All dates"));
+   }
+}
+
+CoreDateFilter& CoreDateFilter::operator=(const CoreDateFilter& copyMe)
 {
    m_date = copyMe.m_date;
    m_period = copyMe.m_period;
@@ -78,12 +103,12 @@ CoreMbrsDateFilterOptions& CoreMbrsDateFilterOptions::operator=(const CoreMbrsDa
    return *this;
 }
 
-bool CoreMbrsDateFilterOptions::operator==(const CoreMbrsDateFilterOptions& rhs) const
+bool CoreDateFilter::operator==(const CoreDateFilter& rhs) const
 {
    return m_date.time_since_epoch() == rhs.m_date.time_since_epoch() && m_period == rhs.m_period;
 }
 
-bool CoreMbrsDateFilterOptions::operator!=(const CoreMbrsDateFilterOptions& rhs) const
+bool CoreDateFilter::operator!=(const CoreDateFilter& rhs) const
 {
    return m_date.time_since_epoch() != rhs.m_date.time_since_epoch() || m_period != rhs.m_period;
 }
@@ -91,7 +116,7 @@ bool CoreMbrsDateFilterOptions::operator!=(const CoreMbrsDateFilterOptions& rhs)
 static const HChar* dateFolderKey = H_TEXT("LastDate");
 static const HChar* periodFolderKey = H_TEXT("LastPeriod");
 
-bool CoreMbrsDateFilterOptions::save() const
+bool CoreDateFilter::save() const
 {
    string s = format(m_date);
 
@@ -104,7 +129,7 @@ bool CoreMbrsDateFilterOptions::save() const
    return true;
 }
 
-bool CoreMbrsDateFilterOptions::load() 
+bool CoreDateFilter::load() 
 {
    HostUserData date(CORE_PACKAGE_FRIENDLY_NAME);
 
@@ -134,28 +159,28 @@ bool CoreMbrsDateFilterOptions::load()
    }
 }
 
-std::string CoreMbrsDateFilterOptions::format(const std::chrono::system_clock::time_point& t) const
+std::string CoreDateFilter::format(const std::chrono::system_clock::time_point& t) const
 {
    // truncate a general timepoint by writing out only the date portion
    char dateString[COMMON_STRING_BUFFER_SIZE];
 
    std::time_t rawtime = std::chrono::system_clock::to_time_t(t);
    std::tm timeinfo;
-   localtime_s(&timeinfo, &rawtime);
+   gmtime_s(&timeinfo, &rawtime);
    strftime(dateString, COMMON_STRING_BUFFER_SIZE,
            ("%Y %m %d"), &timeinfo);
 
    return string(dateString); 
 }
 
-std::chrono::system_clock::time_point CoreMbrsDateFilterOptions::parse(const std::string& d) const
+std::chrono::system_clock::time_point CoreDateFilter::parse(const std::string& d) const
 {
    std::tm timeinfo;
    memset(&timeinfo, sizeof(timeinfo), 0);
 
    // Set up the timeinfo structure by populating it via localtime_s
    time_t rawtime = 0;
-   localtime_s(&timeinfo, &rawtime);
+   gmtime_s(&timeinfo, &rawtime);
 
    std::stringstream ss(d);
    ss >> std::get_time(&timeinfo, "%Y %m %d");

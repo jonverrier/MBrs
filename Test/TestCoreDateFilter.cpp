@@ -8,7 +8,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "Host.h"
 #include "HostException.h"
 #include "Core.h"
-#include "CoreMbrsDateFilter.h"
+#include "CoreDateFilter.h"
 
 #include "Test.h"
 
@@ -17,15 +17,15 @@ using namespace std;
 
 namespace TestCore
 {
-   TEST_CLASS(TestCoreModelDateFilter)
+   TEST_CLASS(TestCoreDateFilter)
    {
    public:
 
       TEST_METHOD(ConstuctAndCopy)
       {
          std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-         CoreMbrsDateFilterOptions filter1 (now, CoreMbrsDateFilterOptions::EPeriod::kMonth), 
-                                   filter2 (now, CoreMbrsDateFilterOptions::EPeriod::kYear);
+         CoreDateFilter filter1 (now, CoreDateFilter::EPeriod::kMonth),
+                        filter2 (now, CoreDateFilter::EPeriod::kYear);
 
          testConstructionAndCopy(filter1, filter2);
       }
@@ -33,13 +33,13 @@ namespace TestCore
       TEST_METHOD(SaveAndLoad)
       {
          std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-         CoreMbrsDateFilterOptions filter1(now, CoreMbrsDateFilterOptions::EPeriod::kMonth), filter2;
+         CoreDateFilter filter1(now, CoreDateFilter::EPeriod::kMonth), filter2;
 
          filter1.save();
          filter2.load();
 
          Assert::IsTrue(filter2.date() == filter1.date());
-         Assert::IsTrue(filter2.period() == CoreMbrsDateFilterOptions::EPeriod::kMonth);
+         Assert::IsTrue(filter2.period() == CoreDateFilter::EPeriod::kMonth);
       }
 
    };

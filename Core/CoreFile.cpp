@@ -9,7 +9,7 @@
 
 using namespace std;
 
-static const HChar* imageExtensions[] = { H_TEXT(".jpg"), H_TEXT(".png") };
+static const HChar* imageExtensions[] = { H_TEXT(".jpg") };
 
 ////////////////////////////////////////////////////////////////////////////
 // CoreFileSystemEntity

@@ -16,7 +16,7 @@
 // CoreMbrsDateFilterOptions
 ///////////////////////////////////////////////////////////////////////////////
 
-class CORE_API CoreMbrsDateFilterOptions 
+class CORE_API CoreDateFilter 
 {
 public:
    enum EPeriod { kNone = 0, kDay = 1, kMonth = 2, kYear = 3};
@@ -25,18 +25,19 @@ public:
    //using CoreDateTimeOption = std::chrono::system_clock::time_point;
 
    // Constructors
-   CoreMbrsDateFilterOptions(); 
-   CoreMbrsDateFilterOptions(const std::chrono::system_clock::time_point& date, const EPeriod& period);
-   virtual ~CoreMbrsDateFilterOptions(void);
+   CoreDateFilter(); 
+   CoreDateFilter(const std::chrono::system_clock::time_point& date, const EPeriod& period);
+   virtual ~CoreDateFilter(void);
 
    // Attributes
    std::chrono::system_clock::time_point date() const;
    EPeriod period() const;
+   HString asUIString() const;
 
    // Operations
-   CoreMbrsDateFilterOptions& operator=(const CoreMbrsDateFilterOptions& copyMe);
-   bool operator==(const CoreMbrsDateFilterOptions& rhs) const;
-   bool operator!=(const CoreMbrsDateFilterOptions& rhs) const;
+   CoreDateFilter& operator=(const CoreDateFilter& copyMe);
+   bool operator==(const CoreDateFilter& rhs) const;
+   bool operator!=(const CoreDateFilter& rhs) const;
    bool save() const;
    bool load();
 

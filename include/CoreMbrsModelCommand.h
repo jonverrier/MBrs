@@ -14,6 +14,7 @@
 #include "CoreQueue.h"
 #include "CoreModelCommand.h"
 #include "CoreImageFile.h"
+#include "CoreDateFilter.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageListModel
@@ -29,10 +30,12 @@ public:
 
    // Attributes
    const HString path () const;
-   const HString pathAsUserString () const;
+   const HString imageSpecAsUIString () const;
+   CoreDateFilter filter () const;
    const std::vector<CoreFileSystemEntity> images() const;
    const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year) const;
    const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year, HInt month) const;
+   const std::vector<CoreFileSystemEntity> filteredImages() const;
    bool doesImageHaveTag(const HString& path, const HString& tag) const;
    const std::list<HString> tagsFor (const HString& path) const;
    const std::list<HString> actualAddTagsFor(const HString& path, std::list<HString>& add) const;
@@ -43,6 +46,8 @@ public:
 
    // Commands
    void setPath(const HString& path);
+   void setFilterPeriod (CoreDateFilter::EPeriod period);
+   void setFilterDate (const std::chrono::system_clock::time_point& date);
    void addTag(const HString& path, const HString& tag);
    void removeTag(const HString& path, const HString& tag);
    void addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove);
@@ -55,6 +60,7 @@ private:
    bool refreshEnrichedImage(const HString& path, const CoreImageFile& file);
    
    HString m_path;
+   CoreDateFilter         m_filter;
    std::vector<CoreFileSystemEntity> m_images;
    std::map<HString, CoreImageFile>  m_enrichedImages;
 };

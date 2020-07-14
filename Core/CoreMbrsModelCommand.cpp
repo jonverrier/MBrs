@@ -9,18 +9,10 @@
 #include "CoreModelCommand.h"
 #include "CoreMbrsModelCommand.h"
 #include "CoreCompoundName.h"
+#include "CoreTimeUtil.h"
 
 using namespace std;
 
-template <typename TP>
-
-std::time_t to_time_t(TP tp)
-{
-   using namespace std::chrono;
-   auto sctp = time_point_cast<system_clock::duration>(tp - TP::clock::now()
-      + system_clock::now());
-   return system_clock::to_time_t(sctp);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageListModel
@@ -30,12 +22,14 @@ std::time_t to_time_t(TP tp)
 CoreImageListModel::CoreImageListModel()
    : m_path(CoreFileSystemEntity::loadImageDirectory())
 {
+   m_filter.load();
    refreshImageList();
 }
 
 CoreImageListModel::CoreImageListModel(const HString& path)
    : m_path (path)
 {
+   m_filter.load();
    refreshImageList();
 }
 
@@ -48,14 +42,19 @@ const HString CoreImageListModel::path() const
    return m_path;
 }
 
-const HString CoreImageListModel::pathAsUserString() const
+const HString CoreImageListModel::imageSpecAsUIString() const
 {
    HString formatted;
    CoreWindowsPathParser parser;
    CoreUIPathFormatter formatter;
 
    CoreCompoundName compound (parser.parsePath(m_path));
-   return formatter.formatPath(compound);
+   return formatter.formatPath(compound) + H_TEXT(", ") + m_filter.asUIString() + H_TEXT(".");
+}
+
+CoreDateFilter CoreImageListModel::filter() const
+{
+   return m_filter;
 }
 
 const vector<CoreFileSystemEntity> CoreImageListModel::images() const
@@ -88,11 +87,32 @@ const vector<CoreFileSystemEntity> CoreImageListModel::imagesWrittenIn(HInt year
       struct tm tm;
       // time_t t = image.takenAt();
       time_t t = to_time_t(image.lastWriteTime());
-      localtime_s(&tm, &t);
-      if (tm.tm_year + 1900 == year && tm.tm_mon + 1  == month) // localtime return years since 1900, months are zero based
+      gmtime_s(&tm, &t);
+      if (tm.tm_year + 1900 == year && tm.tm_mon + 1  == month) // gmtime_s return years since 1900, months are zero based
          images.push_back(image);
    }
    return images;
+}
+
+const std::vector<CoreFileSystemEntity> CoreImageListModel::filteredImages() const
+{
+   struct tm tm;
+   time_t t = to_time_t(m_filter.date());
+   gmtime_s(&tm, &t);
+
+   switch (m_filter.period())
+   {
+   case CoreDateFilter::kMonth:
+      return imagesWrittenIn(tm.tm_year + 1900, tm.tm_mon + 1);
+
+   case CoreDateFilter::kYear:
+      return imagesWrittenIn(tm.tm_year + 1900);
+
+   case CoreDateFilter::kDay:
+   case CoreDateFilter::kNone:
+   default:
+      return images();
+   }
 }
 
 bool CoreImageListModel::doesImageHaveTag(const HString& path, const HString& tag) const
@@ -162,6 +182,18 @@ void CoreImageListModel::setPath(const HString& path)
    m_path = path;
    CoreFileSystemEntity::saveImageDirectory(path);
    refreshImageList();
+}
+
+void CoreImageListModel::setFilterPeriod(CoreDateFilter::EPeriod period)
+{
+   m_filter = CoreDateFilter(m_filter.date(), period);
+   m_filter.save();
+}
+
+void CoreImageListModel::setFilterDate(const std::chrono::system_clock::time_point& date)
+{
+   m_filter = CoreDateFilter(date, m_filter.period());
+   m_filter.save();
 }
 
 void CoreImageListModel::addTag(const HString& path, const HString& tag)

@@ -31,15 +31,17 @@
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A6;"/>
                </Button>
                <CalendarDatePicker x:Name="filterDate"
-                    ToolTipService.ToolTip="Filter images by date" DateFormat="{}{day.integer} {month.full} {year.full}" Background="DimGray" />
+                    ToolTipService.ToolTip="Filter images by date" PlaceholderText="Filter date" 
+                    DateFormat="{}{day.integer} {month.full} {year.full}" Background="DimGray" />
                <DropDownButton  Margin="5,10,5,10" Name="filterPeriod" ToolTipService.ToolTip="Date period" Background="DimGray" >
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE787;"/>
                   <DropDownButton.Flyout>
                      <MenuFlyout Placement="BottomEdgeAlignedLeft" >
-                        <MenuFlyoutItem Text="By month" Icon="CalendarWeek" Tag="left"
-                            />
-                        <MenuFlyoutItem Text="By year" Icon="Calendar" Tag="left"
-                            />
+                        <ToggleMenuFlyoutItem Text="Show a day" Tag="left" Name="dayFilter" Click="onDayFilter"/>
+                        <ToggleMenuFlyoutItem Text="Show a month" Tag="left" Name="monthFilter" Click="onMonthFilter"/>
+                        <ToggleMenuFlyoutItem Text="Show a year" Tag="left" Name="yearFilter" Click="onYearFilter"/>
+                        <MenuFlyoutSeparator/>
+                        <ToggleMenuFlyoutItem Text="Show all" Tag="left" Name="noFilter" Click="onNoFilter"/>                        
                      </MenuFlyout>
                   </DropDownButton.Flyout>
                </DropDownButton>               
@@ -259,7 +261,7 @@
                                        <RowDefinition Height="Auto"/>
                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Image Grid.Row="0" Source="{x:Bind path}" Width="200" ToolTipService.ToolTip="{x:Bind fileName}" ToolTipService.Placement="Bottom"/>
+                                    <Image Grid.Row="0" Source="{x:Bind path}" Width="300" Height="200" ToolTipService.ToolTip="{x:Bind fileName}" ToolTipService.Placement="Bottom"/>
                                     <TextBlock Text="{x:Bind fileName}" Grid.Row="1" />
                                  </Grid>
                               </DataTemplate>

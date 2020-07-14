@@ -64,8 +64,6 @@ void CoreDirectory::listImages(std::vector<HString>& images) const
       if (directoryEntry.isImageFile())
       {
          images.push_back(std::filesystem::absolute(contentPath));
-         if (images.size() >= m_maxSearchSize)
-            break;
       }
    }
 }
