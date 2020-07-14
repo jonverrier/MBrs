@@ -12,7 +12,6 @@
 #include "HostLocks.h"
 #include "Core.h"
 #include "CoreFile.h"
-// #include "exiv2/exiv2.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageFile

@@ -195,6 +195,7 @@
     <ClInclude Include="..\include\CoreMbrsModelCommand.h" />
     <ClInclude Include="..\include\CoreModelCommand.h" />
     <ClInclude Include="..\include\CoreQueue.h" />
+    <ClInclude Include="..\include\CoreTimeUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreCompoundName.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="CoreMbrsModelCommand.cpp" />
     <ClCompile Include="CoreModelCommand.cpp" />
     <ClCompile Include="CoreTagCounter.cpp" />
+    <ClCompile Include="CoreTimeUtil.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="CorePrecompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

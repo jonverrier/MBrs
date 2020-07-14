@@ -71,7 +71,7 @@ const vector<CoreFileSystemEntity> CoreImageListModel::imagesWrittenIn(HInt year
       struct tm tm;
       // time_t t = image.takenAt();
       time_t t = to_time_t (image.lastWriteTime());
-      localtime_s(&tm, &t);
+      time_s (&tm, &t);
       if (tm.tm_year + 1900 == year) // localtime return years since 1900 
          images.push_back(image);
    }
@@ -87,8 +87,8 @@ const vector<CoreFileSystemEntity> CoreImageListModel::imagesWrittenIn(HInt year
       struct tm tm;
       // time_t t = image.takenAt();
       time_t t = to_time_t(image.lastWriteTime());
-      gmtime_s(&tm, &t);
-      if (tm.tm_year + 1900 == year && tm.tm_mon + 1  == month) // gmtime_s return years since 1900, months are zero based
+      time_s(&tm, &t);
+      if (tm.tm_year + 1900 == year && tm.tm_mon + 1  == month) // time_s return years since 1900, months are zero based
          images.push_back(image);
    }
    return images;
@@ -98,7 +98,7 @@ const std::vector<CoreFileSystemEntity> CoreImageListModel::filteredImages() con
 {
    struct tm tm;
    time_t t = to_time_t(m_filter.date());
-   gmtime_s(&tm, &t);
+   time_s(&tm, &t);
 
    switch (m_filter.period())
    {

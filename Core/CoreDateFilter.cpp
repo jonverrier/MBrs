@@ -76,7 +76,7 @@ HString CoreDateFilter::asUIString() const
    char dateString[COMMON_STRING_BUFFER_SIZE];
    struct tm tm;
    time_t t = to_time_t(date());
-   gmtime_s(&tm, &t);
+   time_s(&tm, &t);
 
    switch (m_period)
    {
@@ -166,7 +166,7 @@ std::string CoreDateFilter::format(const std::chrono::system_clock::time_point& 
 
    std::time_t rawtime = std::chrono::system_clock::to_time_t(t);
    std::tm timeinfo;
-   gmtime_s(&timeinfo, &rawtime);
+   time_s(&timeinfo, &rawtime);
    strftime(dateString, COMMON_STRING_BUFFER_SIZE,
            ("%Y %m %d"), &timeinfo);
 
@@ -178,9 +178,9 @@ std::chrono::system_clock::time_point CoreDateFilter::parse(const std::string& d
    std::tm timeinfo;
    memset(&timeinfo, sizeof(timeinfo), 0);
 
-   // Set up the timeinfo structure by populating it via localtime_s
+   // Set up the timeinfo structure by populating it via time_s
    time_t rawtime = 0;
-   gmtime_s(&timeinfo, &rawtime);
+   time_s(&timeinfo, &rawtime);
 
    std::stringstream ss(d);
    ss >> std::get_time(&timeinfo, "%Y %m %d");
