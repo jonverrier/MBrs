@@ -256,66 +256,6 @@ void CoreImageListModel::refreshImageList()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// CoreChangeDirectoryCommand
-///////////////////////////////////////////////////////////////////////////////
-
-CoreChangeDirectoryCommand::CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, 
-    std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreSelection> pSelection)
-   : CoreCommand (), 
-     m_newPath (newPath), m_oldPath (oldPath), m_pModel (pModel), m_pSelection (pSelection)
-{
-}
-
-CoreChangeDirectoryCommand::~CoreChangeDirectoryCommand(void)
-{
-}
-
-CoreChangeDirectoryCommand& CoreChangeDirectoryCommand::operator=(const CoreChangeDirectoryCommand& copyMe)
-{
-   m_newPath = copyMe.m_newPath;
-   m_oldPath = copyMe.m_oldPath;
-   m_pModel = copyMe.m_pModel;
-   m_pSelection = copyMe.m_pSelection;
-
-   return *this;
-}
-
-bool CoreChangeDirectoryCommand::operator==(const CoreChangeDirectoryCommand& rhs) const
-{
-   return m_newPath == rhs.m_newPath && m_oldPath == rhs.m_oldPath && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection;
-}
-
-bool CoreChangeDirectoryCommand::operator!=(const CoreChangeDirectoryCommand& rhs) const
-{
-   return m_newPath != rhs.m_newPath || m_oldPath != rhs.m_oldPath || m_pModel != rhs.m_pModel || m_pSelection != rhs.m_pSelection;
-}
-
-CoreModel& CoreChangeDirectoryCommand::model() const
-{
-   return *m_pModel;
-}
-
-CoreSelection& CoreChangeDirectoryCommand::selection() const
-{
-   return *m_pSelection;
-}
-
-bool CoreChangeDirectoryCommand::canUndo()
-{
-   return m_oldPath.size() > 0;
-}
-
-void CoreChangeDirectoryCommand::apply()
-{
-   m_pModel->setPath(m_newPath);
-}
-
-void CoreChangeDirectoryCommand::undo()
-{
-   m_pModel->setPath(m_oldPath);
-}
-
-///////////////////////////////////////////////////////////////////////////////
 // CoreImageListSelection
 ///////////////////////////////////////////////////////////////////////////////
 

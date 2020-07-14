@@ -37,17 +37,6 @@ namespace TestCore
          makePaths(m_newPath, m_oldPath);
       }
 
-      TEST_METHOD(ConstructAndCopyDirCommand)
-      {
-         std::shared_ptr< CoreImageListModel> pModel(COMMON_NEW CoreImageListModel());
-         std::shared_ptr< CoreSelection> pSelection (COMMON_NEW CoreSelection());
-
-         CoreChangeDirectoryCommand cmd1 (m_newPath, m_oldPath, pModel, pSelection),
-                                    cmd2 (m_oldPath, m_newPath, pModel, pSelection);
-
-         testConstructionAndCopy(cmd1, cmd2);         
-      }
-
       TEST_METHOD(ConstructAndCopyAddCommand)
       {
          HString path = H_TEXT("test.jpg");
@@ -93,42 +82,6 @@ namespace TestCore
          CoreImageListSelection sel2 (imagePaths2);
 
          testConstructionAndCopy(sel1, sel2);
-      }
-
-      TEST_METHOD(DoUndoDirChange)
-      {
-         std::shared_ptr< CoreImageListModel> pModel (COMMON_NEW CoreImageListModel());
-         std::shared_ptr< CoreSelection> pSelection(COMMON_NEW CoreSelection());
-
-         shared_ptr<CoreCommand> pCmd1 (COMMON_NEW CoreChangeDirectoryCommand(m_newPath, m_oldPath, pModel, pSelection)),
-                                 pCmd2 (COMMON_NEW CoreChangeDirectoryCommand(m_oldPath, m_newPath, pModel, pSelection));
-
-         CoreCommandProcessor processor1 (pModel);
-         Assert::IsFalse(processor1.canUndo());
-         Assert::IsFalse(processor1.canRedo());
-
-         // Change directory
-         processor1.adoptAndDo(pCmd1);
-         HString currentPath = pModel->path();
-         Assert::IsTrue(currentPath == m_newPath);
-         Assert::IsTrue(processor1.canUndo());
-         Assert::IsFalse(processor1.canRedo());
-
-         // Undo to change back
-         processor1.undo();
-         currentPath = pModel->path();
-         Assert::IsFalse(processor1.canUndo());
-         Assert::IsTrue(processor1.canRedo());
-         Assert::IsTrue(currentPath == m_oldPath);
-         vector<CoreFileSystemEntity> files = pModel->images();
-         Assert::IsTrue(files.size() > 0); // Always > 0 image files in original directory
-
-         // redo to change again
-         processor1.redo();
-         currentPath = pModel->path();
-         Assert::IsTrue(currentPath == m_newPath);
-         Assert::IsTrue(processor1.canUndo());
-         Assert::IsFalse(processor1.canRedo());
       }
 
       TEST_METHOD(DoUndoAddTag)

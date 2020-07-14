@@ -318,15 +318,11 @@ namespace winrt::MbrsUI::implementation
     }
 
     void setFilterPeriodImpl(const CoreDateFilter& filter,
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& dayToggle,
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& monthToggle,
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& yearToggle,
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& noToggle)
+       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem& yearToggle)
     {
-       dayToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kDay);
        monthToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kMonth);
        yearToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kYear);
-       noToggle.IsChecked(filter.period() == CoreDateFilter::EPeriod::kNone);
     }
 
     void Page::onLoad(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -340,11 +336,9 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->imageSpecAsUIString();
           directoryPath().Text(path);
           CoreDateFilter filter = m_pModel->filter();
-          winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
           winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
           winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
-          winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
-          setFilterPeriodImpl (filter, dayToggle, monthToggle, yearToggle, noToggle);
+          setFilterPeriodImpl (filter, monthToggle, yearToggle);
 
           // set date filter in menu bar
           winrt::Windows::UI::Xaml::Controls::CalendarDatePicker date = filterDate();
@@ -406,12 +400,7 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->path();
           if (m_pDesktop->chooseFolder(path))
           {
-             std::shared_ptr<CoreSelection> pSelection(COMMON_NEW CoreSelection());
-
-             std::shared_ptr<CoreCommand> pCmd (COMMON_NEW CoreChangeDirectoryCommand (path, m_pModel->path(), m_pModel, pSelection));
-
-             m_pCommandProcessor->adoptAndDo(pCmd);
-
+             m_pModel->setPath(path);
              path = m_pModel->imageSpecAsUIString();
              this->directoryPath().Text(path);
 
@@ -427,11 +416,9 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
        m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kDay);
        CoreDateFilter filter = m_pModel->filter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
-       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+       setFilterPeriodImpl(filter, monthToggle, yearToggle);
 
        // Refresh Images grid
        winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
@@ -448,11 +435,9 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
        m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kMonth);
        CoreDateFilter filter = m_pModel->filter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
-       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+       setFilterPeriodImpl(filter, monthToggle, yearToggle);
 
        // Refresh Images grid
        winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
@@ -469,11 +454,9 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
        m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kYear);
        CoreDateFilter filter = m_pModel->filter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
-       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+       setFilterPeriodImpl(filter, monthToggle, yearToggle);
 
        // Refresh Images grid
        winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
@@ -490,11 +473,9 @@ namespace winrt::MbrsUI::implementation
        UNREFERENCED_PARAMETER(e);
        m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kNone);
        CoreDateFilter filter = m_pModel->filter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem dayToggle = dayFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem noToggle = noFilter();
-       setFilterPeriodImpl(filter, dayToggle, monthToggle, yearToggle, noToggle);
+       setFilterPeriodImpl(filter, monthToggle, yearToggle);
 
        // Refresh Images grid
        winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();

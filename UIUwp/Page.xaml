@@ -37,20 +37,11 @@
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE787;"/>
                   <DropDownButton.Flyout>
                      <MenuFlyout Placement="BottomEdgeAlignedLeft" >
-                        <ToggleMenuFlyoutItem Text="Show a day" Tag="left" Name="dayFilter" Click="onDayFilter"/>
                         <ToggleMenuFlyoutItem Text="Show a month" Tag="left" Name="monthFilter" Click="onMonthFilter"/>
                         <ToggleMenuFlyoutItem Text="Show a year" Tag="left" Name="yearFilter" Click="onYearFilter"/>
-                        <MenuFlyoutSeparator/>
-                        <ToggleMenuFlyoutItem Text="Show all" Tag="left" Name="noFilter" Click="onNoFilter"/>                        
                      </MenuFlyout>
                   </DropDownButton.Flyout>
                </DropDownButton>               
-               <Button Margin="5,10,5,10" Name="prevPeriod" ToolTipService.ToolTip="Previous date period">
-                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE760;"/>
-               </Button>
-               <Button Margin="5,10,5,10" Name="nextPeriod" ToolTipService.ToolTip="Next date period">
-                  <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE761;"/>                  
-               </Button>
                <Button Margin="5,10,5,10"  Click="onClearSelection" Name="clearSelection" ToolTipService.ToolTip="Clear selection">
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8E6;"/>
                </Button>

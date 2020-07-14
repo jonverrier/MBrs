@@ -65,40 +65,6 @@ private:
    std::map<HString, CoreImageFile>  m_enrichedImages;
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// CoreChangeDirectoryCommand
-///////////////////////////////////////////////////////////////////////////////
-
-class CORE_API CoreChangeDirectoryCommand : public CoreCommand
-{
-public:
-   // Constructors
-   CoreChangeDirectoryCommand(const HString& newPath, const HString& oldPath, 
-                              std::shared_ptr< CoreImageListModel> pModel, std::shared_ptr< CoreSelection> pSelection);
-   virtual ~CoreChangeDirectoryCommand();
-
-   // Attributes
-   virtual bool canUndo();
-   virtual CoreModel& model() const;
-   virtual CoreSelection& selection() const;
-
-   // Operations
-
-   CoreChangeDirectoryCommand& operator=(const CoreChangeDirectoryCommand& copyMe);
-   bool operator==(const CoreChangeDirectoryCommand& rhs) const;   
-   bool operator!=(const CoreChangeDirectoryCommand& rhs) const;
-   virtual void apply();
-   virtual void undo();
-
-protected:
-
-private:
-   std::shared_ptr< CoreImageListModel> m_pModel;
-   std::shared_ptr< CoreSelection> m_pSelection;
-   HString m_newPath;
-   HString m_oldPath;
-};
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageListSelection
