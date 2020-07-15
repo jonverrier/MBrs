@@ -339,6 +339,8 @@ namespace winrt::MbrsUI::implementation
           winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
           winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
           setFilterPeriodImpl (filter, monthToggle, yearToggle);
+          undo().IsEnabled(false); // No commands in memory to undo or redo yet
+          redo().IsEnabled(false);
 
           // set date filter in menu bar
           winrt::Windows::UI::Xaml::Controls::CalendarDatePicker date = filterDate();
@@ -466,26 +468,7 @@ namespace winrt::MbrsUI::implementation
        HString path = m_pModel->imageSpecAsUIString();
        directoryPath().Text(path);
     }
-
-    void winrt::MbrsUI::implementation::Page::onNoFilter(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
-    {
-       UNREFERENCED_PARAMETER(sender);
-       UNREFERENCED_PARAMETER(e);
-       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kNone);
-       CoreDateFilter filter = m_pModel->filter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
-       winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
-       setFilterPeriodImpl(filter, monthToggle, yearToggle);
-
-       // Refresh Images grid
-       winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
-       setupImagesImpl(false, m_pModel, m_uiImages, grid);
-
-       // Set the caption so the user sees a representation of the filter 
-       HString path = m_pModel->imageSpecAsUIString();
-       directoryPath().Text(path);
-    }
-
+    
     void Page::onFilterDateChanged(winrt::Windows::UI::Xaml::Controls::CalendarDatePicker const& sender, 
                              winrt::Windows::UI::Xaml::Controls::CalendarDatePickerDateChangedEventArgs const& args)
     {
@@ -508,6 +491,34 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->imageSpecAsUIString();
           directoryPath().Text(path);
        }
+    }
+
+    void winrt::MbrsUI::implementation::Page::onUndo(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+
+       auto _this = this; // seems to be required to get Lambda expressions to work
+
+       executeDoFn([_this](void) { return _this->m_pCommandProcessor->undo(); });
+
+       // Select no images - TODO - could change selection to what was selected before last command
+       winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, m_uiImages.Size());
+       imageGrid().DeselectRange(range);
+    }
+
+    void winrt::MbrsUI::implementation::Page::onRedo(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+    {
+       UNREFERENCED_PARAMETER(sender);
+       UNREFERENCED_PARAMETER(e);
+       
+       auto _this = this; // seems to be required to get Lambda expressions to work
+
+       executeDoFn([_this](void) { return _this->m_pCommandProcessor->redo(); });
+
+       // Select no images - TODO - could change selection to what was selected before last command
+       winrt::Windows::UI::Xaml::Data::ItemIndexRange range(0, m_uiImages.Size());
+       imageGrid().DeselectRange(range);
     }
 
     void Page::onImageSelectionChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
@@ -690,6 +701,30 @@ namespace winrt::MbrsUI::implementation
        return m_changeTimer.IsEnabled();
     }
 
+    void Page::executeDoFn (const std::function <bool(void)>& f)
+    {
+       m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaving);
+
+       winrt::Windows::UI::Core::CoreCursor wait(winrt::Windows::UI::Core::CoreCursorType::Wait, 0);
+       winrt::Windows::UI::Core::CoreCursor arrow(winrt::Windows::UI::Core::CoreCursorType::Arrow, 0);
+
+       winrt::Windows::UI::Core::CoreWindow window(winrt::Windows::UI::Core::CoreWindow::GetForCurrentThread());
+       window.PointerCursor(wait);
+
+       if (!f())
+       {
+          // Something went wrong - refresh Images grid
+          winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
+          setupImagesImpl(false, m_pModel, m_uiImages, grid);
+       }
+       m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaved);
+
+       undo().IsEnabled(m_pCommandProcessor->canUndo());
+       redo().IsEnabled(m_pCommandProcessor->canRedo());
+
+       window.PointerCursor(arrow);
+    }
+
     void Page::saveChanges()
     {
        // Stop time if it is running
@@ -731,23 +766,9 @@ namespace winrt::MbrsUI::implementation
           std::shared_ptr< CoreImageListSelection> pSelection(COMMON_NEW CoreImageListSelection(selected));
           std::shared_ptr<CoreCommand> pCompoundCmd(COMMON_NEW CoreCompoundImageTagChangeCommand(add, remove, m_pModel, pSelection));
 
-          m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaving);
-         
-          winrt::Windows::UI::Core::CoreCursor wait (winrt::Windows::UI::Core::CoreCursorType::Wait, 0); 
-          winrt::Windows::UI::Core::CoreCursor arrow (winrt::Windows::UI::Core::CoreCursorType::Arrow, 0);
+          auto _this = this; // seems to be required to get Lambda expressions to work
 
-          winrt::Windows::UI::Core::CoreWindow window( winrt::Windows::UI::Core::CoreWindow::GetForCurrentThread() );
-          window.PointerCursor(wait);
-
-          if (!m_pCommandProcessor->adoptAndDo(pCompoundCmd))
-          {
-             // Something went wrong - refresh Images grid
-             winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();
-             setupImagesImpl(false, m_pModel, m_uiImages, grid);
-          }
-          m_pDesktop->setSaveFlag(DesktopCallback::ESaveMode::kSaved);
-
-          window.PointerCursor(arrow);
+          executeDoFn([_this, pCompoundCmd](void) { return _this->m_pCommandProcessor->adoptAndDo(pCompoundCmd); });
        }
     }
 }

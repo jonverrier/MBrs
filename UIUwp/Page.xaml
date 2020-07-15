@@ -24,10 +24,10 @@
                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-               <Button Margin="5,10,5,10" Name="undo" ToolTipService.ToolTip="Undo">
+               <Button Margin="5,10,5,10" Name="undo" ToolTipService.ToolTip="Undo" Click="onUndo">
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A7;"/>
                </Button>
-               <Button Margin="5,10,5,10" Name="redo" ToolTipService.ToolTip="Redo">
+               <Button Margin="5,10,5,10" Name="redo" ToolTipService.ToolTip="Redo" Click="onRedo">
                   <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A6;"/>
                </Button>
                <CalendarDatePicker x:Name="filterDate"

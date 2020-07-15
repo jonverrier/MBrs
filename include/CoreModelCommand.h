@@ -101,9 +101,9 @@ public:
    bool operator!=(const CoreCommandProcessor& rhs) const;
    bool adoptAndDo(std::shared_ptr<CoreCommand> pCommand);
    bool canUndo();
-   void undo();
+   bool undo();
    bool canRedo();
-   void redo();
+   bool redo();
 
 protected:
 

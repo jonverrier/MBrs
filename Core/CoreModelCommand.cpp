@@ -112,15 +112,17 @@ bool CoreCommandProcessor::canUndo()
       return false;
 }
 
-void CoreCommandProcessor::undo()
+bool CoreCommandProcessor::undo()
 {
+   bool ok = false;
    if (canUndo())
    {
       // move fwd one step after undoing - opposite of 'redo' 
-      (*m_lastDone)->undo();
+      ok = (*m_lastDone)->undo();
 
       m_lastDone++;
    }
+   return ok;
 }
 
 bool CoreCommandProcessor::canRedo()
@@ -134,12 +136,14 @@ bool CoreCommandProcessor::canRedo()
       return false;
 }
 
-void CoreCommandProcessor::redo()
+bool CoreCommandProcessor::redo()
 {
+   bool ok = false;
    if (canRedo())
    {
       // move back one step before applying - opposite of 'undo' 
       m_lastDone--;
-      (*m_lastDone)->apply();
+      ok = (*m_lastDone)->apply();
    }
+   return ok;
 }

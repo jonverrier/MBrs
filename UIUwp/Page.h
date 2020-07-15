@@ -36,6 +36,8 @@ namespace winrt::MbrsUI::implementation
         void onNoFilter(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
         void onFilterDateChanged(winrt::Windows::UI::Xaml::Controls::CalendarDatePicker const& sender, winrt::Windows::UI::Xaml::Controls::CalendarDatePickerDateChangedEventArgs const& args);
         void onClearSelection(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void onUndo(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
+        void onRedo(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 
         // 3 x sets of methods for People, Places, Times tags
         void onNewPersonTagChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
@@ -62,6 +64,7 @@ namespace winrt::MbrsUI::implementation
         bool isChangeTimerRunning();
         void resetChangeTimer(); 
         void saveChanges();
+        void Page::executeDoFn(const std::function <bool(void)>& f);
 
         DesktopCallback    *m_pDesktop;   
         std::shared_ptr<CoreCommandProcessor> m_pCommandProcessor;
