@@ -6,12 +6,14 @@
 * [Licence](#licence)
 
 ## General info
-TXP Photographic Memory is a graphical interface that lets the user manage large photo albums by adding & removing subject tags to .JPG files. 
+TXP Photographic Memory is a graphical interface that helps you manage large photo albums by adding & removing subject tags to .JPG files. 
 
 Subject tags are metadada such as people, places, and events - 'Family Holiday', 'Jon', 'Claire', and 'France'. These subject tags are stored in the image file, so they won't get lost or separated from it even when it is sent or copied to other people or places. The user can then easly find images about a particular subject. The subject tags are stored in industry-standard fields, and most image library programs can read them, and the tags can be used to organise & share relevant parts of a large photo library. 
 
 The same technology is available in professional image management programs, such as Adobe Bridge. TXP Photographic Memory is a free, lightweight, open source option for everyday use. 
 	
+![Screen](screen.png)
+
 ## Technologies
 TXP Photographic Memory is created with:
 * C++ 17 
@@ -25,8 +27,7 @@ TXP Photographic Memory is composed of several different components, each of whi
 * UIWin32 - this is a shell application that creates a 'Xaml island' containing the UI. Fully windows specific. 
 * UIUwp - the actual windows UI, implemented in Xaml. Fully windows specific. In the 'Model View Controller' pattern, this is the View. 
 * Test - contains the test suite. 
-
-For deployment to the Windows store, the application is built as a single integrated executable. 
+ 
 
 ## Installation
 TXP Photographic Memory will soon be available in the Windows Store. 

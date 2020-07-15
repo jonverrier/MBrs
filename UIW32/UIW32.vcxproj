@@ -203,6 +203,14 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.vcxproj">
+      <Project>{ad741d27-2a63-4fd9-86f5-f2405db2a112}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Host\Host.vcxproj">
+      <Project>{9c9e51e6-1717-4a16-8913-a4150fae74e2}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.200117.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200117.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
