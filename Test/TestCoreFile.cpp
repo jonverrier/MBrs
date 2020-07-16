@@ -50,7 +50,7 @@ namespace TestCore
 
          // Check correct date stamp is returned
          filesystem::file_time_type last_write_time = fileThatExists.lastWriteTime();
-         fileThatExists.setLastWriteTime(last_write_time);
+         fileThatExists.lastWriteTime(last_write_time);
          Assert::IsTrue(last_write_time == fileThatExists.lastWriteTime());
 
          // file does not exist, therefore is not a file or a directory

@@ -402,7 +402,7 @@ namespace winrt::MbrsUI::implementation
           HString path = m_pModel->path();
           if (m_pDesktop->chooseFolder(path))
           {
-             m_pModel->setPath(path);
+             m_pModel->path(path);
              path = m_pModel->imageSpecAsUIString();
              this->directoryPath().Text(path);
 
@@ -416,7 +416,7 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
-       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kDay);
+       m_pModel->filterPeriod(CoreDateFilter::EPeriod::kDay);
        CoreDateFilter filter = m_pModel->filter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
@@ -435,7 +435,7 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
-       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kMonth);
+       m_pModel->filterPeriod(CoreDateFilter::EPeriod::kMonth);
        CoreDateFilter filter = m_pModel->filter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
@@ -454,7 +454,7 @@ namespace winrt::MbrsUI::implementation
     {
        UNREFERENCED_PARAMETER(sender);
        UNREFERENCED_PARAMETER(e);
-       m_pModel->setFilterPeriod(CoreDateFilter::EPeriod::kYear);
+       m_pModel->filterPeriod(CoreDateFilter::EPeriod::kYear);
        CoreDateFilter filter = m_pModel->filter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem monthToggle = monthFilter();
        winrt::Windows::UI::Xaml::Controls::ToggleMenuFlyoutItem yearToggle = yearFilter();
@@ -481,7 +481,7 @@ namespace winrt::MbrsUI::implementation
           DateTime dt = rdt.Value();
           time_t ft = winrt::clock::to_time_t(dt);
 
-          m_pModel->setFilterDate(std::chrono::system_clock::from_time_t(ft));
+          m_pModel->filterDate(std::chrono::system_clock::from_time_t(ft));
 
           // Refresh Images grid
           winrt::Windows::UI::Xaml::Controls::GridView grid = imageGrid();

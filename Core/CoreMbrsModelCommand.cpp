@@ -196,20 +196,20 @@ const std::list<HString> CoreImageListModel::actualRemoveTagsFor(const HString& 
    return enrichedImage.actualRemoveSubjectTags(remove);
 }
 
-void CoreImageListModel::setPath(const HString& path)
+void CoreImageListModel::path(const HString& path)
 {
    m_path = path;
    CoreFileSystemEntity::saveImageDirectory(path);
    refreshImageList();
 }
 
-void CoreImageListModel::setFilterPeriod(CoreDateFilter::EPeriod period)
+void CoreImageListModel::filterPeriod(CoreDateFilter::EPeriod period)
 {
    m_filter = CoreDateFilter(m_filter.date(), period);
    m_filter.save();
 }
 
-void CoreImageListModel::setFilterDate(const std::chrono::system_clock::time_point& date)
+void CoreImageListModel::filterDate(const std::chrono::system_clock::time_point& date)
 {
    m_filter = CoreDateFilter(date, m_filter.period());
    m_filter.save();

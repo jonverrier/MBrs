@@ -182,11 +182,11 @@
   <ItemGroup>
     <ClInclude Include="..\include\Host.h" />
     <ClInclude Include="..\include\HostException.h" />
+    <ClInclude Include="..\Include\HostInternal.h" />
     <ClInclude Include="..\include\HostLocks.h" />
     <ClInclude Include="..\include\HostResources.h" />
     <ClInclude Include="..\include\HostStringLoader.h" />
     <ClInclude Include="..\include\HostUserData.h" />
-    <ClInclude Include="HostInternal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HostException.cpp" />

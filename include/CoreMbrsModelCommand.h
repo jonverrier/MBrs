@@ -32,6 +32,10 @@ public:
    const HString path () const;
    const HString imageSpecAsUIString () const;
    CoreDateFilter filter () const;
+   void path(const HString& path);
+   void filterPeriod(CoreDateFilter::EPeriod period);
+   void filterDate(const std::chrono::system_clock::time_point& date);
+
    const std::vector<CoreFileSystemEntity> images() const;
    const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year) const;
    const std::vector<CoreFileSystemEntity> imagesWrittenIn (HInt year, HInt month) const;
@@ -45,9 +49,6 @@ public:
    CoreImageListModel& operator=(const CoreImageListModel& copyMe) = delete;
 
    // Commands
-   void setPath(const HString& path);
-   void setFilterPeriod (CoreDateFilter::EPeriod period);
-   void setFilterDate (const std::chrono::system_clock::time_point& date);
    bool addTag(const HString& path, const HString& tag);
    bool removeTag(const HString& path, const HString& tag);
    bool addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove);

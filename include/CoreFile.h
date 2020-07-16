@@ -29,7 +29,7 @@ public :
    HString path() const;
    HString filename() const;
    std::filesystem::file_time_type lastWriteTime() const;
-   bool setLastWriteTime(const std::filesystem::file_time_type& writeTime) const;
+   bool lastWriteTime(const std::filesystem::file_time_type& writeTime) const;
 
    bool existsOnFileSystem () const;
    bool isDirectory () const;

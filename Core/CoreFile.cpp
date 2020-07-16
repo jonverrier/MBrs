@@ -76,7 +76,7 @@ CoreFileSystemEntity::filename() const
 }
 
 bool
-CoreFileSystemEntity::setLastWriteTime(const filesystem::file_time_type& writeTime) const
+CoreFileSystemEntity::lastWriteTime(const filesystem::file_time_type& writeTime) const
 {
    error_code ec;
 

@@ -147,14 +147,14 @@ bool CoreDateFilter::load()
       else
       {
          m_date = std::chrono::system_clock::now();
-         m_period = EPeriod::kNone;
+         m_period = EPeriod::kMonth;
          return false;
       }
    }
    else
    {
       m_date = std::chrono::system_clock::now();
-      m_period = EPeriod::kNone;
+      m_period = EPeriod::kMonth;
       return false;
    }
 }

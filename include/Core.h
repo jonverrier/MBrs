@@ -25,7 +25,14 @@
 #endif
 #endif
 
+// USer-visible name for this library 
+#if (defined WINXX)
+#ifdef NDEBUG
 #define CORE_PACKAGE_FRIENDLY_NAME L"Core"
+#else
+#define CORE_PACKAGE_FRIENDLY_NAME L"Core Debug Version"
+#endif
+#endif
 
 #if (defined LINUX)
 #ifdef NDEBUG
