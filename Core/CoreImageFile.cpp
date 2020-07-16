@@ -46,6 +46,24 @@ static std::string convertToNarrow(const HString& orig);
 // CoreImageFile
 ////////////////////////////////////////////////////////////////////////////
 
+/* 
+ * Links on how & which tags to read/write
+ * https://www.exiv2.org/doc/xmpsample_8cpp-example.html
+ * https://exiftool.org/forum/index.php?PHPSESSID=549060ab6264eb1b85c258c2135f19b0&topic=6591.msg32875#msg32875
+ * https://docs.microsoft.com/en-gb/windows/win32/wic/-wic-photoprop-system-keywords
+ *
+ * Subject tags read:
+ * XMP:Subject
+ * IPTC : Keywords
+ * EXIF : XPKeywords
+ *
+ * Subject tags written :
+ * XMP:Subject
+ * IPTC : Keywords
+ * EXIF : XPKeywords
+ * TODO: Consider writing XMP : LastKeywordIPTC, LastKeywordXMP
+ */ 
+
 CoreImageFile::CoreImageFile(const HString& path) :
    CoreFileSystemEntity (path),
    m_tagCache (),
