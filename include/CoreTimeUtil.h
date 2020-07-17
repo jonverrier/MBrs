@@ -18,9 +18,13 @@ template <typename TP> std::time_t to_time_t(TP tp)
    return system_clock::to_time_t(sctp);
 }
 
+// Convert time breakdown to seconds
 std::chrono::seconds yearMonthDayHoursMinSecondsToSeconds(HInt year, HInt month, HInt day, HInt hour, HInt minute, HInt second);
+
+// Convert seconds to time_t
 time_t secondsToTime (const std::chrono::seconds& seconds);
 
+// Single point to call either localtime() or gmtime(). Currenty use localtime() lse you get odd artefacts around dates where clocks move. 
 inline errno_t time_s(struct tm* const tm, time_t const* const t)
 {
    return localtime_s(tm, t);

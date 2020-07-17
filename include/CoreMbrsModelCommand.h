@@ -54,12 +54,14 @@ public:
    bool addRemoveTags(const HString& path, const std::list<HString>& tagsToAdd, const std::list<HString>& tagsToRemove);
 
 protected:
-   void refreshImageList ();
+
 
 private:
    CoreImageFile lookupEnrichedImage (const HString& path);
    bool refreshEnrichedImage(const HString& path, const CoreImageFile& file);
    void removeImage(const HString& path);
+   void refreshImageList();
+   void trimFilterDate ();
    
    HString m_path;
    CoreDateFilter         m_filter;

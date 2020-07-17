@@ -24,6 +24,7 @@ CoreImageListModel::CoreImageListModel()
 {
    m_filter.load();
    refreshImageList();
+   trimFilterDate();
 }
 
 CoreImageListModel::CoreImageListModel(const HString& path)
@@ -31,6 +32,7 @@ CoreImageListModel::CoreImageListModel(const HString& path)
 {
    m_filter.load();
    refreshImageList();
+   trimFilterDate();
 }
 
 CoreImageListModel::~CoreImageListModel(void)
@@ -304,6 +306,33 @@ void CoreImageListModel::refreshImageList()
    }
 
    sort (m_images.begin(), m_images.end(), compare);
+}
+
+void CoreImageListModel::trimFilterDate()
+{
+   std::chrono::system_clock::time_point tpFilter = m_filter.date();
+
+   if (m_images.size() > 0)
+   {
+      // Check that filter is within bounds of images we have 
+      std::filesystem::file_time_type tpFile0 = m_images[0].lastWriteTime();
+      std::filesystem::file_time_type tpFileN = m_images[m_images.size() - 1].lastWriteTime();
+      std::time_t timeFile0 = to_time_t(tpFile0);
+      std::time_t timeFileN = to_time_t(tpFileN);
+      std::time_t timeFilter = to_time_t(tpFilter);
+
+      if (timeFilter > timeFile0)
+      {
+         chrono::system_clock::time_point tpNew = chrono::system_clock::from_time_t(timeFile0);
+         m_filter = CoreDateFilter(tpNew, m_filter.period());
+      }
+      else
+      if (timeFilter < timeFileN)
+      {
+         chrono::system_clock::time_point tpNew = chrono::system_clock::from_time_t(timeFileN);
+         m_filter = CoreDateFilter(tpNew, m_filter.period());
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
