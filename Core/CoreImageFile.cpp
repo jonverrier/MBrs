@@ -109,8 +109,18 @@ bool CoreImageFile::operator!=(const CoreImageFile& rhs) const
    return (m_tagCache != rhs.m_tagCache || m_takenAt != rhs.m_takenAt || CoreFileSystemEntity::operator!=(rhs));
 }
 
+// Helper function to convert a chrono time to a time_t
+template <typename TP> void from_time_t (time_t t, TP& tp)
+{
+   auto sctp = chrono::system_clock::from_time_t(t);
+   tp = chrono::time_point_cast<TP::clock::duration>(sctp - chrono::system_clock::now() + TP::clock::now());
+}
+
 time_t CoreImageFile::takenAt() const
 {
+   chrono::time_point<std::filesystem::file_time_type::clock> fstp;
+   from_time_t(m_takenAt, fstp);
+
    return m_takenAt;
 }
 

@@ -109,9 +109,9 @@ namespace TestCore
 
          Assert::IsTrue(pModel->images().size() == 3);
          Assert::IsTrue(pModel->imagesWrittenIn(2014).size() == 0);
-         Assert::IsTrue(pModel->imagesWrittenIn(2020).size() == 3); // all images will be saved in current year
-         Assert::IsTrue(pModel->imagesWrittenIn(2020, 1).size() == 0);
-         Assert::IsTrue(pModel->imagesWrittenIn(2020, 7).size() == 3); // all images will be saved in current month
+         Assert::IsTrue(pModel->imagesWrittenIn(2015).size() == 3); // all images taken in 2015
+         Assert::IsTrue(pModel->imagesWrittenIn(2015, 1).size() == 0);
+         Assert::IsTrue(pModel->imagesWrittenIn(2015, 7).size() == 2); // all images taken in 2015 
       }
 
       TEST_METHOD(Benchmark)

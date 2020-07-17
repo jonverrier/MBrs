@@ -400,7 +400,7 @@ CoreCompoundImageTagChangeCommand& CoreCompoundImageTagChangeCommand::operator=(
 
 bool CoreCompoundImageTagChangeCommand::operator==(const CoreCompoundImageTagChangeCommand& rhs) const
 {
-   return m_addTags == rhs.m_addTags && rhs.m_removeTags == rhs.m_removeTags 
+   return m_addTags == rhs.m_addTags && m_removeTags == rhs.m_removeTags 
       && m_pModel == rhs.m_pModel && m_pSelection == rhs.m_pSelection && m_paths == rhs.m_paths;
 }
 

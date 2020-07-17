@@ -10,6 +10,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "Core.h"
 #include "CoreFile.h"
 #include "CoreImageFile.h"
+#include "CoreTimeUtil.h"
 #include "Test.h"
 
 using namespace std;
@@ -29,6 +30,18 @@ namespace TestCore
          CoreImageFile file1(path1), file2(path2);
 
          testConstructionAndCopy(file1, file2);
+      }
+
+      TEST_METHOD(Taken)
+      {
+         // These two files exist in home bin directory
+         const HString path1 = H_TEXT("Test.jpg");
+
+         CoreImageFile file1(path1);
+
+         time_t t = file1.takenAt();
+         struct tm tm;
+         time_s(&tm, &t);
       }
 
       TEST_METHOD(addSubjects)
