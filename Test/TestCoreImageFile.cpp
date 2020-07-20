@@ -39,9 +39,14 @@ namespace TestCore
 
          CoreImageFile file1(path1);
 
-         time_t t = file1.takenAt();
+         std::filesystem::file_time_type ft = file1.takenAt();
+         std::chrono::time_point<std::chrono::system_clock> sctp;
+         convert_tp(ft, sctp);
+
+         time_t t = std::chrono::system_clock::to_time_t(sctp);
          struct tm tm;
          time_s(&tm, &t);
+         Assert::IsTrue(tm.tm_year == 115); // 2015
       }
 
       TEST_METHOD(addSubjects)

@@ -8,8 +8,8 @@
 
   <Identity
     Name="43db37fe-4c79-47fc-8a29-fa373f5e62cb"
-    Publisher="CN=Jonathan"
-    Version="0.1.3.0" />
+    Publisher="CN=TXP CO Ltd"
+    Version="0.1.8.0" />
 
   <Properties>
     <DisplayName>Photographic Memory</DisplayName>

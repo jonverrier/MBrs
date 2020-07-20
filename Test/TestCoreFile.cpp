@@ -11,6 +11,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "CoreFile.h"
 
 #include "Test.h"
+#include <fstream>
 
 using namespace std;
 

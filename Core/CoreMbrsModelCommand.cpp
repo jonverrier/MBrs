@@ -203,6 +203,7 @@ void CoreImageListModel::path(const HString& path)
    m_path = path;
    CoreFileSystemEntity::saveImageDirectory(path);
    refreshImageList();
+   trimFilterDate();
 }
 
 void CoreImageListModel::filterPeriod(CoreDateFilter::EPeriod period)

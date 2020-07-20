@@ -51,7 +51,6 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <fstream>
 #include <vector>
 #include <list>
 #include <map>
@@ -140,7 +139,7 @@ AType clamp (const AType& lo, const AType& x, const AType& hi)
    return ((x < lo) ? lo : ((x > hi) ? hi : x));
 }
 
-enum HErrorSource {kHost, kCore, kUILib, k3d, kNone};
+enum HErrorSource {kHost, kCore, k3d, kNone};
 
 #ifndef NDEBUG
 
@@ -159,6 +158,5 @@ enum HErrorSource {kHost, kCore, kUILib, k3d, kNone};
 #if (defined WINXX)
    #pragma warning (disable : 4251) // 'Class 2' needs to have dll-interface to be used by clients of class 'Class 1'
 #endif
-
 
 #endif // COMMON_INCLUDED

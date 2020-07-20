@@ -14,7 +14,7 @@ using namespace std;
 
 Exiv2::Image::AutoPtr openImage(const HString& path, HUint& fileError);
 
-time_t readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
+std::filesystem::file_time_type readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError);
 
 std::list<HString> readSubjectTags(std::list<HString>& tagCache, Exiv2::Image::AutoPtr& pImage, HUint& fileError);
 
@@ -67,7 +67,7 @@ static std::string convertToNarrow(const HString& orig);
 CoreImageFile::CoreImageFile(const HString& path) :
    CoreFileSystemEntity (path),
    m_tagCache (),
-   m_takenAt (0)
+   m_takenAt ()
 {
    readMetaData();
 }
@@ -109,18 +109,8 @@ bool CoreImageFile::operator!=(const CoreImageFile& rhs) const
    return (m_tagCache != rhs.m_tagCache || m_takenAt != rhs.m_takenAt || CoreFileSystemEntity::operator!=(rhs));
 }
 
-// Helper function to convert a chrono time to a time_t
-template <typename TP> void from_time_t (time_t t, TP& tp)
+std::filesystem::file_time_type CoreImageFile::takenAt() const
 {
-   auto sctp = chrono::system_clock::from_time_t(t);
-   tp = chrono::time_point_cast<TP::clock::duration>(sctp - chrono::system_clock::now() + TP::clock::now());
-}
-
-time_t CoreImageFile::takenAt() const
-{
-   chrono::time_point<std::filesystem::file_time_type::clock> fstp;
-   from_time_t(m_takenAt, fstp);
-
    return m_takenAt;
 }
 
@@ -283,10 +273,11 @@ std::list<HString> readSubjectTags (std::list<HString>& tagCache, Exiv2::Image::
    return allSubjects;
 }
 
-time_t readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
+std::filesystem::file_time_type readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
 {
    // Initialise the time to start of epoch in case there is an error reading 
-   time_t t = 0;
+   std::chrono::time_point<std::chrono::system_clock> sctp;
+   std::filesystem::file_time_type ft;
 
    Exiv2::ExifData& exifData = pImage->exifData();
 
@@ -316,12 +307,15 @@ time_t readExifDateTime(Exiv2::Image::AutoPtr& pImage, HUint& fileError)
             // Convert to time_t
             std::chrono::seconds seconds = yearMonthDayHoursMinSecondsToSeconds(year, month, day, hour, minute, second);
             takenAt = chrono::time_point<chrono::system_clock> (seconds);
-            t = secondsToTime(std::chrono::duration_cast<std::chrono::seconds> (takenAt.time_since_epoch()));
+            sctp = secondsToSystemTime(std::chrono::duration_cast<std::chrono::seconds> (takenAt.time_since_epoch()));
          }
       }
    }
+   
+   // convert from system time to file time
+   convert_tp(sctp, ft);
 
-   return t;
+   return ft;
 }
 
 list<HString> readExifSubjectTags(Exiv2::Image::AutoPtr& pImage, HUint& fileError) 

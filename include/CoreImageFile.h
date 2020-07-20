@@ -12,6 +12,7 @@
 #include "HostLocks.h"
 #include "Core.h"
 #include "CoreFile.h"
+#include <filesystem>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CoreImageFile
@@ -28,7 +29,7 @@ public:
    // Attributes
    std::list<HString> subjectTags() const;
    bool hasSubjectTag (const HString& tagToTest) const;
-   time_t takenAt() const;
+   std::filesystem::file_time_type takenAt() const;
 
    // Operations
    std::list<HString> addSubjectTags(const std::list<HString>& add);
@@ -53,7 +54,7 @@ private:
    void readMetaData();
 
    std::list<HString> m_tagCache;
-   time_t             m_takenAt;
+   std::filesystem::file_time_type m_takenAt;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

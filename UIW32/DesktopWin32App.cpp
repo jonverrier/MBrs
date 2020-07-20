@@ -146,6 +146,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    
     // TODO: Place code here.
     winrt::init_apartment(winrt::apartment_type::single_threaded);
     hostApp = winrt::MbrsUI::App{};
@@ -155,6 +156,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_DESKTOPWIN32APP, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
+
+    puts("Hello");
 
     // Perform application initialization:
     if (!InitInstance (hInstance, nCmdShow))

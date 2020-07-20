@@ -54,7 +54,7 @@
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\UIW32\UIW32.vcxproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -62,6 +62,8 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <AppInstallerUri>https://www.txp.co.uk</AppInstallerUri>
     <HoursBetweenUpdateChecks>168</HoursBetweenUpdateChecks>
+    <PackageCertificateThumbprint>355D36DB165405EE76F287616085AF91C2B7EE4C</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AppxBundle>Always</AppxBundle>
@@ -106,6 +108,7 @@
     <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Images\StoreLogo.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
+    <None Include="UIUwp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UIW32\UIW32.vcxproj" />

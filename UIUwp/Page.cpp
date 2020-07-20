@@ -297,7 +297,10 @@ namespace winrt::MbrsUI::implementation
              }
              auto value = winrt::make<MbrsUI::implementation::TagCheckbox>(listItem.name(),
                 ref);
-             plist->SetAt(listIndex, value);
+
+             // Only over-write if it is different - saves screen flashing
+             if (plist->GetAt (listIndex).name() != value.name() || (plist->GetAt(listIndex).isUsed() != value.isUsed()))
+                plist->SetAt(listIndex, value);
           }
        }
 

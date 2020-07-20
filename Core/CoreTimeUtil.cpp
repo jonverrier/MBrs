@@ -52,12 +52,12 @@ std::chrono::seconds yearMonthDayHoursMinSecondsToSeconds(HInt year, HInt month,
    return seconds;
 }
 
-time_t secondsToTime(const std::chrono::seconds& seconds)
+std::chrono::time_point<std::chrono::system_clock> secondsToSystemTime(const std::chrono::seconds& seconds)
 {
    std::chrono::seconds epoch = yearMonthDayHoursMinSecondsToSeconds(1970, 1, 1, 0, 0, 0);
 
    std::chrono::seconds delta = seconds - epoch;
    const time_t t = delta.count();
 
-   return t;
+   return std::chrono::system_clock::from_time_t (t);
 }
