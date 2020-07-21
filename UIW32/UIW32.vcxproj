@@ -25,7 +25,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{8AA1B8C7-1578-48E4-958C-7402D69EDEB7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DesktopWin32App</RootNamespace>
+    <RootNamespace>MbrsUI</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>UIWin32</ProjectName>
   </PropertyGroup>

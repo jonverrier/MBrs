@@ -15,5 +15,5 @@
 #include <winrt/Windows.UI.Xaml.Navigation.h>
 #include <winrt/Windows.UI.Xaml.Input.h>
 #include <winrt/Windows.UI.Core.h>
-//#include <winrt/Windows.Storage.h>
-//#include <winrt/Windows.Storage.Pickers.h>
+#include <winrt/Windows.Storage.h>
+#include <winrt/Windows.Storage.Pickers.h>

@@ -3,11 +3,11 @@
   <Identity
     Name="cbf5ec59-ac41-4815-bbfd-625da7427cff"
     Publisher="CN=TXP CO Ltd"
-    Version="0.1.0.0" />
+    Version="0.1.2.0" />
   <mp:PhoneIdentity PhoneProductId="cbf5ec59-ac41-4815-bbfd-625da7427cff" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
   <Properties>
-    <DisplayName>Photographic Memory</DisplayName>
-    <PublisherDisplayName>TXP Co Ltd</PublisherDisplayName>
+    <DisplayName>Photographic Memory UI</DisplayName>
+    <PublisherDisplayName>TXP CO Ltd</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -18,7 +18,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="Dummy.exe" EntryPoint="Mbrs.App">
-      <uap:VisualElements DisplayName="Photographic Memory" 
+      <uap:VisualElements DisplayName="Photographic Memory UI" 
         Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" BackgroundColor="transparent" Description="TXP Photographic Memory is a graphical interface that helps you manage large photo albums by adding &amp; removing subject tags to .JPG files.">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
