@@ -198,7 +198,9 @@
     <ResourceCompile Include="DesktopWin32App.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Camera.ico" />
+    <Image Include="Camera.ico">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="DesktopWin32App.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
