@@ -15,44 +15,44 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_008BBC2168914C069C45CEB8449D2496"
+        "MsmKey" = "8:_09ECCA746C04430F8C60776C66B87D17"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_0EBFB3F28AA5402D99ADEEE8DA84645C"
+        "MsmKey" = "8:_16137BADCA904C1E9BEA71D32AA5F758"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_189735C5D29B4FCFBE88FC5E91BFC6B8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_1F9D86F881D1D0935D31B545C0F0912F"
-        "OwnerKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
+        "OwnerKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_1F9D86F881D1D0935D31B545C0F0912F"
-        "OwnerKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_28CF4FC33B154018AA3C35E762459C0E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2CB6A386184C4CB3BE50253C801F4408"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -63,91 +63,91 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3FA6C75D3891499E9D59B28AFFE880A1"
+        "MsmKey" = "8:_414070E0426149A09C7CBB7C8A0390AF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
+        "MsmKey" = "8:_45CFF2EC4AC54C19BA2DD9C9290C0E32"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7298770CE7134A0D81D09D65360ACF9E"
+        "MsmKey" = "8:_5527046FAD79453DA07BE07E696299FC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_574869AA84B7476E9D4D80809C003936"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6802D644BE714CF1A427B044DF3D119B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_7673FF09DD58D917A0E3A87AD1A0605F"
-        "OwnerKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
+        "OwnerKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_7673FF09DD58D917A0E3A87AD1A0605F"
-        "OwnerKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
+        "OwnerKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7D1A36DB5DE84153B7C408A77B2DE799"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_810CD85FBFDE4DCD975DEDE4F0826031"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_812201DF656E497694B3A9A138B57601"
+        "MsmKey" = "8:_797C049789B646E485665C56D2C6A1F4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_857E16C73B184270A595C1C2E0D7CE30"
-        "OwnerKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
+        "OwnerKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_857E16C73B184270A595C1C2E0D7CE30"
-        "OwnerKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
+        "OwnerKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9346DCF68D6F4EBCA5D1EB5E739B805C"
+        "MsmKey" = "8:_893A43B098DC4830B2D8D922325DE095"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9F247160A2294BBB8DEFAE4518CD6A31"
+        "MsmKey" = "8:_8B5D0C3F7EC94AE29D94C30FBF496D2F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9F4545D2434B4B4CB0881603050F4AE8"
+        "MsmKey" = "8:_A569B3E9F4E3400688D264420EBE0075"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A283800718404BAD9980DC3994D269C2"
+        "MsmKey" = "8:_A5A9D213C6BE44999D7CA25EC1EB2E61"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_B3CAA314AE5E4423848E172B8C34BE6B"
+        "MsmKey" = "8:_B38B73DE2FB8469EBA99D25F5BF8D504"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -160,18 +160,30 @@
         "Entry"
         {
         "MsmKey" = "8:_BE20630CCB0F3D802D1A79F8F4184A36"
-        "OwnerKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
+        "OwnerKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_BE20630CCB0F3D802D1A79F8F4184A36"
-        "OwnerKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
+        "OwnerKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C6F71D193CCB4F76A7FF6BD40798B96B"
+        "MsmKey" = "8:_C0B1E886373A4925AE0E9F0A1F948FDB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C66C6C3E83ED44C6A08BE28C487E2535"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C95E26A34AF9400EABBE605276FDF07F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -183,7 +195,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D5D8EB3633D54006B735A326526B2E33"
+        "MsmKey" = "8:_D976CB6672824B54B6A33B749143EA14"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E034F61250BE4648B5EAB2DFC94975D6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E18F2AFCF96D45809763D6236D653BE0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -195,32 +219,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EBCECC778E0341278EB737984966381A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F198383AACB1426C8B86F0F79449313F"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_F2060C437A4C941E3365308BA0A27A71"
+        "OwnerKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F2060C437A4C941E3365308BA0A27A71"
-        "OwnerKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F2060C437A4C941E3365308BA0A27A71"
-        "OwnerKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4348998E3E94B49B5BF1FDDA8EC1BFC"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -231,13 +237,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F745F231179344718923C5124A0D6C34"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_FC9A5F7E693B406AA601063E0E9D16FF"
+        "MsmKey" = "8:_F6B4CE3B115B4146A8E085F54594A40E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -250,13 +250,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_26ED1CF536314EF591C0F37BE48BDCDB"
+        "OwnerKey" = "8:_1C50F745CCC042DE8D77689887E369D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_61CC491B2AED41B2A2EF2921482713D8"
+        "OwnerKey" = "8:_18C8C2D5E468467294D9A9F9A6C33FA3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -301,6 +301,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -317,6 +325,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -346,10 +362,10 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_008BBC2168914C069C45CEB8449D2496"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_09ECCA746C04430F8C60776C66B87D17"
             {
-            "SourcePath" = "8:..\\TestDeploy\\AppxManifest.xml"
-            "TargetName" = "8:AppxManifest.xml"
+            "SourcePath" = "8:..\\binrw64\\App.xaml"
+            "TargetName" = "8:App.xaml"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -366,10 +382,92 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0EBFB3F28AA5402D99ADEEE8DA84645C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_16137BADCA904C1E9BEA71D32AA5F758"
             {
-            "SourcePath" = "8:..\\TestDeploy\\expat.dll"
-            "TargetName" = "8:expat.dll"
+            "SourcePath" = "8:..\\binrw64\\libcharset.dll"
+            "TargetName" = "8:libcharset.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_189735C5D29B4FCFBE88FC5E91BFC6B8"
+            {
+            "SourcePath" = "8:..\\binrw64\\vcomp140_app.dll"
+            "TargetName" = "8:vcomp140_app.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_18C8C2D5E468467294D9A9F9A6C33FA3"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:MbrsUI, Version=255.255.255.255, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_18C8C2D5E468467294D9A9F9A6C33FA3"
+                    {
+                    "Name" = "8:MbrsUI.winmd"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\binrw64\\MbrsUI.winmd"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1C50F745CCC042DE8D77689887E369D2"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Toolkit.Win32.UI.XamlHost, Version=255.255.255.255, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_1C50F745CCC042DE8D77689887E369D2"
+                    {
+                    "Name" = "8:Microsoft.Toolkit.Win32.UI.XamlHost.winmd"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\binrw64\\Microsoft.Toolkit.Win32.UI.XamlHost.winmd"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -417,21 +515,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_26ED1CF536314EF591C0F37BE48BDCDB"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_414070E0426149A09C7CBB7C8A0390AF"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Toolkit.Win32.UI.XamlHost, Version=255.255.255.255, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_26ED1CF536314EF591C0F37BE48BDCDB"
-                    {
-                    "Name" = "8:Microsoft.Toolkit.Win32.UI.XamlHost.winmd"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\TestDeploy\\Microsoft.Toolkit.Win32.UI.XamlHost.winmd"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\binrw64\\concrt140_app.dll"
+            "TargetName" = "8:concrt140_app.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -448,9 +535,29 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_28CF4FC33B154018AA3C35E762459C0E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_45CFF2EC4AC54C19BA2DD9C9290C0E32"
             {
-            "SourcePath" = "8:..\\TestDeploy\\Microsoft.Toolkit.Win32.UI.XamlHost.pri"
+            "SourcePath" = "8:..\\binrw64\\AppxManifest.xml"
+            "TargetName" = "8:AppxManifest.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5527046FAD79453DA07BE07E696299FC"
+            {
+            "SourcePath" = "8:..\\binrw64\\Microsoft.Toolkit.Win32.UI.XamlHost.pri"
             "TargetName" = "8:Microsoft.Toolkit.Win32.UI.XamlHost.pri"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
@@ -468,81 +575,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2CB6A386184C4CB3BE50253C801F4408"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_574869AA84B7476E9D4D80809C003936"
             {
-            "SourcePath" = "8:..\\TestDeploy\\msvcp140_2_app.dll"
-            "TargetName" = "8:msvcp140_2_app.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3FA6C75D3891499E9D59B28AFFE880A1"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\zlib1.dll"
-            "TargetName" = "8:zlib1.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_61CC491B2AED41B2A2EF2921482713D8"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MbrsUI, Version=255.255.255.255, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_61CC491B2AED41B2A2EF2921482713D8"
-                    {
-                    "Name" = "8:MbrsUI.winmd"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\TestDeploy\\MbrsUI.winmd"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7298770CE7134A0D81D09D65360ACF9E"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\vcruntime140_app.dll"
+            "SourcePath" = "8:..\\binrw64\\vcruntime140_app.dll"
             "TargetName" = "8:vcruntime140_app.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6802D644BE714CF1A427B044DF3D119B"
+            {
+            "SourcePath" = "8:..\\binrw64\\vcruntime140_1_app.dll"
+            "TargetName" = "8:vcruntime140_1_app.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -590,50 +646,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7D1A36DB5DE84153B7C408A77B2DE799"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_797C049789B646E485665C56D2C6A1F4"
             {
-            "SourcePath" = "8:..\\TestDeploy\\vcomp140_app.dll"
-            "TargetName" = "8:vcomp140_app.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_810CD85FBFDE4DCD975DEDE4F0826031"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\msvcp140_1_app.dll"
-            "TargetName" = "8:msvcp140_1_app.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_812201DF656E497694B3A9A138B57601"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\vcamp140_app.dll"
-            "TargetName" = "8:vcamp140_app.dll"
+            "SourcePath" = "8:..\\binrw64\\zlib1.dll"
+            "TargetName" = "8:zlib1.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -681,49 +697,9 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9346DCF68D6F4EBCA5D1EB5E739B805C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_893A43B098DC4830B2D8D922325DE095"
             {
-            "SourcePath" = "8:..\\TestDeploy\\concrt140_app.dll"
-            "TargetName" = "8:concrt140_app.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F247160A2294BBB8DEFAE4518CD6A31"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\Microsoft.Toolkit.Win32.UI.XamlHost.xml"
-            "TargetName" = "8:Microsoft.Toolkit.Win32.UI.XamlHost.xml"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F4545D2434B4B4CB0881603050F4AE8"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\Microsoft.Toolkit.Win32.UI.XamlHost.dll"
+            "SourcePath" = "8:..\\binrw64\\Microsoft.Toolkit.Win32.UI.XamlHost.dll"
             "TargetName" = "8:Microsoft.Toolkit.Win32.UI.XamlHost.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
@@ -741,10 +717,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A283800718404BAD9980DC3994D269C2"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8B5D0C3F7EC94AE29D94C30FBF496D2F"
             {
-            "SourcePath" = "8:..\\TestDeploy\\Page.xaml"
-            "TargetName" = "8:Page.xaml"
+            "SourcePath" = "8:..\\binrw64\\msvcp140_2_app.dll"
+            "TargetName" = "8:msvcp140_2_app.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -761,10 +737,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B3CAA314AE5E4423848E172B8C34BE6B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A569B3E9F4E3400688D264420EBE0075"
             {
-            "SourcePath" = "8:..\\TestDeploy\\exiv2.dll"
-            "TargetName" = "8:exiv2.dll"
+            "SourcePath" = "8:..\\binrw64\\resources.pri"
+            "TargetName" = "8:resources.pri"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A5A9D213C6BE44999D7CA25EC1EB2E61"
+            {
+            "SourcePath" = "8:..\\binrw64\\msvcp140_1_app.dll"
+            "TargetName" = "8:msvcp140_1_app.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B38B73DE2FB8469EBA99D25F5BF8D504"
+            {
+            "SourcePath" = "8:..\\binrw64\\vcamp140_app.dll"
+            "TargetName" = "8:vcamp140_app.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -812,10 +828,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6F71D193CCB4F76A7FF6BD40798B96B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C0B1E886373A4925AE0E9F0A1F948FDB"
             {
-            "SourcePath" = "8:..\\TestDeploy\\vcruntime140_1_app.dll"
-            "TargetName" = "8:vcruntime140_1_app.dll"
+            "SourcePath" = "8:..\\binrw64\\vccorlib140_app.dll"
+            "TargetName" = "8:vccorlib140_app.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -832,10 +848,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D5D8EB3633D54006B735A326526B2E33"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C66C6C3E83ED44C6A08BE28C487E2535"
             {
-            "SourcePath" = "8:..\\TestDeploy\\msvcp140_app.dll"
-            "TargetName" = "8:msvcp140_app.dll"
+            "SourcePath" = "8:..\\binrw64\\Microsoft.Toolkit.Win32.UI.XamlHost.xml"
+            "TargetName" = "8:Microsoft.Toolkit.Win32.UI.XamlHost.xml"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -852,9 +868,49 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EBCECC778E0341278EB737984966381A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C95E26A34AF9400EABBE605276FDF07F"
             {
-            "SourcePath" = "8:..\\TestDeploy\\libiconv.dll"
+            "SourcePath" = "8:..\\binrw64\\expat.dll"
+            "TargetName" = "8:expat.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D976CB6672824B54B6A33B749143EA14"
+            {
+            "SourcePath" = "8:..\\binrw64\\Page.xaml"
+            "TargetName" = "8:Page.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E034F61250BE4648B5EAB2DFC94975D6"
+            {
+            "SourcePath" = "8:..\\binrw64\\libiconv.dll"
             "TargetName" = "8:libiconv.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
@@ -872,10 +928,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F198383AACB1426C8B86F0F79449313F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E18F2AFCF96D45809763D6236D653BE0"
             {
-            "SourcePath" = "8:..\\TestDeploy\\App.xaml"
-            "TargetName" = "8:App.xaml"
+            "SourcePath" = "8:..\\binrw64\\msvcp140_app.dll"
+            "TargetName" = "8:msvcp140_app.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
@@ -923,26 +979,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F4348998E3E94B49B5BF1FDDA8EC1BFC"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\vccorlib140_app.dll"
-            "TargetName" = "8:vccorlib140_app.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F5378FE526A346FEADF8D75D0076C447"
             {
             "SourcePath" = "8:..\\UIW32\\Camera.ico"
@@ -963,30 +999,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F745F231179344718923C5124A0D6C34"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F6B4CE3B115B4146A8E085F54594A40E"
             {
-            "SourcePath" = "8:..\\TestDeploy\\resources.pri"
-            "TargetName" = "8:resources.pri"
-            "Tag" = "8:"
-            "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FC9A5F7E693B406AA601063E0E9D16FF"
-            {
-            "SourcePath" = "8:..\\TestDeploy\\libcharset.dll"
-            "TargetName" = "8:libcharset.dll"
+            "SourcePath" = "8:..\\binrw64\\exiv2.dll"
+            "TargetName" = "8:exiv2.dll"
             "Tag" = "8:"
             "Folder" = "8:_8D5F31BC55AC41E18398D2F0CFB6CAEA"
             "Condition" = "8:"
