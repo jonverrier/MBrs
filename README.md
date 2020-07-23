@@ -30,12 +30,14 @@ TXP Photographic Memory is composed of several different components, each of whi
  
 
 ## Installation
-TXP Photographic Memory will soon be available in the Windows Store. 
 
 To install & build a local copy for development:
 * Install Visual Studio Community 2019.  
 * Use 'vcpkg' to install the Exiv2[unicode] library. 
 * Open & build the 'MBrs' solution (media browser). The solution builds developer versions to the 'bindw64' directory, and release versions to 'binrw64'.
+
+To install a version for personal use:
+* Run the setup program - Setup/Release/Setup.msi
 
 ## Licence
 
