@@ -27,6 +27,7 @@ TXP Photographic Memory is composed of several different components, each of whi
 * UIWin32 - this is a shell application that creates a 'Xaml island' containing the UI. Fully windows specific. 
 * UIUwp - the actual windows UI, implemented in Xaml. Fully windows specific. In the 'Model View Controller' pattern, this is the View. 
 * Test - contains the test suite. 
+* Setup - a simple (unsigned) install program. 
  
 
 ## Installation
